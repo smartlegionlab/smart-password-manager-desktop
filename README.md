@@ -1,4 +1,4 @@
-# Smart Password Manager v0.6.2 
+# Smart Password Manager v0.6.3 
 
 ### Desktop version
 
@@ -27,7 +27,7 @@ Other apps for generating and managing smart passwords:
 
 ---
 
-## What's new? <sup>v0.6.2</sup>
+## What's new? <sup>v0.6.3</sup>
 
 - Fixed errors.
 - Improved user interface.
@@ -49,11 +49,11 @@ Other apps for generating and managing smart passwords:
 
 ## Images:
 
-![LOGO](https://github.com/smartlegionlab/smartpassman/raw/master/data/images/smartpassman.png)
+![LOGO](https://github.com/smartlegionlab/smart-password-manager-desktop/raw/master/data/images/smartpassman.png)
 
-![LOGO](https://github.com/smartlegionlab/smartpassman/raw/master/data/images/smartpassman2.png)
+![LOGO](https://github.com/smartlegionlab/smart-password-manager-desktop/raw/master/data/images/smartpassman2.png)
 
-![LOGO](https://github.com/smartlegionlab/smartpassman/raw/master/data/images/smartpassman3.png)
+![LOGO](https://github.com/smartlegionlab/smart-password-manager-desktop/raw/master/data/images/smartpassman3.png)
 
 ***
 
@@ -76,6 +76,6 @@ Other apps for generating and managing smart passwords:
     --------------------------------------------------------
     Licensed under the terms of the BSD 3-Clause License
     (see LICENSE for details).
-    Copyright © 2018-2021, A.A Suvorov
+    Copyright © 2018-2025, A.A Suvorov
     All rights reserved.
     --------------------------------------------------------
