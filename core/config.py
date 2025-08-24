@@ -4,7 +4,7 @@
 class Config:
     title = 'Smart Password Manager'
     description = 'Smart Password Manager'
-    copyright = 'Copyright © 2018-2025, A.A. Suvorov; Smart Legion Lab; All rights reserved.'
+    copyright = 'Copyright © 2025, Alexander Suvorov. All rights reserved.'
     author = 'A.A. Suvorov'
     url = 'https://github.com/smartlegionlab/smart-password-manager-desktop/'
     label_len_title = 'Password length'

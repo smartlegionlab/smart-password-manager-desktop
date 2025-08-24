@@ -18,11 +18,11 @@ OPTION 2: COMMERCIAL LICENSE
 
 For commercial use, integration into proprietary software, distribution as part of a closed-source solution, or any use not explicitly permitted under the Non-Commercial License, you must purchase a commercial license from the Licensor.
 
-Commercial License Terms typically include:
+Commercial License Terms:
 · A perpetual, worldwide, non-exclusive, non-transferable (except as provided in the agreement) right to use the Software for commercial purposes.
 · Rights to create and distribute proprietary modifications without the obligation to disclose source code.
-· Priority technical support and maintenance (depending on the chosen plan).
-· Indemnification against certain legal claims (depending on the chosen plan).
+· Priority technical support (depending on the chosen plan).
+· NO INDEMNIFICATION OR LIABILITY OF ANY KIND IS PROVIDED UNDER THE COMMERCIAL LICENSE. THE DISCLAIMER OF LIABILITY APPLIES IN FULL FORCE TO COMMERCIAL LICENSEES.
 
 For pricing, terms, and to obtain a Commercial License, please contact: Email: smartlegiondev@gmail.com
 

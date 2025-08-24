@@ -1,4 +1,4 @@
-# Smart Password Manager <sup>v0.6.5</sup>
+# Smart Password Manager <sup>v0.7.0</sup>
 
 ### Desktop version
 
@@ -25,15 +25,6 @@ Other apps for generating and managing smart passwords:
 
 > WARNING!!! Requires [Python](https://python.org) 3.7+ installed!!!
 
----
-
-## What's new? <sup>v0.6.3</sup>
-
-- Fixed errors.
-- Improved user interface.
-- Code refactoring.
-- Upgrade to new version of [smartpasslib](https://github.com/smartlegionlab/smartpasslib/)
-  
 ---
 
 ## Help:
@@ -74,7 +65,8 @@ A commercial license is **required** for:
 - Integrating this software into proprietary products
 - Using it in internal operations within a company
 - SaaS and hosted services that incorporate this software
-- Obtaining priority support and indemnification
+
+**Important:** The commercial license provides usage rights but **does not include any indemnification or liability**. The software is provided "AS IS" without any warranties as described in the full license agreement.
 
 **To obtain a commercial license,** please contact us directly at:  
 📧 **smartlegiondev@gmail.com**
