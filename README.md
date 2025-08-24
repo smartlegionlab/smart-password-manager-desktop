@@ -1,4 +1,4 @@
-# Smart Password Manager v0.6.3 
+# Smart Password Manager v0.6.4
 
 ### Desktop version
 
@@ -72,10 +72,18 @@ Other apps for generating and managing smart passwords:
 
 ***
 
-## Copyright:
-    --------------------------------------------------------
-    Licensed under the terms of the BSD 3-Clause License
-    (see LICENSE for details).
-    Copyright © 2018-2025, A.A Suvorov
-    All rights reserved.
-    --------------------------------------------------------
+## 📜 Licensing
+
+This project uses a dual licensing system:
+
+### 🆓 BSD 3-Clause License
+- For non-commercial use
+- For academic and research purposes
+- For open-source projects
+
+### 💼 Commercial License
+- For commercial products and services
+- For enterprises using the code in proprietary solutions
+- For additional features and support
+
+**To obtain a commercial license:** [smartlegiondev@gmail.com](mailto:smartlegiondev@gmail.com)
