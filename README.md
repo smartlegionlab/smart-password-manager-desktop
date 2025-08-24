@@ -1,4 +1,4 @@
-# Smart Password Manager v0.6.4
+# Smart Password Manager <sup>v0.6.5</sup>
 
 ### Desktop version
 
@@ -57,33 +57,24 @@ Other apps for generating and managing smart passwords:
 
 ***
 
-## Disclaimer of liability:
-    
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-    FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-    DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-    OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-***
-
 ## 📜 Licensing
 
-This project uses a dual licensing system:
+This project is offered under a dual-licensing model.
 
-### 🆓 BSD 3-Clause License
-- For non-commercial use
-- For academic and research purposes
-- For open-source projects
+### 🆓 Option 1: BSD 3-Clause License (for Non-Commercial Use)
+This license is **free of charge** and allows you to use the software for:
+- Personal and educational purposes
+- Academic research and open-source projects
+- Evaluation and testing
 
-### 💼 Commercial License
-- For commercial products and services
-- For enterprises using the code in proprietary solutions
-- For additional features and support
+**Important:** Any use by a commercial organization or for commercial purposes (including internal development and prototyping) requires a commercial license.
 
-**To obtain a commercial license:** [smartlegiondev@gmail.com](mailto:smartlegiondev@gmail.com)
+### 💼 Option 2: Commercial License (for Commercial Use)
+A commercial license is **required** for:
+- Integrating this software into proprietary products
+- Using it in internal operations within a company
+- SaaS and hosted services that incorporate this software
+- Obtaining priority support and indemnification
+
+**To obtain a commercial license,** please contact us directly at:  
+📧 **smartlegiondev@gmail.com**
