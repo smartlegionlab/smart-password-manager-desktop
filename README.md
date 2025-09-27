@@ -23,19 +23,6 @@ A professional, cross-platform desktop application for managing and generating s
 
 ---
 
-## 🌌 The Paradox at the Core
-
-This tool embodies a beautiful cryptographic paradox: **perfect reproducibility meets complete unpredictability**. 
-
-The system is both:
-- **Perfectly reproducible** - Identical inputs (login + secret phrase) will always generate the exact same password, every time, on any device
-- **Completely unpredictable** - Without the exact inputs, the output is computationally impossible to guess or reverse-engineer
-
-This paradox is powered by deterministic cryptography - the same revolutionary concept explored in our foundational articles:
-- [**The Password That Never Was**](https://dev.to/smartlegionlab/the-password-that-never-was-how-to-access-secrets-that-were-always-there-smart-password-library-4h16) - How passwords emerge from mathematical space rather than being created
-- [**Chrono-Library Messenger**](https://dev.to/smartlegionlab/i-created-a-messenger-that-doesnt-send-any-data-heres-how-it-works-4ecp) - The cryptographic framework enabling this paradigm
-- [**Messages That Have Always Been With Us**](https://dev.to/smartlegionlab/the-magic-of-messages-that-have-always-been-with-us-48gp) - Philosophical foundation of pre-existing information
-
 Your passwords don't need to be stored because they were never created - they already exist as mathematical certainties, waiting to be discovered through the correct combination of login and secret phrase.
 
 ---
@@ -87,19 +74,11 @@ This desktop manager is part of a comprehensive suite of applications built on s
 
 ### 🌐 Web & Mobile Applications
 - [**Web Password Manager**](https://github.com/smartlegionlab/smart-password-manager) - Web-based management interface
-- [**Telegram Bot**](https://t.me/smartpasswordmanagerbot) - Mobile password management
 
 ### 💡 Core Technology
 - [**SmartPassLib**](https://github.com/smartlegionlab/smartpasslib) - Core password generation library
-- [**Chrono-Library Messenger**](https://github.com/smartlegionlab/chrono-library-messenger) - Secure messaging technology
 
 ## 📖 Technical Foundation
-
-Learn about the innovative approach behind this technology:
-
-1. [**The Password That Never Was**](https://dev.to/smartlegionlab/the-password-that-never-was-how-to-access-secrets-that-were-always-there-smart-password-library-4h16) - Deterministic password generation
-2. [**Chrono-Library Messenger**](https://dev.to/smartlegionlab/i-created-a-messenger-that-doesnt-send-any-data-heres-how-it-works-4ecp) - Underlying cryptographic principles
-3. [**Technical Implementation**](https://dev.to/smartlegionlab/the-magic-of-messages-that-have-always-been-with-us-48gp) - Architecture and design patterns
 
 ## 🛡️ Security Features
 
@@ -143,12 +122,5 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 
-## 🌟 Professional Password Management
-
-Experience modern password management with deterministic security. Generate strong passwords without the risks of traditional storage.
-
-**Ready to enhance your security practices?** [Download now](https://github.com/smartlegionlab/smart-password-manager-desktop/releases) and join developers worldwide using smart password technology.
-
----
 
 *Explore more professional tools at [Smart Legion Lab](https://github.com/smartlegionlab)*
