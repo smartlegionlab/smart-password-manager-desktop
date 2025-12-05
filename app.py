@@ -434,18 +434,21 @@ class MainWindow(QWidget):
                 )
                 return
 
-            existing_descriptions = [p.description for p in self.smart_pass_man.passwords.values()]
-            if description in existing_descriptions:
-                QMessageBox.warning(
-                    self,
-                    'Duplicate Description',
-                    f'A password entry with description "{description}" already exists.\n'
-                    f'Please use a different description.'
-                )
-                return
-
             try:
                 public_key = SmartPasswordMaster.generate_public_key(secret=secret)
+
+                if public_key in self.smart_pass_man.passwords:
+                    existing_password = self.smart_pass_man.passwords[public_key]
+                    QMessageBox.warning(
+                        self,
+                        'Duplicate Secret Phrase',
+                        f'A password entry with this secret phrase already exists:\n\n'
+                        f'"{existing_password.description}"\n'
+                        f'Length: {existing_password.length} characters\n\n'
+                        f'Each unique secret phrase generates a unique public key.\n'
+                        f'You cannot have multiple entries with the same secret.'
+                    )
+                    return
 
                 smart_password = SmartPassword(
                     public_key=public_key,
