@@ -221,7 +221,7 @@ class MainWindow(QWidget):
         self.main_layout.setContentsMargins(20, 20, 20, 20)
 
         header_layout = QHBoxLayout()
-        self.label_logo = QLabel(f"{self.config.title} <sup>v2.0.0</sup>")
+        self.label_logo = QLabel(f"{self.config.title} <sup>v2.0.3</sup>")
         font = QFont()
         font.setPointSize(20)
         font.setBold(True)
@@ -520,7 +520,7 @@ class MainWindow(QWidget):
                         '• Caps Lock\n'
                         '• Keyboard layout\n'
                         '• Spelling\n\n'
-                        'Note: In v2.0.0, secret phrases are case-sensitive.'
+                        'Note: In v2.0.3, secret phrases are case-sensitive.'
                     )
 
             except Exception as e:
@@ -575,7 +575,7 @@ def main():
     app.setPalette(dark_palette)
 
     warning_msg = """
-    <h3>⚠️ IMPORTANT: Smart Password Manager v2.0.0</h3>
+    <h3>⚠️ IMPORTANT: Smart Password Manager v2.0.3</h3>
     <p>This version has <b>BREAKING CHANGES</b>:</p>
     <ul>
     <li>All passwords generated with v1.x are now <b>INVALID</b></li>

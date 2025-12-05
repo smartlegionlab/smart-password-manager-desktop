@@ -1,4 +1,4 @@
-# Smart Password Manager Desktop <sup>v2.0.0</sup>
+# Smart Password Manager Desktop <sup>v2.0.3</sup>
 
 ---
 
@@ -16,9 +16,9 @@
 
 Cross-platform desktop application for managing password metadata using deterministic smart password generation.
 
-> **Powered by** [smartpasslib v2.0.0](https://github.com/smartlegionlab/smartpasslib) - The core library for deterministic password generation
+> **Powered by** [smartpasslib](https://github.com/smartlegionlab/smartpasslib) - The core library for deterministic password generation
 
-### ⚠️ **BREAKING CHANGES in v2.0.0**
+### ⚠️ **BREAKING CHANGES in v2.0.3**
 
 **WARNING:** This version introduces breaking changes:
 - All passwords generated with v1.x are now **INVALID**
@@ -102,7 +102,7 @@ This desktop manager is part of a comprehensive suite of applications built on d
 - [**Web Smart Password Manager**](https://github.com/smartlegionlab/smart-password-manager) - Web-based management interface
 
 ### 💡 Core Technology
-- [**SmartPassLib v2.0.0**](https://github.com/smartlegionlab/smartpasslib) - Core password generation library
+- [**SmartPassLib**](https://github.com/smartlegionlab/smartpasslib) - Core password generation library
 
 ## 🛡️ Security Features
 
@@ -123,7 +123,7 @@ This desktop manager is part of a comprehensive suite of applications built on d
 
 ### Architecture:
 - **Frontend**: PyQt5 for cross-platform GUI
-- **Backend**: smartpasslib v2.0.0 for password generation
+- **Backend**: smartpasslib v2.0.0+ for password generation
 - **Storage**: JSON-based local file storage
 - **Platform**: Native desktop application
 
@@ -136,13 +136,13 @@ This desktop manager is part of a comprehensive suite of applications built on d
 ## 📋 Migration from v1.x
 
 ### Important Notes:
-- **v2.0.0 is NOT backward compatible** with v1.x
-- **All v1.x passwords are invalid** in v2.0.0
+- **v2.0.3 is NOT backward compatible** with v1.x
+- **All v1.x passwords are invalid** in v2.0.3
 - **You must recreate all passwords** using your secret phrases
 
 ### Migration Steps:
 1. **Backup** any critical passwords from v1.x
-2. **Install** v2.0.0 fresh
+2. **Install** v2.0.3 fresh
 3. **Delete** old `~/.cases.json` file
 4. **Recreate** all passwords using your secret phrases
 5. **Update** all service credentials
