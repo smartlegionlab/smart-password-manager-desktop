@@ -575,7 +575,7 @@ def main():
     app.setPalette(dark_palette)
 
     warning_msg = """
-    <h3>⚠️ IMPORTANT: SmartPassLib v2.0.0</h3>
+    <h3>⚠️ IMPORTANT: Smart Password Manager v2.0.0</h3>
     <p>This version has <b>BREAKING CHANGES</b>:</p>
     <ul>
     <li>All passwords generated with v1.x are now <b>INVALID</b></li>
