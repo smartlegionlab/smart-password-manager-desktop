@@ -1,4 +1,4 @@
-# Smart Password Manager Desktop <sup>v2.1.1</sup>
+# Smart Password Manager Desktop <sup>v2.2.0</sup>
 
 ---
 
@@ -12,13 +12,25 @@
 [![GitHub stars](https://img.shields.io/github/stars/smartlegionlab/smart-password-manager-desktop?style=social)](https://github.com/smartlegionlab/smart-password-manager-desktop/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/smartlegionlab/smart-password-manager-desktop?style=social)](https://github.com/smartlegionlab/smart-password-manager-desktop/network/members)
 
+---
+
+## ⚠️ Critical Notice
+
+**BEFORE USING THIS SOFTWARE, READ THE COMPLETE LEGAL DISCLAIMER BELOW**
+
+[View Legal Disclaimer & Liability Waiver](#-legal-disclaimer)
+
+*Usage of this software constitutes acceptance of all terms and conditions.*
+
+---
+
 ## 🖥️ Desktop Manager for Deterministic Smart Passwords
 
 Cross-platform desktop application for managing password metadata using deterministic smart password generation.
 
 > **Powered by** [smartpasslib](https://github.com/smartlegionlab/smartpasslib) - The core library for deterministic password generation
 
-### ⚠️ **BREAKING CHANGES in v2.1.1**
+### ⚠️ **BREAKING CHANGES in v2.2.0**
 
 **WARNING:** This version introduces breaking changes:
 - All passwords generated with v1.x are now **INVALID**
@@ -136,13 +148,13 @@ This desktop manager is part of a comprehensive suite of applications built on d
 ## 📋 Migration from v1.x
 
 ### Important Notes:
-- **v2.1.1 is NOT backward compatible** with v1.x
-- **All v1.x passwords are invalid** in v2.1.1
+- **v2.2.0 is NOT backward compatible** with v1.x
+- **All v1.x passwords are invalid** in v2.2.0
 - **You must recreate all passwords** using your secret phrases
 
 ### Migration Steps:
 1. **Backup** any critical passwords from v1.x
-2. **Install** v2.1.1 fresh
+2. **Install** v2.2.0 fresh
 3. **Delete** old `~/.cases.json` file
 4. **Recreate** all passwords using your secret phrases
 5. **Update** all service credentials
@@ -235,3 +247,93 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 **Note**: Always keep backup copies of your secret phrases. 
 If you lose your secret phrase, you cannot regenerate your passwords.
+
+---
+
+## 🆘 Support
+
+- **Issues smartpasslib**: [GitHub Issues](https://github.com/smartlegionlab/smartpasslib/issues)
+- **Issues Smart Password Manager Desktop**: [GitHub Issues](https://github.com/smartlegionlab/smart-password-manager-desktop/issues)
+
+**Note**: Always test password generation in your specific environment. Implementation security depends on proper usage.
+
+---
+
+## ⚠️ Security Warnings
+
+**Version Incompatibility**: v2.0.x+ passwords are incompatible with v1.x.
+Never mix secret phrases across different versions.
+
+### Secret Phrase Security
+
+**Your secret phrase is the cryptographic master key**
+
+1. **Permanent data loss**: Lost secret phrase = irreversible loss of all derived passwords
+2. **No recovery mechanisms**: No password recovery, no secret reset, no administrative override
+3. **Deterministic generation**: Identical input (secret + parameters) = identical output (password)
+4. **Single point of failure**: Secret phrase is the sole authentication factor for all passwords
+5. **Secure storage required**: Digital storage of secret phrases is prohibited
+
+**Critical**: Test password regeneration with non-essential accounts before production use
+
+---
+
+## 📄 Legal Disclaimer
+
+**COMPLETE AND ABSOLUTE RELEASE FROM ALL LIABILITY**
+
+**SOFTWARE PROVIDED "AS IS" WITHOUT ANY WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.**
+
+The copyright holder, contributors, and any associated parties **EXPLICITLY DISCLAIM AND DENY ALL RESPONSIBILITY AND LIABILITY** for:
+
+1. **ANY AND ALL DATA LOSS**: Complete or partial loss of passwords, accounts, credentials, cryptographic keys, or any data whatsoever
+2. **ANY AND ALL SECURITY INCIDENTS**: Unauthorized access, data breaches, account compromises, theft, or exposure of sensitive information
+3. **ANY AND ALL FINANCIAL LOSSES**: Direct, indirect, incidental, special, consequential, or punitive damages of any kind
+4. **ANY AND ALL OPERATIONAL DISRUPTIONS**: Service interruptions, account lockouts, authentication failures, or denial of service
+5. **ANY AND ALL IMPLEMENTATION ISSUES**: Bugs, errors, vulnerabilities, misconfigurations, or incorrect usage
+6. **ANY AND ALL LEGAL OR REGULATORY CONSEQUENCES**: Violations of laws, regulations, compliance requirements, or terms of service
+7. **ANY AND ALL PERSONAL OR BUSINESS DAMAGES**: Reputational harm, business interruption, loss of revenue, or any other damages
+8. **ANY AND ALL THIRD-PARTY CLAIMS**: Claims made by any other parties affected by software usage
+
+**USER ACCEPTS FULL AND UNCONDITIONAL RESPONSIBILITY**
+
+By installing, accessing, or using this software in any manner, you irrevocably agree that:
+
+- You assume **ALL** risks associated with software usage
+- You bear **SOLE** responsibility for secret phrase management and security
+- You accept **COMPLETE** responsibility for all testing and validation
+- You are **EXCLUSIVELY** liable for compliance with all applicable laws
+- You accept **TOTAL** responsibility for any and all consequences
+- You **PERMANENTLY AND IRREVOCABLY** waive, release, and discharge all claims against the copyright holder, contributors, distributors, and any associated entities
+
+**NO WARRANTY OF ANY KIND**
+
+This software comes with **ABSOLUTELY NO GUARANTEES** regarding:
+- Security effectiveness or cryptographic strength
+- Reliability or availability
+- Fitness for any particular purpose
+- Accuracy or correctness
+- Freedom from defects or vulnerabilities
+
+**NOT A SECURITY PRODUCT OR SERVICE**
+
+This is experimental software. It is not:
+- Security consultation or advice
+- A certified cryptographic product
+- A guaranteed security solution
+- Professional security software
+- Endorsed by any security authority
+
+**FINAL AND BINDING AGREEMENT**
+
+Usage of this software constitutes your **FULL AND UNCONDITIONAL ACCEPTANCE** of this disclaimer. If you do not accept **ALL** terms and conditions, **DO NOT USE THE SOFTWARE.**
+
+**BY PROCEEDING, YOU ACKNOWLEDGE THAT YOU HAVE READ THIS DISCLAIMER IN ITS ENTIRETY, UNDERSTAND ITS TERMS COMPLETELY, AND ACCEPT THEM WITHOUT RESERVATION OR EXCEPTION.**
+
+---
+
+**Version**: 2.2.0 | [**Author**](https://smartlegionlab.ru): [Alexander Suvorov](https://alexander-suvorov.ru)
+
+---
+
+**Note**: This is v2.2.0. If migrating from v1.x, all passwords must be regenerated.

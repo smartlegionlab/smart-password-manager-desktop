@@ -146,6 +146,51 @@ class SecretInputDialog(QDialog):
         return self.secret_input.text()
 
 
+class EditPasswordDialog(QDialog):
+    def __init__(self, parent=None, current_description=""):
+        super().__init__(parent)
+        self.setWindowTitle('Edit Password Entry')
+        self.setMinimumWidth(350)
+
+        self.layout = QVBoxLayout(self)
+        self.layout.setSpacing(10)
+
+        instruction = QLabel('Edit service description:')
+        self.layout.addWidget(instruction)
+
+        description_group = QGroupBox("Service Description")
+        description_layout = QVBoxLayout()
+        self.description_input = QLineEdit(self)
+        self.description_input.setText(current_description)
+        self.description_input.setPlaceholderText("Enter new service description")
+        description_layout.addWidget(self.description_input)
+        description_group.setLayout(description_layout)
+        self.layout.addWidget(description_group)
+
+        note = QLabel(
+            "<i>Note: Only the description can be changed. "
+            "Password length cannot be changed as it would generate a different password.</i>"
+        )
+        note.setWordWrap(True)
+        note.setStyleSheet("color: #888;")
+        self.layout.addWidget(note)
+
+        button_layout = QHBoxLayout()
+        self.cancel_button = QPushButton('Cancel', self)
+        self.cancel_button.clicked.connect(self.reject)
+        button_layout.addWidget(self.cancel_button)
+
+        self.submit_button = QPushButton('Update Description', self)
+        self.submit_button.setDefault(True)
+        self.submit_button.clicked.connect(self.accept)
+        self.submit_button.setStyleSheet("background-color: #ff9800; color: white;")
+        button_layout.addWidget(self.submit_button)
+        self.layout.addLayout(button_layout)
+
+    def get_description(self):
+        return self.description_input.text().strip()
+
+
 class PasswordDisplayDialog(QDialog):
     def __init__(self, parent=None, description="", password=""):
         super().__init__(parent)
@@ -221,7 +266,7 @@ class MainWindow(QWidget):
         self.main_layout.setContentsMargins(20, 20, 20, 20)
 
         header_layout = QHBoxLayout()
-        self.label_logo = QLabel(f"{self.config.title} <sup>v2.1.1</sup>")
+        self.label_logo = QLabel(f"{self.config.title} <sup>v2.2.0</sup>")
         font = QFont()
         font.setPointSize(20)
         font.setBold(True)
@@ -238,8 +283,8 @@ class MainWindow(QWidget):
         self.main_layout.addLayout(header_layout)
 
         self.table_widget = QTableWidget()
-        self.table_widget.setColumnCount(4)
-        self.table_widget.setHorizontalHeaderLabels(['Description', 'Length', 'Actions', ''])
+        self.table_widget.setColumnCount(5)
+        self.table_widget.setHorizontalHeaderLabels(['Description', 'Length', 'Get', 'Edit', 'Delete'])
         self.table_widget.setEditTriggers(QTableWidget.NoEditTriggers)
         self.table_widget.setAlternatingRowColors(True)
         self.table_widget.setStyleSheet("""
@@ -259,6 +304,7 @@ class MainWindow(QWidget):
         self.table_widget.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeToContents)
         self.table_widget.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeToContents)
         self.table_widget.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeToContents)
+        self.table_widget.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeToContents)
 
         self.main_layout.addWidget(self.table_widget)
 
@@ -337,7 +383,7 @@ class MainWindow(QWidget):
 
     def show_help(self):
         help_text = """
-        <h3>Smart Password Manager Help</h3>
+        <h3>Smart Password Manager Help v2.2.0</h3>
 
         <p><b>How it works:</b></p>
         <ul>
@@ -351,7 +397,9 @@ class MainWindow(QWidget):
         <li>Click <b>Add</b> to create a new password entry</li>
         <li>Enter service description (e.g., "GitHub")</li>
         <li>Enter and remember your secret phrase</li>
-        <li>Click <b>Get Password</b> to generate password</li>
+        <li>Click <b>Get</b> to generate password</li>
+        <li>Click <b>Edit</b> to change service description</li>
+        <li>Click <b>Delete</b> to remove entry (doesn't delete password)</li>
         </ol>
 
         <p><b>Important Notes:</b></p>
@@ -359,6 +407,8 @@ class MainWindow(QWidget):
         <li>🔐 Never share your secret phrases</li>
         <li>📝 Back up your .cases.json file</li>
         <li>⚙️ Secret phrases are case-sensitive</li>
+        <li>✏️ You can edit descriptions anytime</li>
+        <li>🗑️ Deleting entry only removes metadata - password can be recreated</li>
         </ul>
 
         <hr>
@@ -393,14 +443,14 @@ class MainWindow(QWidget):
         length_item.setTextAlignment(Qt.AlignCenter)
         self.table_widget.setItem(row_position, 1, length_item)
 
-        get_button = QPushButton("🔑 Get Password")
+        get_button = QPushButton("🔑 Get")
         get_button.setStyleSheet("""
             QPushButton {
                 background-color: #2a82da;
                 color: white;
                 border-radius: 3px;
                 padding: 5px 10px;
-                min-width: 120px;
+                min-width: 80px;
             }
             QPushButton:hover {
                 background-color: #1a72ca;
@@ -408,7 +458,27 @@ class MainWindow(QWidget):
         """)
         get_button.clicked.connect(lambda checked, pk=smart_password.public_key, desc=smart_password.description:
                                    self.get_password(pk, desc))
+        get_button.callback_data = smart_password.public_key
         self.table_widget.setCellWidget(row_position, 2, get_button)
+
+        edit_button = QPushButton("✏️ Edit")
+        edit_button.setToolTip("Edit service description")
+        edit_button.setStyleSheet("""
+            QPushButton {
+                background-color: #ff9800;
+                color: white;
+                border-radius: 3px;
+                padding: 5px 10px;
+                min-width: 80px;
+            }
+            QPushButton:hover {
+                background-color: #e68900;
+            }
+        """)
+        edit_button.clicked.connect(lambda checked, pk=smart_password.public_key, desc=smart_password.description:
+                                    self.edit_password(pk, desc))
+        edit_button.callback_data = smart_password.public_key
+        self.table_widget.setCellWidget(row_position, 3, edit_button)
 
         delete_button = QPushButton("🗑️")
         delete_button.setToolTip("Delete this password entry")
@@ -427,9 +497,64 @@ class MainWindow(QWidget):
         """)
         delete_button.clicked.connect(lambda checked, pk=smart_password.public_key:
                                       self.remove_password(pk))
-        self.table_widget.setCellWidget(row_position, 3, delete_button)
+        delete_button.callback_data = smart_password.public_key
+        self.table_widget.setCellWidget(row_position, 4, delete_button)
 
         self.update_password_count()
+
+    def edit_password(self, public_key, current_description):
+        dialog = EditPasswordDialog(self, current_description)
+        if dialog.exec_() == QDialog.Accepted:
+            new_description = dialog.get_description()
+
+            if not new_description:
+                QMessageBox.warning(
+                    self,
+                    'Missing Information',
+                    'Please enter a service description.'
+                )
+                return
+
+            if new_description == current_description:
+                QMessageBox.information(
+                    self,
+                    'No Changes',
+                    'The description was not changed.'
+                )
+                return
+
+            try:
+                success = self.smart_pass_man.update_smart_password(
+                    public_key=public_key,
+                    description=new_description
+                )
+
+                if success:
+                    row = self.find_row_by_public_key(public_key)
+                    if row != -1:
+                        desc_item = self.table_widget.item(row, 0)
+                        if desc_item:
+                            desc_item.setText(new_description)
+                            desc_item.setToolTip(new_description)
+
+                    QMessageBox.information(
+                        self,
+                        'Updated',
+                        f'Service description updated to:\n<b>{new_description}</b>'
+                    )
+                else:
+                    QMessageBox.warning(
+                        self,
+                        'Not Found',
+                        'Password entry not found.'
+                    )
+
+            except Exception as e:
+                QMessageBox.critical(
+                    self,
+                    'Error',
+                    f'Failed to update description:\n{str(e)}'
+                )
 
     def remove_password(self, public_key):
         row = self.find_row_by_public_key(public_key)
@@ -460,11 +585,10 @@ class MainWindow(QWidget):
 
     def find_row_by_public_key(self, public_key):
         for row in range(self.table_widget.rowCount()):
-            password_item = self.table_widget.item(row, 0)
-            if password_item:
-                for stored_password in self.smart_pass_man.passwords.values():
-                    if stored_password.description == password_item.text() and stored_password.public_key == public_key:
-                        return row
+            for col in [2, 3, 4]:
+                widget = self.table_widget.cellWidget(row, col)
+                if widget and hasattr(widget, 'callback_data') and widget.callback_data == public_key:
+                    return row
         return -1
 
     def add_password(self):
@@ -566,7 +690,7 @@ class MainWindow(QWidget):
                         '• Caps Lock\n'
                         '• Keyboard layout\n'
                         '• Spelling\n\n'
-                        'Note: In v2.1.1, secret phrases are case-sensitive.'
+                        'Note: In v2.2.0, secret phrases are case-sensitive.'
                     )
 
             except Exception as e:
