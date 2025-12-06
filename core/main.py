@@ -1,6 +1,6 @@
 # Copyright (©) 2025, Alexander Suvorov. All rights reserved.
 from PyQt5.QtWidgets import (
-    QApplication,
+    QApplication, QDesktopWidget,
     QWidget,
     QLabel,
     QPushButton,
@@ -32,12 +32,12 @@ class PasswordInputDialog(QDialog):
         self.layout = QVBoxLayout(self)
         self.layout.setSpacing(10)
 
-        description_group = QGroupBox("Service Information")
+        description_group = QGroupBox("Password Description")
         description_layout = QVBoxLayout()
-        self.description_label = QLabel('Service Description (e.g., "GitHub Account"):')
+        self.description_label = QLabel('Password Description (e.g., "GitHub Account"):')
         description_layout.addWidget(self.description_label)
         self.description_input = QLineEdit(self)
-        self.description_input.setPlaceholderText("Enter service name or description")
+        self.description_input.setPlaceholderText("Enter password description")
         description_layout.addWidget(self.description_input)
         description_group.setLayout(description_layout)
         self.layout.addWidget(description_group)
@@ -147,29 +147,51 @@ class SecretInputDialog(QDialog):
 
 
 class EditPasswordDialog(QDialog):
-    def __init__(self, parent=None, current_description=""):
+    def __init__(self, parent=None, current_description="", current_length=16):
         super().__init__(parent)
-        self.setWindowTitle('Edit Password Entry')
-        self.setMinimumWidth(350)
+        self.current_length = current_length
+        self.setWindowTitle('Edit Password Metadata')
+        self.setMinimumWidth(400)
 
         self.layout = QVBoxLayout(self)
         self.layout.setSpacing(10)
 
-        instruction = QLabel('Edit service description:')
+        instruction = QLabel('Edit password metadata:')
         self.layout.addWidget(instruction)
 
-        description_group = QGroupBox("Service Description")
+        description_group = QGroupBox("Password Description")
         description_layout = QVBoxLayout()
         self.description_input = QLineEdit(self)
         self.description_input.setText(current_description)
-        self.description_input.setPlaceholderText("Enter new service description")
+        self.description_input.setPlaceholderText("Enter new password description")
         description_layout.addWidget(self.description_input)
         description_group.setLayout(description_layout)
         self.layout.addWidget(description_group)
 
+        length_group = QGroupBox("Password Length")
+        length_layout = QHBoxLayout()
+        self.length_label = QLabel('Length:')
+        length_layout.addWidget(self.length_label)
+
+        self.length_input = QSpinBox(self)
+        self.length_input.setMinimum(4)
+        self.length_input.setMaximum(100)
+        self.length_input.setValue(current_length)
+        self.length_input.setSuffix(" characters")
+        self.length_input.valueChanged.connect(self.on_length_changed)
+        length_layout.addWidget(self.length_input)
+
+        self.length_warning = QLabel("")
+        self.length_warning.setStyleSheet("color: #ff9800; font-style: italic;")
+        length_layout.addWidget(self.length_warning)
+
+        length_layout.addStretch()
+        length_group.setLayout(length_layout)
+        self.layout.addWidget(length_group)
+
         note = QLabel(
-            "<i>Note: Only the description can be changed. "
-            "Password length cannot be changed as it would generate a different password.</i>"
+            "<i>Note: Changing the length will generate a different password "
+            "(first characters remain the same).</i>"
         )
         note.setWordWrap(True)
         note.setStyleSheet("color: #888;")
@@ -180,15 +202,26 @@ class EditPasswordDialog(QDialog):
         self.cancel_button.clicked.connect(self.reject)
         button_layout.addWidget(self.cancel_button)
 
-        self.submit_button = QPushButton('Update Description', self)
+        self.submit_button = QPushButton('Update', self)
         self.submit_button.setDefault(True)
         self.submit_button.clicked.connect(self.accept)
         self.submit_button.setStyleSheet("background-color: #ff9800; color: white;")
         button_layout.addWidget(self.submit_button)
         self.layout.addLayout(button_layout)
 
-    def get_description(self):
-        return self.description_input.text().strip()
+        self.on_length_changed(current_length)
+
+    def on_length_changed(self, new_length):
+        if new_length != self.current_length:
+            if new_length > self.current_length:
+                self.length_warning.setText(f"⚠️ Password will be extended")
+            else:
+                self.length_warning.setText(f"⚠️ Password will be shortened")
+        else:
+            self.length_warning.setText("")
+
+    def get_values(self):
+        return self.description_input.text().strip(), self.length_input.value()
 
 
 class PasswordDisplayDialog(QDialog):
@@ -266,7 +299,7 @@ class MainWindow(QWidget):
         self.main_layout.setContentsMargins(20, 20, 20, 20)
 
         header_layout = QHBoxLayout()
-        self.label_logo = QLabel(f"{self.config.title} <sup>v2.2.0</sup>")
+        self.label_logo = QLabel(f"{self.config.title} <sup>v2.2.1</sup>")
         font = QFont()
         font.setPointSize(20)
         font.setBold(True)
@@ -374,6 +407,13 @@ class MainWindow(QWidget):
 
         self.setLayout(self.main_layout)
         self._init()
+        self.center_window()
+
+    def center_window(self):
+        frame = self.frameGeometry()
+        center_point = QDesktopWidget().availableGeometry().center()
+        frame.moveCenter(center_point)
+        self.move(frame.topLeft())
 
     def _init(self):
         self.table_widget.setRowCount(0)
@@ -383,7 +423,7 @@ class MainWindow(QWidget):
 
     def show_help(self):
         help_text = """
-        <h3>Smart Password Manager Help v2.2.0</h3>
+        <h3>Smart Password Manager Help v2.2.1</h3>
 
         <p><b>How it works:</b></p>
         <ul>
@@ -395,10 +435,11 @@ class MainWindow(QWidget):
         <p><b>Basic Steps:</b></p>
         <ol>
         <li>Click <b>Add</b> to create a new password entry</li>
-        <li>Enter service description (e.g., "GitHub")</li>
+        <li>Enter password description (e.g., "GitHub")</li>
         <li>Enter and remember your secret phrase</li>
+        <li>Select password length (recommended: 16-24 characters)</li>
         <li>Click <b>Get</b> to generate password</li>
-        <li>Click <b>Edit</b> to change service description</li>
+        <li>Click <b>Edit</b> to change description or length</li>
         <li>Click <b>Delete</b> to remove entry (doesn't delete password)</li>
         </ol>
 
@@ -407,7 +448,9 @@ class MainWindow(QWidget):
         <li>🔐 Never share your secret phrases</li>
         <li>📝 Back up your .cases.json file</li>
         <li>⚙️ Secret phrases are case-sensitive</li>
-        <li>✏️ You can edit descriptions anytime</li>
+        <li>✏️ You can edit password descriptions anytime</li>
+        <li>📏 Changing password length generates a different password!</li>
+        <li>⚠️ First N characters remain same, new characters are added/removed</li>
         <li>🗑️ Deleting entry only removes metadata - password can be recreated</li>
         </ul>
 
@@ -456,13 +499,13 @@ class MainWindow(QWidget):
                 background-color: #1a72ca;
             }
         """)
-        get_button.clicked.connect(lambda checked, pk=smart_password.public_key, desc=smart_password.description:
-                                   self.get_password(pk, desc))
-        get_button.callback_data = smart_password.public_key
+        get_button.clicked.connect(lambda checked, pk=smart_password.public_key:
+                                   self.get_password(pk))
+        get_button.public_key = smart_password.public_key
         self.table_widget.setCellWidget(row_position, 2, get_button)
 
         edit_button = QPushButton("✏️ Edit")
-        edit_button.setToolTip("Edit service description")
+        edit_button.setToolTip("Edit password description and length")
         edit_button.setStyleSheet("""
             QPushButton {
                 background-color: #ff9800;
@@ -475,9 +518,9 @@ class MainWindow(QWidget):
                 background-color: #e68900;
             }
         """)
-        edit_button.clicked.connect(lambda checked, pk=smart_password.public_key, desc=smart_password.description:
-                                    self.edit_password(pk, desc))
-        edit_button.callback_data = smart_password.public_key
+        edit_button.clicked.connect(lambda checked, pk=smart_password.public_key:
+                                    self.edit_password(pk))
+        edit_button.public_key = smart_password.public_key
         self.table_widget.setCellWidget(row_position, 3, edit_button)
 
         delete_button = QPushButton("🗑️")
@@ -497,36 +540,54 @@ class MainWindow(QWidget):
         """)
         delete_button.clicked.connect(lambda checked, pk=smart_password.public_key:
                                       self.remove_password(pk))
-        delete_button.callback_data = smart_password.public_key
+        delete_button.public_key = smart_password.public_key
         self.table_widget.setCellWidget(row_position, 4, delete_button)
 
         self.update_password_count()
 
-    def edit_password(self, public_key, current_description):
-        dialog = EditPasswordDialog(self, current_description)
+    def edit_password(self, public_key):
+        smart_password = self.smart_pass_man.get_smart_password(public_key)
+        if not smart_password:
+            QMessageBox.warning(self, 'Error', 'Password metadata not found.')
+            return
+
+        dialog = EditPasswordDialog(self, smart_password.description, smart_password.length)
         if dialog.exec_() == QDialog.Accepted:
-            new_description = dialog.get_description()
+            new_description, new_length = dialog.get_values()
 
             if not new_description:
-                QMessageBox.warning(
-                    self,
-                    'Missing Information',
-                    'Please enter a service description.'
-                )
+                QMessageBox.warning(self, 'Missing Information', 'Please enter a password description.')
                 return
 
-            if new_description == current_description:
-                QMessageBox.information(
-                    self,
-                    'No Changes',
-                    'The description was not changed.'
-                )
+            if new_description == smart_password.description and new_length == smart_password.length:
+                QMessageBox.information(self, 'No Changes', 'No changes were made.')
                 return
+
+            if new_length != smart_password.length:
+                msg_box = QMessageBox(self)
+                msg_box.setWindowTitle('⚠️ Password Length Change Warning')
+                msg_box.setTextFormat(Qt.RichText)
+                msg_box.setText(
+                    f'Changing password length from {smart_password.length} to {new_length} characters:<br><br>'
+                    f'• First {min(smart_password.length, new_length)} characters will remain the same<br>'
+                    f'• You will get a {"longer" if new_length > smart_password.length else "shorter"} password<br>'
+                    f'• Accounts using the old password may need to be updated<br><br>'
+                    f'Are you sure you want to change the password length?'
+                )
+                msg_box.setIcon(QMessageBox.Warning)
+                msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+                msg_box.setDefaultButton(QMessageBox.No)
+
+                reply = msg_box.exec_()
+
+                if reply == QMessageBox.No:
+                    return
 
             try:
                 success = self.smart_pass_man.update_smart_password(
                     public_key=public_key,
-                    description=new_description
+                    description=new_description,
+                    length=new_length
                 )
 
                 if success:
@@ -537,24 +598,26 @@ class MainWindow(QWidget):
                             desc_item.setText(new_description)
                             desc_item.setToolTip(new_description)
 
-                    QMessageBox.information(
-                        self,
-                        'Updated',
-                        f'Service description updated to:\n<b>{new_description}</b>'
-                    )
-                else:
-                    QMessageBox.warning(
-                        self,
-                        'Not Found',
-                        'Password entry not found.'
-                    )
+                        length_item = self.table_widget.item(row, 1)
+                        if length_item:
+                            length_item.setText(f"{new_length} chars")
+
+                    msg_box = QMessageBox(self)
+                    msg_box.setWindowTitle('Updated')
+                    msg_box.setTextFormat(Qt.RichText)
+
+                    msg = f'Password description updated to:<br><b>{new_description}</b>'
+                    if new_length != smart_password.length:
+                        msg += f'<br><br>Password length changed from {smart_password.length} to {new_length} characters.'
+                        msg += f'<br><br><i>Note: New password will have {"extended" if new_length > smart_password.length else "truncated"} characters.</i>'
+
+                    msg_box.setText(msg)
+                    msg_box.setIcon(QMessageBox.Information)
+                    msg_box.setStandardButtons(QMessageBox.Ok)
+                    msg_box.exec_()
 
             except Exception as e:
-                QMessageBox.critical(
-                    self,
-                    'Error',
-                    f'Failed to update description:\n{str(e)}'
-                )
+                QMessageBox.critical(self, 'Error', f'Failed to update:\n{str(e)}')
 
     def remove_password(self, public_key):
         row = self.find_row_by_public_key(public_key)
@@ -563,10 +626,12 @@ class MainWindow(QWidget):
 
             msg_box = QMessageBox(self)
             msg_box.setWindowTitle('Confirm Deletion')
-            msg_box.setText(f'Delete password entry for:\n<b>{description}</b>?\n\n'
-                            f'Note: This only deletes the metadata. You can recreate it '
-                            f'later using the same secret phrase.')
             msg_box.setTextFormat(Qt.RichText)
+            msg_box.setText(
+                f'Delete password entry for:<br><b>{description}</b>?<br><br>'
+                f'Note: This only deletes the metadata. You can recreate it '
+                f'later using the same secret phrase.'
+            )
             msg_box.setIcon(QMessageBox.Question)
             msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             msg_box.setDefaultButton(QMessageBox.No)
@@ -577,17 +642,20 @@ class MainWindow(QWidget):
                 self.table_widget.removeRow(row)
                 self.smart_pass_man.delete_smart_password(public_key)
                 self.update_password_count()
-                QMessageBox.information(
-                    self,
-                    'Deleted',
-                    f'Password metadata for "{description}" has been deleted.'
-                )
+
+                msg_box = QMessageBox(self)
+                msg_box.setWindowTitle('Deleted')
+                msg_box.setTextFormat(Qt.RichText)
+                msg_box.setText(f'Password metadata for <b>{description}</b> has been deleted.')
+                msg_box.setIcon(QMessageBox.Information)
+                msg_box.setStandardButtons(QMessageBox.Ok)
+                msg_box.exec_()
 
     def find_row_by_public_key(self, public_key):
         for row in range(self.table_widget.rowCount()):
             for col in [2, 3, 4]:
                 widget = self.table_widget.cellWidget(row, col)
-                if widget and hasattr(widget, 'callback_data') and widget.callback_data == public_key:
+                if widget and hasattr(widget, 'public_key') and widget.public_key == public_key:
                     return row
         return -1
 
@@ -600,7 +668,7 @@ class MainWindow(QWidget):
                 QMessageBox.warning(
                     self,
                     'Missing Information',
-                    'Please provide both service description and secret phrase.'
+                    'Please provide both password description and secret phrase.'
                 )
                 return
 
@@ -609,15 +677,19 @@ class MainWindow(QWidget):
 
                 if public_key in self.smart_pass_man.passwords:
                     existing_password = self.smart_pass_man.passwords[public_key]
-                    QMessageBox.warning(
-                        self,
-                        'Duplicate Secret Phrase',
-                        f'A password entry with this secret phrase already exists:\n\n'
-                        f'"{existing_password.description}"\n'
-                        f'Length: {existing_password.length} characters\n\n'
-                        f'Each unique secret phrase generates a unique public key.\n'
+                    msg_box = QMessageBox(self)
+                    msg_box.setWindowTitle('Duplicate Secret Phrase')
+                    msg_box.setTextFormat(Qt.RichText)
+                    msg_box.setText(
+                        f'A password entry with this secret phrase already exists:<br><br>'
+                        f'<b>"{existing_password.description}"</b><br>'
+                        f'Length: {existing_password.length} characters<br><br>'
+                        f'Each unique secret phrase generates a unique public key.<br>'
                         f'You cannot have multiple entries with the same secret.'
                     )
+                    msg_box.setIcon(QMessageBox.Warning)
+                    msg_box.setStandardButtons(QMessageBox.Ok)
+                    msg_box.exec_()
                     return
 
                 smart_password = SmartPassword(
@@ -645,7 +717,17 @@ class MainWindow(QWidget):
                     f'Failed to create password:\n{str(e)}'
                 )
 
-    def get_password(self, public_key, description):
+    def get_password(self, public_key):
+        smart_password = self.smart_pass_man.get_smart_password(public_key)
+        if not smart_password:
+            QMessageBox.critical(
+                self,
+                'Error',
+                'Password metadata not found. It may have been deleted.'
+            )
+            return
+
+        description = smart_password.description
         dialog = SecretInputDialog(self, description)
         if dialog.exec_() == QDialog.Accepted:
             secret = dialog.get_secret()
@@ -659,15 +741,6 @@ class MainWindow(QWidget):
                 return
 
             try:
-                smart_password = self.smart_pass_man.get_smart_password(public_key)
-                if not smart_password:
-                    QMessageBox.critical(
-                        self,
-                        'Error',
-                        'Password metadata not found. It may have been deleted.'
-                    )
-                    return
-
                 is_valid = SmartPasswordMaster.check_public_key(
                     secret=secret,
                     public_key=public_key
@@ -683,15 +756,19 @@ class MainWindow(QWidget):
                     display_dialog.exec_()
 
                 else:
-                    QMessageBox.warning(
-                        self,
-                        'Invalid Secret',
-                        'The secret phrase is incorrect. Please check:\n'
-                        '• Caps Lock\n'
-                        '• Keyboard layout\n'
-                        '• Spelling\n\n'
-                        'Note: In v2.2.0, secret phrases are case-sensitive.'
+                    msg_box = QMessageBox(self)
+                    msg_box.setWindowTitle('Invalid Secret')
+                    msg_box.setTextFormat(Qt.RichText)
+                    msg_box.setText(
+                        'The secret phrase is incorrect. Please check:<br>'
+                        '• Caps Lock<br>'
+                        '• Keyboard layout<br>'
+                        '• Spelling<br><br>'
+                        'Note: In v2.2.1, secret phrases are case-sensitive.'
                     )
+                    msg_box.setIcon(QMessageBox.Warning)
+                    msg_box.setStandardButtons(QMessageBox.Ok)
+                    msg_box.exec_()
 
             except Exception as e:
                 QMessageBox.critical(
@@ -705,7 +782,6 @@ class MainWindow(QWidget):
             reply = QMessageBox.question(
                 self,
                 'Exit',
-                f'You have {len(self.smart_pass_man.passwords)} password(s) stored.\n'
                 f'Are you sure you want to exit?',
                 QMessageBox.Yes | QMessageBox.No,
                 QMessageBox.No
