@@ -299,7 +299,7 @@ class MainWindow(QWidget):
         self.main_layout.setContentsMargins(20, 20, 20, 20)
 
         header_layout = QHBoxLayout()
-        self.label_logo = QLabel(f"{self.config.title} <sup>v2.2.1</sup>")
+        self.label_logo = QLabel(f"{self.config.title} <sup>v2.2.2</sup>")
         font = QFont()
         font.setPointSize(20)
         font.setBold(True)
@@ -423,7 +423,7 @@ class MainWindow(QWidget):
 
     def show_help(self):
         help_text = """
-        <h3>Smart Password Manager Help v2.2.1</h3>
+        <h3>Smart Password Manager Help v2.2.2</h3>
 
         <p><b>How it works:</b></p>
         <ul>
@@ -764,7 +764,7 @@ class MainWindow(QWidget):
                         '• Caps Lock<br>'
                         '• Keyboard layout<br>'
                         '• Spelling<br><br>'
-                        'Note: In v2.2.1, secret phrases are case-sensitive.'
+                        'Note: In v2.2.2, secret phrases are case-sensitive.'
                     )
                     msg_box.setIcon(QMessageBox.Warning)
                     msg_box.setStandardButtons(QMessageBox.Ok)

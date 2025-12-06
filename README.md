@@ -1,4 +1,4 @@
-# Smart Password Manager Desktop <sup>v2.2.1</sup>
+# Smart Password Manager Desktop <sup>v2.2.2</sup>
 
 ---
 
@@ -88,11 +88,11 @@ Powered by **[smartpasslib v2.1.0+](https://github.com/smartlegionlab/smartpassl
 
 ---
 
-## 🆕 What's New in v2.2.1
+## 🆕 What's New in v2.2.2
 
 ### ⚠️ **BREAKING CHANGES WARNING**
 
-**CRITICAL**: v2.2.1 is **NOT** backward compatible with v1.x. All passwords generated with v1.x are now **INVALID**. You must recreate all passwords using your secret phrases.
+**CRITICAL**: v2.2.2 is **NOT** backward compatible with v1.x. All passwords generated with v1.x are now **INVALID**. You must recreate all passwords using your secret phrases.
 
 ### Major Improvements:
 
@@ -130,7 +130,7 @@ Powered by **[smartpasslib v2.1.0+](https://github.com/smartlegionlab/smartpassl
 ```bash
 # Backup old passwords if needed
 # Delete old ~/.cases.json file
-# Recreate all passwords with v2.2.1
+# Recreate all passwords with v2.2.2
 # Update all account credentials
 ```
 
@@ -295,7 +295,7 @@ Length Strategy:
 **Best Practices:**
 1. **Unique per service** - Different secret for each account type
 2. **Memorable but complex** - Phrases you can remember
-3. **Case-sensitive** - v2.2.1 enforces exact case matching
+3. **Case-sensitive** - v2.2.2 enforces exact case matching
 4. **No digital storage** - Keep only in memory
 5. **Backup plan** - Physical written backup in secure location
 
@@ -409,7 +409,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ## ⚠️ Security Warnings
 
-**Version Incompatibility**: v2.2.1 passwords are incompatible with v1.x.
+**Version Incompatibility**: v2.2.2 passwords are incompatible with v1.x.
 Never mix secret phrases across different versions.
 
 ### Secret Phrase Security
@@ -480,8 +480,20 @@ Usage of this software constitutes your **FULL AND UNCONDITIONAL ACCEPTANCE** of
 
 ---
 
-**Version**: 2.2.1 | [**Author**](https://smartlegionlab.ru): [Alexander Suvorov](https://alexander-suvorov.ru)
+**Version**: 2.2.2 | [**Author**](https://smartlegionlab.ru): [Alexander Suvorov](https://alexander-suvorov.ru)
 
 ---
 
-**Note**: This is v2.2.1. If migrating from v1.x, all passwords must be regenerated with new secret phrases.
+**Note**: This is v2.2.2. If migrating from v1.x, all passwords must be regenerated with new secret phrases.
+
+---
+
+## Interface
+
+![Main Interface 1](https://github.com/smartlegionlab/smart-password-manager-desktop/raw/master/data/images/smartpassman1.png)
+
+![Main Interface 2](https://github.com/smartlegionlab/smart-password-manager-desktop/raw/master/data/images/smartpassman2.png)
+
+![Main Interface 3](https://github.com/smartlegionlab/smart-password-manager-desktop/raw/master/data/images/smartpassman3.png)
+
+![Main Interface 4](https://github.com/smartlegionlab/smart-password-manager-desktop/raw/master/data/images/smartpassman4.png)
