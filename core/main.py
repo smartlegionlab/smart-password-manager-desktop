@@ -108,6 +108,7 @@ class SecretInputDialog(QDialog):
 
         instruction = QLabel(f'Enter the secret phrase for:\n<b>{description}</b>')
         instruction.setWordWrap(True)
+        instruction.setTextFormat(Qt.RichText)
         self.layout.addWidget(instruction)
 
         self.secret_input = QLineEdit(self)
@@ -156,6 +157,7 @@ class PasswordDisplayDialog(QDialog):
 
         header = QLabel(f'<h3>{description}</h3>')
         header.setWordWrap(True)
+        header.setTextFormat(Qt.RichText)
         self.layout.addWidget(header)
 
         password_group = QGroupBox("Generated Password")
@@ -219,7 +221,7 @@ class MainWindow(QWidget):
         self.main_layout.setContentsMargins(20, 20, 20, 20)
 
         header_layout = QHBoxLayout()
-        self.label_logo = QLabel(f"{self.config.title} <sup>v2.1.0</sup>")
+        self.label_logo = QLabel(f"{self.config.title} <sup>v2.1.1</sup>")
         font = QFont()
         font.setPointSize(20)
         font.setBold(True)
@@ -564,7 +566,7 @@ class MainWindow(QWidget):
                         '• Caps Lock\n'
                         '• Keyboard layout\n'
                         '• Spelling\n\n'
-                        'Note: In v2.1.0, secret phrases are case-sensitive.'
+                        'Note: In v2.1.1, secret phrases are case-sensitive.'
                     )
 
             except Exception as e:

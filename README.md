@@ -1,4 +1,4 @@
-# Smart Password Manager Desktop <sup>v2.1.0</sup>
+# Smart Password Manager Desktop <sup>v2.1.1</sup>
 
 ---
 
@@ -18,7 +18,7 @@ Cross-platform desktop application for managing password metadata using determin
 
 > **Powered by** [smartpasslib](https://github.com/smartlegionlab/smartpasslib) - The core library for deterministic password generation
 
-### ⚠️ **BREAKING CHANGES in v2.1.0**
+### ⚠️ **BREAKING CHANGES in v2.1.1**
 
 **WARNING:** This version introduces breaking changes:
 - All passwords generated with v1.x are now **INVALID**
@@ -136,13 +136,13 @@ This desktop manager is part of a comprehensive suite of applications built on d
 ## 📋 Migration from v1.x
 
 ### Important Notes:
-- **v2.1.0 is NOT backward compatible** with v1.x
-- **All v1.x passwords are invalid** in v2.1.0
+- **v2.1.1 is NOT backward compatible** with v1.x
+- **All v1.x passwords are invalid** in v2.1.1
 - **You must recreate all passwords** using your secret phrases
 
 ### Migration Steps:
 1. **Backup** any critical passwords from v1.x
-2. **Install** v2.1.0 fresh
+2. **Install** v2.1.1 fresh
 3. **Delete** old `~/.cases.json` file
 4. **Recreate** all passwords using your secret phrases
 5. **Update** all service credentials
