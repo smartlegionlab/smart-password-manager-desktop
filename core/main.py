@@ -487,6 +487,7 @@ class MainWindow(QWidget):
         self.table_widget.setItem(row_position, 1, length_item)
 
         get_button = QPushButton("Get")
+        get_button.setToolTip("Get Smart Password")
         get_button.setStyleSheet("""
             QPushButton {
                 background-color: #2a82da;
@@ -606,7 +607,7 @@ class MainWindow(QWidget):
                     msg_box.setWindowTitle('Updated')
                     msg_box.setTextFormat(Qt.RichText)
 
-                    msg = f'Password description updated to:<br><b>{new_description}</b>'
+                    msg = f'✅ Successfully updated!'
                     if new_length != smart_password.length:
                         msg += f'<br><br>Password length changed from {smart_password.length} to {new_length} characters.'
                         msg += f'<br><br><i>Note: New password will have {"extended" if new_length > smart_password.length else "truncated"} characters.</i>'
