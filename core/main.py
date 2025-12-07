@@ -88,7 +88,7 @@ class PasswordInputDialog(QDialog):
     def toggle_secret_visibility(self):
         if self.show_secret_checkbox.isChecked():
             self.secret_input.setEchoMode(QLineEdit.Normal)
-            self.show_secret_checkbox.setText("👁 Hide")
+            self.show_secret_checkbox.setText("🙈 Hide")
         else:
             self.secret_input.setEchoMode(QLineEdit.Password)
             self.show_secret_checkbox.setText("👁 Show")
@@ -137,7 +137,7 @@ class SecretInputDialog(QDialog):
     def toggle_secret_visibility(self):
         if self.show_secret_checkbox.isChecked():
             self.secret_input.setEchoMode(QLineEdit.Normal)
-            self.show_secret_checkbox.setText("👁 Hide")
+            self.show_secret_checkbox.setText("🙈 Hide")
         else:
             self.secret_input.setEchoMode(QLineEdit.Password)
             self.show_secret_checkbox.setText("👁 Show")
@@ -299,7 +299,7 @@ class MainWindow(QWidget):
         self.main_layout.setContentsMargins(20, 20, 20, 20)
 
         header_layout = QHBoxLayout()
-        self.label_logo = QLabel(f"{self.config.title} <sup>v2.2.2</sup>")
+        self.label_logo = QLabel(f"{self.config.title} <sup>{self.config.version}</sup>")
         font = QFont()
         font.setPointSize(20)
         font.setBold(True)
@@ -344,7 +344,7 @@ class MainWindow(QWidget):
         button_layout = QHBoxLayout()
         button_layout.setSpacing(10)
 
-        self.btn_new_password = QPushButton('➕ ' + self.config.btn_new_pass_title)
+        self.btn_new_password = QPushButton(self.config.btn_new_pass_title)
         self.btn_new_password.setMinimumHeight(40)
         self.btn_new_password.clicked.connect(self.add_password)
         self.btn_new_password.setStyleSheet("""
@@ -363,12 +363,12 @@ class MainWindow(QWidget):
 
         button_layout.addStretch()
 
-        self.btn_help = QPushButton('❓ ' + self.config.btn_help_title)
+        self.btn_help = QPushButton('? ' + self.config.btn_help_title)
         self.btn_help.setMinimumHeight(40)
         self.btn_help.clicked.connect(self.show_help)
         button_layout.addWidget(self.btn_help)
 
-        self.btn_exit = QPushButton('🚪 ' + self.config.btn_exit_title)
+        self.btn_exit = QPushButton(self.config.btn_exit_title)
         self.btn_exit.setMinimumHeight(40)
         self.btn_exit.clicked.connect(self.close)
         self.btn_exit.setStyleSheet("""
@@ -422,8 +422,8 @@ class MainWindow(QWidget):
             self.add_item(password)
 
     def show_help(self):
-        help_text = """
-        <h3>Smart Password Manager Help v2.2.2</h3>
+        help_text = f"""
+        <h3>Smart Password Manager Help {self.config.version}</h3>
 
         <p><b>How it works:</b></p>
         <ul>
@@ -486,7 +486,7 @@ class MainWindow(QWidget):
         length_item.setTextAlignment(Qt.AlignCenter)
         self.table_widget.setItem(row_position, 1, length_item)
 
-        get_button = QPushButton("🔑 Get")
+        get_button = QPushButton("Get")
         get_button.setStyleSheet("""
             QPushButton {
                 background-color: #2a82da;
@@ -504,7 +504,7 @@ class MainWindow(QWidget):
         get_button.public_key = smart_password.public_key
         self.table_widget.setCellWidget(row_position, 2, get_button)
 
-        edit_button = QPushButton("✏️ Edit")
+        edit_button = QPushButton("Edit")
         edit_button.setToolTip("Edit password description and length")
         edit_button.setStyleSheet("""
             QPushButton {
@@ -523,7 +523,7 @@ class MainWindow(QWidget):
         edit_button.public_key = smart_password.public_key
         self.table_widget.setCellWidget(row_position, 3, edit_button)
 
-        delete_button = QPushButton("🗑️")
+        delete_button = QPushButton("Delete")
         delete_button.setToolTip("Delete this password entry")
         delete_button.setStyleSheet("""
             QPushButton {
@@ -531,8 +531,8 @@ class MainWindow(QWidget):
                 color: white;
                 border-radius: 3px;
                 padding: 5px;
-                min-width: 30px;
-                max-width: 30px;
+                min-width: 60px;
+                max-width: 60px;
             }
             QPushButton:hover {
                 background-color: #ca1a1a;
@@ -764,7 +764,7 @@ class MainWindow(QWidget):
                         '• Caps Lock<br>'
                         '• Keyboard layout<br>'
                         '• Spelling<br><br>'
-                        'Note: In v2.2.2, secret phrases are case-sensitive.'
+                        f'Note: In {self.config.version}, secret phrases are case-sensitive.'
                     )
                     msg_box.setIcon(QMessageBox.Warning)
                     msg_box.setStandardButtons(QMessageBox.Ok)

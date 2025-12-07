@@ -1,4 +1,4 @@
-# Smart Password Manager Desktop <sup>v2.2.2</sup>
+# Smart Password Manager Desktop <sup>v2.2.3</sup>
 
 ---
 
@@ -88,11 +88,11 @@ Powered by **[smartpasslib v2.1.0+](https://github.com/smartlegionlab/smartpassl
 
 ---
 
-## 🆕 What's New in v2.2.2
+## 🆕 What's New in v2.2.3
 
 ### ⚠️ **BREAKING CHANGES WARNING**
 
-**CRITICAL**: v2.2.2 is **NOT** backward compatible with v1.x. All passwords generated with v1.x are now **INVALID**. You must recreate all passwords using your secret phrases.
+**CRITICAL**: v2.2.3 is **NOT** backward compatible with v1.x. All passwords generated with v1.x are now **INVALID**. You must recreate all passwords using your secret phrases.
 
 ### Major Improvements:
 
@@ -130,7 +130,7 @@ Powered by **[smartpasslib v2.1.0+](https://github.com/smartlegionlab/smartpassl
 ```bash
 # Backup old passwords if needed
 # Delete old ~/.cases.json file
-# Recreate all passwords with v2.2.2
+# Recreate all passwords with v2.2.3
 # Update all account credentials
 ```
 
@@ -271,6 +271,87 @@ python app.py
 
 ---
 
+## 📦 Windows Standalone Executable
+
+### Creating a Single-File *.exe
+
+Build a standalone `smart_pass_man.exe` that runs without Python installation:
+
+#### Step 1: Get the Project Files
+1. **Download project ZIP:**
+   - Go to: https://github.com/smartlegionlab/smart-password-manager-desktop
+   - Click green "Code" button
+   - Select "Download ZIP"
+   - Extract to: `C:\smart-password-manager-desktop\`
+
+2. **Or clone with git (if installed):**
+   ```cmd
+   git clone https://github.com/smartlegionlab/smart-password-manager-desktop.git
+   cd smart-password-manager-desktop
+   ```
+
+#### Step 2: Install Python
+1. Download Python installer from: https://python.org/downloads/
+2. Run installer
+3. **IMPORTANT:** Check ✅ "Add Python to PATH"
+4. Click "Install Now"
+
+#### Step 3: Open Command Prompt
+1. Press `Win + R`
+2. Type `cmd`, press Enter
+3. Navigate to project folder:
+   ```cmd
+   cd C:\smart-password-manager-desktop
+   ```
+
+#### Step 4: Create Virtual Environment
+```cmd
+# Create virtual environment
+python -m venv venv
+
+# Activate it (IMPORTANT!)
+.\venv\Scripts\activate
+
+# You should see (venv) in your command prompt
+```
+
+#### Step 5: Install Dependencies
+```cmd
+# Install PyInstaller in virtual environment
+pip install pyinstaller
+pip install PyQt5==5.15.9
+pip install smartpasslib
+```
+
+#### Step 6: Build Executable
+```cmd
+# Build single .exe file
+
+pyinstaller --onefile --windowed --name "smart_pass_man.exe --additional-hooks-dir=. app.py
+
+# Wait for build to complete (1-2 minutes)
+```
+
+#### Step 7: Find and Use
+**Location:** `C:\smart-password-manager-desktop\dist\smart_pass_man.exe`
+
+**Create desktop shortcut:**
+1. Open `C:\smart-password-manager-desktop\dist\` folder
+2. Right-click `smart_pass_man.exe`
+3. Select "Create shortcut"
+4. Drag shortcut to desktop
+5. Rename shortcut to "Smart Pass Manager"
+6. Double-click to start
+
+
+**What you get:**
+- Single file: `smart_pass_man.exe` (~50MB)
+- No Python required to run
+- Works on any Windows 10/11 PC
+- Can be copied to USB drive
+
+---
+
 ## 💡 Advanced Usage
 
 ### Password Management Strategy
@@ -295,7 +376,7 @@ Length Strategy:
 **Best Practices:**
 1. **Unique per service** - Different secret for each account type
 2. **Memorable but complex** - Phrases you can remember
-3. **Case-sensitive** - v2.2.2 enforces exact case matching
+3. **Case-sensitive** - v2.2.3 enforces exact case matching
 4. **No digital storage** - Keep only in memory
 5. **Backup plan** - Physical written backup in secure location
 
@@ -409,7 +490,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ## ⚠️ Security Warnings
 
-**Version Incompatibility**: v2.2.2 passwords are incompatible with v1.x.
+**Version Incompatibility**: v2.2.3 passwords are incompatible with v1.x.
 Never mix secret phrases across different versions.
 
 ### Secret Phrase Security
@@ -480,11 +561,11 @@ Usage of this software constitutes your **FULL AND UNCONDITIONAL ACCEPTANCE** of
 
 ---
 
-**Version**: 2.2.2 | [**Author**](https://smartlegionlab.ru): [Alexander Suvorov](https://alexander-suvorov.ru)
+**Version**: 2.2.3 | [**Author**](https://smartlegionlab.ru): [Alexander Suvorov](https://alexander-suvorov.ru)
 
 ---
 
-**Note**: This is v2.2.2. If migrating from v1.x, all passwords must be regenerated with new secret phrases.
+**Note**: This is v2.2.3. If migrating from v1.x, all passwords must be regenerated with new secret phrases.
 
 ---
 
