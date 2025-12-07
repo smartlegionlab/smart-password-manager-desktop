@@ -320,7 +320,7 @@ python -m venv venv
 # Install PyInstaller in virtual environment
 pip install pyinstaller
 pip install PyQt5==5.15.9
-pip install smartpasslib
+pip install smartpasslib==2.1.0
 ```
 
 #### Step 6: Build Executable
