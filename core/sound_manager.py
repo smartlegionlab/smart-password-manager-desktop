@@ -8,7 +8,7 @@ class SoundManager(QObject):
 
     def __init__(self):
         super().__init__()
-        self._enabled = True
+        self._enabled = False
         self._sounds = {}
 
     def set_enabled(self, enabled: bool):

@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import (
     QFrame,
     QHeaderView,
     QHBoxLayout,
-    QGroupBox, QAction
+    QGroupBox, QAction, QMenuBar
 )
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
@@ -335,6 +335,11 @@ class MainWindow(QWidget):
         self.main_layout.setSpacing(15)
         self.main_layout.setContentsMargins(20, 20, 20, 20)
 
+        self.menu_bar = QMenuBar()
+        self.main_layout.setMenuBar(self.menu_bar)
+
+        self.setup_menu_bar()
+
         header_layout = QHBoxLayout()
         self.label_logo = QLabel(f"{self.config.title} <sup>{self.config.version}</sup>")
         font = QFont()
@@ -455,20 +460,19 @@ class MainWindow(QWidget):
         self.center_window()
 
     def setup_menu_bar(self):
-        menubar = self.menuBar()
 
-        file_menu = menubar.addMenu('File')
+        file_menu = self.menu_bar.addMenu('File')
 
         exit_action = QAction('Exit', self)
         exit_action.setShortcut('Ctrl+Q')
         exit_action.triggered.connect(self.close)
         file_menu.addAction(exit_action)
 
-        sounds_menu = menubar.addMenu('Sounds')
+        sounds_menu = self.menu_bar.addMenu('Sounds')
 
         sound_action = QAction('Enable Sounds', self)
         sound_action.setCheckable(True)
-        sound_action.setChecked(True)
+        sound_action.setChecked(False)
         sound_action.triggered.connect(self.toggle_sounds)
         sounds_menu.addAction(sound_action)
 
@@ -476,16 +480,16 @@ class MainWindow(QWidget):
             sound_action.setChecked
         )
 
-        help_menu = menubar.addMenu('Help')
+        help_menu = self.menu_bar.addMenu('Help')
 
         about_action = QAction('About', self)
-        about_action.triggered.connect(self.on_click)
+        about_action.triggered.connect(self.sound_manager.play_click)
         about_action.triggered.connect(self.show_about)
         help_menu.addAction(about_action)
 
         help_action = QAction('Help', self)
         help_action.setShortcut('F1')
-        help_action.triggered.connect(self.on_click)
+        help_action.triggered.connect(self.sound_manager.play_click)
         help_action.triggered.connect(self.show_help)
         help_menu.addAction(help_action)
 
@@ -889,8 +893,6 @@ class MainWindow(QWidget):
 
     def toggle_sounds(self, enabled: bool):
         self.sound_manager.set_enabled(enabled)
-        status = "enabled" if enabled else "disabled"
-        self.status_bar.showMessage(f'Sounds {status}', 2000)
 
     def closeEvent(self, event):
         self.sound_manager.play_error()
