@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import (
     QFrame,
     QHeaderView,
     QHBoxLayout,
-    QGroupBox, QAction, QMenuBar
+    QGroupBox, QAction, QMenuBar, QStatusBar, QMainWindow
 )
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
@@ -308,13 +308,16 @@ class PasswordDisplayDialog(QDialog):
         self.copy_button.setStyleSheet("background-color: #2e7d32; color: white;")
 
 
-class MainWindow(QWidget):
+class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.config = Config()
         self.smart_pass_man = SmartPasswordManager()
         self.setWindowTitle(f'{self.config.description}')
         self.resize(900, 700)
+
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
 
         self.click_sound = QSound("data/sounds/click.wav")
 
@@ -331,7 +334,7 @@ class MainWindow(QWidget):
         self.sound_manager.register_sound('notify', self.notify_sound)
         self.sound_manager.register_sound('error', self.error_sound)
 
-        self.main_layout = QVBoxLayout()
+        self.main_layout = QVBoxLayout(central_widget)
         self.main_layout.setSpacing(15)
         self.main_layout.setContentsMargins(20, 20, 20, 20)
 
@@ -446,6 +449,8 @@ class MainWindow(QWidget):
         footer_layout = QVBoxLayout()
         footer_layout.setSpacing(5)
 
+        self.setup_status_bar()
+
         copyright_text = 'Copyright © 2026, <a href="https://github.com/smartlegionlab" style="color: #2a82da; text-decoration: none;">Alexander Suvorov</a>. All rights reserved.'
         self.copyright_label = QLabel(copyright_text)
         self.copyright_label.setAlignment(Qt.AlignCenter)
@@ -455,7 +460,6 @@ class MainWindow(QWidget):
 
         self.main_layout.addLayout(footer_layout)
 
-        self.setLayout(self.main_layout)
         self._init()
         self.center_window()
 
@@ -481,6 +485,7 @@ class MainWindow(QWidget):
         sound_action = QAction('Enable Sounds', self)
         sound_action.setCheckable(True)
         sound_action.setChecked(False)
+        sound_action.setShortcut('Ctrl+Shift+S')
         sound_action.triggered.connect(self.toggle_sounds)
         sounds_menu.addAction(sound_action)
 
@@ -738,6 +743,11 @@ class MainWindow(QWidget):
             except Exception as e:
                 QMessageBox.critical(self, 'Error', f'Failed to update:\n{str(e)}')
 
+    def setup_status_bar(self):
+        self.status_bar = QStatusBar()
+        self.setStatusBar(self.status_bar)
+        self.status_bar.showMessage('Ready')
+
     def remove_password(self, public_key):
         self.sound_manager.play_notify()
         row = self.find_row_by_public_key(public_key)
@@ -901,6 +911,8 @@ class MainWindow(QWidget):
 
     def toggle_sounds(self, enabled: bool):
         self.sound_manager.set_enabled(enabled)
+        status = "enabled" if enabled else "disabled"
+        self.status_bar.showMessage(f'Sounds {status}', 2000)
 
     def closeEvent(self, event):
         self.sound_manager.play_error()
