@@ -1,10 +1,10 @@
-# Copyright (©) 2025, Alexander Suvorov. All rights reserved.
+# Copyright (©) 2026, Alexander Suvorov. All rights reserved.
 
 
 class Config:
     title = 'Smart Password Manager'
     description = 'Smart Password Manager'
-    copyright = 'Copyright © 2025, Alexander Suvorov. All rights reserved.'
+    copyright = 'Copyright © 2026, Alexander Suvorov. All rights reserved.'
     author = 'Alexander Suvorov'
     url = 'https://github.com/smartlegionlab/smart-password-manager-desktop/'
     label_len_title = 'Password length'

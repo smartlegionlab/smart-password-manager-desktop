@@ -1,4 +1,4 @@
-# Copyright (©) 2025, Alexander Suvorov. All rights reserved.
+# Copyright (©) 2026, Alexander Suvorov. All rights reserved.
 from PyQt5.QtWidgets import (
     QApplication, QDesktopWidget,
     QWidget,
@@ -18,16 +18,20 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
+from PyQt5.QtMultimedia import QSound
 from smartpasslib import SmartPasswordManager, SmartPassword, SmartPasswordMaster
 
 from core.config import Config
+from core.sound_manager import SoundManager
 
 
 class PasswordInputDialog(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, sound_manager=None):
         super().__init__(parent)
         self.setWindowTitle('Create Smart Password')
         self.setMinimumWidth(400)
+
+        self.sound_manager = sound_manager
 
         self.layout = QVBoxLayout(self)
         self.layout.setSpacing(10)
@@ -54,6 +58,7 @@ class PasswordInputDialog(QDialog):
         self.show_secret_checkbox = QPushButton("👁 Show")
         self.show_secret_checkbox.setCheckable(True)
         self.show_secret_checkbox.setMaximumWidth(100)
+        self.show_secret_checkbox.clicked.connect(self.sound_manager.play_click)
         self.show_secret_checkbox.clicked.connect(self.toggle_secret_visibility)
         secret_layout.addWidget(self.show_secret_checkbox, alignment=Qt.AlignRight)
         secret_group.setLayout(secret_layout)
@@ -75,11 +80,13 @@ class PasswordInputDialog(QDialog):
 
         button_layout = QHBoxLayout()
         self.cancel_button = QPushButton('Cancel', self)
+        self.cancel_button.clicked.connect(self.sound_manager.play_click)
         self.cancel_button.clicked.connect(self.reject)
         button_layout.addWidget(self.cancel_button)
 
         self.submit_button = QPushButton('Create Password', self)
         self.submit_button.setDefault(True)
+        self.submit_button.clicked.connect(self.sound_manager.play_click)
         self.submit_button.clicked.connect(self.accept)
         self.submit_button.setStyleSheet("background-color: #2a82da; color: white;")
         button_layout.addWidget(self.submit_button)
@@ -98,10 +105,12 @@ class PasswordInputDialog(QDialog):
 
 
 class SecretInputDialog(QDialog):
-    def __init__(self, parent=None, description=""):
+    def __init__(self, parent=None, description="", sound_manager=None):
         super().__init__(parent)
         self.setWindowTitle(f'Enter Secret Phrase for "{description}"')
         self.setMinimumWidth(350)
+
+        self.sound_manager = sound_manager
 
         self.layout = QVBoxLayout(self)
         self.layout.setSpacing(10)
@@ -119,16 +128,19 @@ class SecretInputDialog(QDialog):
         self.show_secret_checkbox = QPushButton("👁 Show")
         self.show_secret_checkbox.setCheckable(True)
         self.show_secret_checkbox.setMaximumWidth(100)
+        self.show_secret_checkbox.clicked.connect(self.sound_manager.play_click)
         self.show_secret_checkbox.clicked.connect(self.toggle_secret_visibility)
         self.layout.addWidget(self.show_secret_checkbox, alignment=Qt.AlignRight)
 
         button_layout = QHBoxLayout()
         self.cancel_button = QPushButton('Cancel', self)
+        self.cancel_button.clicked.connect(self.sound_manager.play_click)
         self.cancel_button.clicked.connect(self.reject)
         button_layout.addWidget(self.cancel_button)
 
         self.submit_button = QPushButton('Generate Password', self)
         self.submit_button.setDefault(True)
+        self.submit_button.clicked.connect(self.sound_manager.play_click)
         self.submit_button.clicked.connect(self.accept)
         self.submit_button.setStyleSheet("background-color: #2a82da; color: white;")
         button_layout.addWidget(self.submit_button)
@@ -147,11 +159,13 @@ class SecretInputDialog(QDialog):
 
 
 class EditPasswordDialog(QDialog):
-    def __init__(self, parent=None, current_description="", current_length=16):
+    def __init__(self, parent=None, current_description="", current_length=16, sound_manager=None):
         super().__init__(parent)
         self.current_length = current_length
         self.setWindowTitle('Edit Password Metadata')
         self.setMinimumWidth(400)
+
+        self.sound_manager = sound_manager
 
         self.layout = QVBoxLayout(self)
         self.layout.setSpacing(10)
@@ -199,11 +213,13 @@ class EditPasswordDialog(QDialog):
 
         button_layout = QHBoxLayout()
         self.cancel_button = QPushButton('Cancel', self)
+        self.cancel_button.clicked.connect(self.sound_manager.play_click)
         self.cancel_button.clicked.connect(self.reject)
         button_layout.addWidget(self.cancel_button)
 
         self.submit_button = QPushButton('Update', self)
         self.submit_button.setDefault(True)
+        self.submit_button.clicked.connect(self.sound_manager.play_click)
         self.submit_button.clicked.connect(self.accept)
         self.submit_button.setStyleSheet("background-color: #ff9800; color: white;")
         button_layout.addWidget(self.submit_button)
@@ -225,13 +241,17 @@ class EditPasswordDialog(QDialog):
 
 
 class PasswordDisplayDialog(QDialog):
-    def __init__(self, parent=None, description="", password=""):
+    def __init__(self, parent=None, description="", password="", sound_manager=None):
         super().__init__(parent)
         self.setWindowTitle(f'Password for "{description}"')
         self.setMinimumWidth(400)
 
+        self.sound_manager = sound_manager
+
         self.layout = QVBoxLayout(self)
         self.layout.setSpacing(10)
+
+        self.sound_manager.play_notify()
 
         header = QLabel(f'<h3>{description}</h3>')
         header.setWordWrap(True)
@@ -259,6 +279,7 @@ class PasswordDisplayDialog(QDialog):
         copy_layout = QHBoxLayout()
         copy_layout.addStretch()
         self.copy_button = QPushButton("📋 Copy to Clipboard")
+        self.copy_button.clicked.connect(self.sound_manager.play_click)
         self.copy_button.clicked.connect(self.copy_password)
         copy_layout.addWidget(self.copy_button)
         password_layout.addLayout(copy_layout)
@@ -276,6 +297,7 @@ class PasswordDisplayDialog(QDialog):
 
         self.close_button = QPushButton('Close', self)
         self.close_button.setDefault(True)
+        self.close_button.clicked.connect(self.sound_manager.play_click)
         self.close_button.clicked.connect(self.accept)
         self.layout.addWidget(self.close_button)
 
@@ -293,6 +315,21 @@ class MainWindow(QWidget):
         self.smart_pass_man = SmartPasswordManager()
         self.setWindowTitle(f'{self.config.description}')
         self.resize(900, 700)
+
+        self.click_sound = QSound("data/sounds/click.wav")
+
+        self.about_sound = QSound("data/sounds/about.wav")
+
+        self.notify_sound = QSound("data/sounds/notify.wav")
+
+        self.error_sound = QSound("data/sounds/error.wav")
+
+        self.sound_manager = SoundManager()
+
+        self.sound_manager.register_sound('click', self.click_sound)
+        self.sound_manager.register_sound('about', self.about_sound)
+        self.sound_manager.register_sound('notify', self.notify_sound)
+        self.sound_manager.register_sound('error', self.error_sound)
 
         self.main_layout = QVBoxLayout()
         self.main_layout.setSpacing(15)
@@ -346,6 +383,7 @@ class MainWindow(QWidget):
 
         self.btn_new_password = QPushButton(self.config.btn_new_pass_title)
         self.btn_new_password.setMinimumHeight(40)
+        self.btn_new_password.clicked.connect(self.sound_manager.play_click)
         self.btn_new_password.clicked.connect(self.add_password)
         self.btn_new_password.setStyleSheet("""
             QPushButton {
@@ -365,6 +403,7 @@ class MainWindow(QWidget):
 
         self.btn_help = QPushButton('? ' + self.config.btn_help_title)
         self.btn_help.setMinimumHeight(40)
+        self.btn_help.clicked.connect(self.sound_manager.play_click)
         self.btn_help.clicked.connect(self.show_help)
         button_layout.addWidget(self.btn_help)
 
@@ -396,7 +435,7 @@ class MainWindow(QWidget):
         footer_layout = QVBoxLayout()
         footer_layout.setSpacing(5)
 
-        copyright_text = 'Copyright © 2025, <a href="https://github.com/smartlegionlab" style="color: #2a82da; text-decoration: none;">Alexander Suvorov</a>. All rights reserved.'
+        copyright_text = 'Copyright © 2026, <a href="https://github.com/smartlegionlab" style="color: #2a82da; text-decoration: none;">Alexander Suvorov</a>. All rights reserved.'
         self.copyright_label = QLabel(copyright_text)
         self.copyright_label.setAlignment(Qt.AlignCenter)
         self.copyright_label.setStyleSheet("color: #888; font-size: 16px;")
@@ -422,6 +461,7 @@ class MainWindow(QWidget):
             self.add_item(password)
 
     def show_help(self):
+        self.sound_manager.play_notify()
         help_text = f"""
         <h3>Smart Password Manager Help {self.config.version}</h3>
 
@@ -500,6 +540,7 @@ class MainWindow(QWidget):
                 background-color: #1a72ca;
             }
         """)
+        get_button.clicked.connect(self.sound_manager.play_click)
         get_button.clicked.connect(lambda checked, pk=smart_password.public_key:
                                    self.get_password(pk))
         get_button.public_key = smart_password.public_key
@@ -519,6 +560,7 @@ class MainWindow(QWidget):
                 background-color: #e68900;
             }
         """)
+        edit_button.clicked.connect(self.sound_manager.play_click)
         edit_button.clicked.connect(lambda checked, pk=smart_password.public_key:
                                     self.edit_password(pk))
         edit_button.public_key = smart_password.public_key
@@ -539,6 +581,7 @@ class MainWindow(QWidget):
                 background-color: #ca1a1a;
             }
         """)
+        delete_button.clicked.connect(self.sound_manager.play_click)
         delete_button.clicked.connect(lambda checked, pk=smart_password.public_key:
                                       self.remove_password(pk))
         delete_button.public_key = smart_password.public_key
@@ -547,12 +590,13 @@ class MainWindow(QWidget):
         self.update_password_count()
 
     def edit_password(self, public_key):
+        self.sound_manager.play_notify()
         smart_password = self.smart_pass_man.get_smart_password(public_key)
         if not smart_password:
             QMessageBox.warning(self, 'Error', 'Password metadata not found.')
             return
 
-        dialog = EditPasswordDialog(self, smart_password.description, smart_password.length)
+        dialog = EditPasswordDialog(self, smart_password.description, smart_password.length, self.sound_manager)
         if dialog.exec_() == QDialog.Accepted:
             new_description, new_length = dialog.get_values()
 
@@ -621,6 +665,7 @@ class MainWindow(QWidget):
                 QMessageBox.critical(self, 'Error', f'Failed to update:\n{str(e)}')
 
     def remove_password(self, public_key):
+        self.sound_manager.play_notify()
         row = self.find_row_by_public_key(public_key)
         if row != -1:
             description = self.table_widget.item(row, 0).text()
@@ -661,7 +706,8 @@ class MainWindow(QWidget):
         return -1
 
     def add_password(self):
-        dialog = PasswordInputDialog(self)
+        self.sound_manager.play_notify()
+        dialog = PasswordInputDialog(self, self.sound_manager)
         if dialog.exec_() == QDialog.Accepted:
             description, secret, length = dialog.get_inputs()
 
@@ -708,7 +754,7 @@ class MainWindow(QWidget):
 
                 self.add_item(smart_password)
 
-                display_dialog = PasswordDisplayDialog(self, description, password)
+                display_dialog = PasswordDisplayDialog(self, description, password, self.sound_manager)
                 display_dialog.exec_()
 
             except Exception as e:
@@ -719,6 +765,7 @@ class MainWindow(QWidget):
                 )
 
     def get_password(self, public_key):
+        self.sound_manager.play_notify()
         smart_password = self.smart_pass_man.get_smart_password(public_key)
         if not smart_password:
             QMessageBox.critical(
@@ -729,7 +776,7 @@ class MainWindow(QWidget):
             return
 
         description = smart_password.description
-        dialog = SecretInputDialog(self, description)
+        dialog = SecretInputDialog(self, description, self.sound_manager)
         if dialog.exec_() == QDialog.Accepted:
             secret = dialog.get_secret()
 
@@ -753,7 +800,7 @@ class MainWindow(QWidget):
                         length=smart_password.length
                     )
 
-                    display_dialog = PasswordDisplayDialog(self, description, password)
+                    display_dialog = PasswordDisplayDialog(self, description, password, self.sound_manager)
                     display_dialog.exec_()
 
                 else:
@@ -778,7 +825,13 @@ class MainWindow(QWidget):
                     f'Failed to generate password:\n{str(e)}'
                 )
 
+    def toggle_sounds(self, enabled: bool):
+        self.sound_manager.set_enabled(enabled)
+        status = "enabled" if enabled else "disabled"
+        self.status_bar.showMessage(f'Sounds {status}', 2000)
+
     def closeEvent(self, event):
+        self.sound_manager.play_error()
         if len(self.smart_pass_man.passwords) > 0:
             reply = QMessageBox.question(
                 self,
