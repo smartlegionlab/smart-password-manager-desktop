@@ -468,6 +468,14 @@ class MainWindow(QWidget):
         exit_action.triggered.connect(self.close)
         file_menu.addAction(exit_action)
 
+        passwords_menu = self.menu_bar.addMenu('Passwords')
+
+        create_pass_action = QAction('Create new password', self)
+        create_pass_action.setShortcut('Ctrl+P')
+        create_pass_action.triggered.connect(self.sound_manager.play_click)
+        create_pass_action.triggered.connect(self.add_password)
+        passwords_menu.addAction(create_pass_action)
+
         sounds_menu = self.menu_bar.addMenu('Sounds')
 
         sound_action = QAction('Enable Sounds', self)
