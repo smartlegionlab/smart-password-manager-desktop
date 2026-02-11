@@ -15,4 +15,4 @@ class Config:
     btn_help_title = 'Help'
     btn_about_title = 'About'
     btn_exit_title = 'Exit'
-    version = "v2.2.4"
+    version = "v2.2.5"

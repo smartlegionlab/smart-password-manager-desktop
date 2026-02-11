@@ -1,10 +1,11 @@
-# Smart Password Manager Desktop <sup>v2.2.4</sup>
+# Smart Password Manager Desktop <sup>v2.2.4=5</sup>
 
 ---
 
 **Cross-platform desktop manager for deterministic smart passwords. Generate, manage, and retrieve passwords without storing them. Your secret phrase is the only key you need.**
 
 ---
+| `Ctrl+Delete`  | Delete Local        | Remove local repository copy      |
 
 [![GitHub top language](https://img.shields.io/github/languages/top/smartlegionlab/smart-password-manager-desktop)](https://github.com/smartlegionlab/smart-password-manager-desktop)
 [![GitHub license](https://img.shields.io/github/license/smartlegionlab/smart-password-manager-desktop)](https://github.com/smartlegionlab/smart-password-manager-desktop/blob/master/LICENSE)
@@ -88,80 +89,34 @@ Powered by **[smartpasslib v2.1.0+](https://github.com/smartlegionlab/smartpassl
 
 ---
 
-## 🆕 What's New in v2.2.4
-
-### ⚠️ **BREAKING CHANGES WARNING**
-
-**CRITICAL**: v2.2.4 is **NOT** backward compatible with v1.x. All passwords generated with v1.x are now **INVALID**. You must recreate all passwords using your secret phrases.
+## 🆕 What's New in v2.2.5
 
 ### Major Improvements:
 
-**New Edit Functionality:**
-- Added **Edit** button for each password entry
-- Update password descriptions anytime
-- Change password length with visual warnings
-- First N characters remain consistent when changing lengths
+**New App's sounds:**
+- Added click sound to buttons
+- Added notify sound
+- Added error sound
+- Added about sound to about
 
 **Enhanced User Interface:**
-- 5-column table layout: Description, Length, Get, Edit, Delete
-- Improved button layouts and visual hierarchy
-- Added length change warnings with clear explanations
-- Better tooltips and user guidance
-
-**Window Management:**
-- Added automatic window centering on startup
-- Improved dialog positioning and sizing
-- Better responsive layout for different screen sizes
-
-**User Experience:**
-- Clearer warning messages for length changes
-- Improved help documentation with edit instructions
-- Better error messages and user feedback
-- Streamlined table operations
-
-### Breaking Changes:
-
-**Compatibility:**
-- **NOT compatible** with v1.x password generation
-- Requires **smartpasslib v2.1.0+**
-- **All v1.x passwords must be recreated**
-
-**Migration Required:**
-```bash
-# Backup old passwords if needed
-# Delete old ~/.cases.json file
-# Recreate all passwords with v2.2.4
-# Update all account credentials
-```
+- Added menu bar
+- Added status bar
+- Added keyboard's shortcuts
 
 ### New Features:
 
-**Password Metadata Editing:**
+**Keyboard's shortcuts:**
 ```python
-# Edit password description and length
-# First characters remain consistent when changing length
-# Visual warnings for length changes
+# Use app with your keyboard
+# Look for shortcuts in "Help/Keyboard shortcuts"
 ```
 
 **Improved UI:**
-- Separate columns for Get/Edit/Delete actions
-- Better visual distinction between action types
-- Enhanced help text with edit instructions
-- Clear warnings for irreversible operations
-
-**Technical Updates:**
-- Updated to smartpasslib v2.1.0 API
-- Improved public key handling
-- Better error handling and validation
-- Enhanced dialog management
-
-### Key Improvements:
-
-1. **Edit Functionality** - Change descriptions and lengths without recreating
-2. **Better Warnings** - Clear explanations for length changes
-3. **Improved Layout** - 5-column table for better organization
-4. **Enhanced UX** - Better feedback and user guidance
-5. **Modern API** - Updated to latest smartpasslib version
+- Added a menu bar for keyboard interaction
+- Added sounds "Enable/Disable" feature (Default: Disable)
+- Added app's about
+- Added a status bar for user awareness
 
 ---
 
@@ -242,6 +197,15 @@ python app.py
 - Show/hide toggle for verification
 - Copy to clipboard with visual feedback
 - No internet connectivity required
+
+### ⌨️ Keyboard Shortcuts
+
+| Shortcut       | Action              | Description                       |
+|----------------|---------------------|-----------------------------------|
+| `F1`           | Help                | Show help                         |
+| `Ctrl+Q`       | Exit                | Close the application             |
+| `Ctrl+P`       | Create new password | Open "Create password" dialog     |
+| `Ctrl+Shift+S` | Toggle sounds       | Enable/Disable app's sounds       |
 
 ### Dialogs Overview
 
@@ -370,7 +334,7 @@ Length Strategy:
 **Best Practices:**
 1. **Unique per service** - Different secret for each account type
 2. **Memorable but complex** - Phrases you can remember
-3. **Case-sensitive** - v2.2.4 enforces exact case matching
+3. **Case-sensitive** - v2.2.5 enforces exact case matching
 4. **No digital storage** - Keep only in memory
 5. **Backup plan** - Physical written backup in secure location
 
@@ -451,7 +415,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ## ⚠️ Security Warnings
 
-**Version Incompatibility**: v2.2.4 passwords are incompatible with v1.x.
+**Version Incompatibility**: v2.2.5 passwords are incompatible with v1.x.
 Never mix secret phrases across different versions.
 
 ### Secret Phrase Security
@@ -522,11 +486,11 @@ Usage of this software constitutes your **FULL AND UNCONDITIONAL ACCEPTANCE** of
 
 ---
 
-**Version**: 2.2.4 | [**Author**](https://smartlegionlab.ru): [Alexander Suvorov](https://alexander-suvorov.ru)
+**Version**: 2.2.5 | [**Author**](https://smartlegionlab.ru): [Alexander Suvorov](https://alexander-suvorov.ru)
 
 ---
 
-**Note**: This is v2.2.4. If migrating from v1.x, all passwords must be regenerated with new secret phrases.
+**Note**: This is v2.2.5. If migrating from v1.x, all passwords must be regenerated with new secret phrases.
 
 ---
 
