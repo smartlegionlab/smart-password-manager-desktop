@@ -31,18 +31,15 @@ class MainWindow(QMainWindow):
         super().__init__(parent)
         self.config = Config()
         self.smart_pass_man = SmartPasswordManager()
-        self.setWindowTitle(f'{self.config.description}')
-        self.resize(900, 700)
+        self.setWindowTitle(f'{self.config.app_name} {self.config.version}')
+        self.resize(800, 600)
 
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
 
         self.click_sound = QSound("data/sounds/click.wav")
-
         self.about_sound = QSound("data/sounds/about.wav")
-
         self.notify_sound = QSound("data/sounds/notify.wav")
-
         self.error_sound = QSound("data/sounds/error.wav")
 
         self.sound_manager = SoundManager()
@@ -62,7 +59,7 @@ class MainWindow(QMainWindow):
         self.setup_menu_bar()
 
         header_layout = QHBoxLayout()
-        self.label_logo = QLabel(f"{self.config.title} <sup>{self.config.version}</sup>")
+        self.label_logo = QLabel(f"{self.config.app_name}")
         font = QFont()
         font.setPointSize(20)
         font.setBold(True)
@@ -169,7 +166,7 @@ class MainWindow(QMainWindow):
 
         self.setup_status_bar()
 
-        copyright_text = 'Copyright © 2026, <a href="https://github.com/smartlegionlab" style="color: #2a82da; text-decoration: none;">Alexander Suvorov</a>. All rights reserved.'
+        copyright_text = self.config.copyright_text
         self.copyright_label = QLabel(copyright_text)
         self.copyright_label.setAlignment(Qt.AlignCenter)
         self.copyright_label.setStyleSheet("color: #888; font-size: 16px;")
@@ -243,50 +240,10 @@ class MainWindow(QMainWindow):
 
     def show_help(self):
         self.sound_manager.play_notify()
-        help_text = f"""
-        <h3>Smart Password Manager Help {self.config.version}</h3>
-
-        <p><b>How it works:</b></p>
-        <ul>
-        <li>Each password is generated from your secret phrase</li>
-        <li>No passwords are stored - regenerate when needed</li>
-        <li>Same secret phrase always generates the same password</li>
-        </ul>
-
-        <p><b>Basic Steps:</b></p>
-        <ol>
-        <li>Click <b>Add</b> to create a new password entry</li>
-        <li>Enter password description (e.g., "GitHub")</li>
-        <li>Enter and remember your secret phrase</li>
-        <li>Select password length (recommended: 16-24 characters)</li>
-        <li>Click <b>Get</b> to generate password</li>
-        <li>Click <b>Edit</b> to change description or length</li>
-        <li>Click <b>Delete</b> to remove entry (doesn't delete password)</li>
-        </ol>
-
-        <p><b>Important Notes:</b></p>
-        <ul>
-        <li>🔐 Never share your secret phrases</li>
-        <li>📝 Back up your .cases.json file</li>
-        <li>⚙️ Secret phrases are case-sensitive</li>
-        <li>✏️ You can edit password descriptions anytime</li>
-        <li>📏 Changing password length generates a different password!</li>
-        <li>⚠️ First N characters remain same, new characters are added/removed</li>
-        <li>🗑️ Deleting entry only removes metadata - password can be recreated</li>
-        </ul>
-
-        <hr>
-        <p><b>Links:</b></p>
-        <p>
-        📂 <a href="https://github.com/smartlegionlab/smart-password-manager-desktop" style="color: #2a82da;">GitHub Repository</a><br>
-        🐛 <a href="https://github.com/smartlegionlab/smart-password-manager-desktop/issues" style="color: #2a82da;">Report Issues</a>
-        </p>
-        """
-
         msg_box = QMessageBox(self)
         msg_box.setWindowTitle('Smart Password Manager Help')
         msg_box.setTextFormat(Qt.RichText)
-        msg_box.setText(help_text)
+        msg_box.setText(self.config.help_text)
         msg_box.setIcon(QMessageBox.Information)
         msg_box.setStandardButtons(QMessageBox.Ok)
         msg_box.exec_()
@@ -296,20 +253,7 @@ class MainWindow(QMainWindow):
         QMessageBox.about(
             self,
             "About Smart Password Manager",
-            f"""<h2>Smart Password Manager {self.config.version}</h2>
-            <p>Cross-platform desktop manager for deterministic smart passwords.</p>
-            <p><b>Features:</b></p>
-            <ul>
-            <li>Eliminates password storage completely</li>
-            <li>Verify secret knowledge without exposure</li>
-            <li>See all your password metadata at a glance</li>
-            <li>Update descriptions and lengths anytime</li>
-            <li>Hidden secret phrase entry with show/hide toggle</li>
-            <li>Quick password copying for account setup</li>
-            <li>No web dependencies or internet required</li>
-            </ul>
-            <p><b>Copyright © 2026, <a href="https://github.com/smartlegionlab/">Alexander Suvorov</a>. All rights reserved.</b></p>
-            """
+            self.config.about_text
         )
 
     def _show_keyboard_shortcuts(self):
@@ -470,8 +414,10 @@ class MainWindow(QMainWindow):
 
                     msg = f'✅ Successfully updated!'
                     if new_length != smart_password.length:
-                        msg += f'<br><br>Password length changed from {smart_password.length} to {new_length} characters.'
-                        msg += f'<br><br><i>Note: New password will have {"extended" if new_length > smart_password.length else "truncated"} characters.</i>'
+                        msg += (f'<br><br>Password length changed from {smart_password.length} '
+                                f'to {new_length} characters.')
+                        msg += (f'<br><br><i>Note: New password will have '
+                                f'{"extended" if new_length > smart_password.length else "truncated"} characters.</i>')
 
                     msg_box.setText(msg)
                     msg_box.setIcon(QMessageBox.Information)

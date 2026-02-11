@@ -1,4 +1,4 @@
-# Smart Password Manager Desktop <sup>v2.2.4=5</sup>
+# Smart Password Manager Desktop <sup>v2.2.5</sup>
 
 ---
 
@@ -386,7 +386,7 @@ Length Strategy:
 
 **[BSD 3-Clause License](LICENSE)**
 
-Copyright (c) 2025, Alexander Suvorov
+Copyright (c) 2026, Alexander Suvorov
 
 ```
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
