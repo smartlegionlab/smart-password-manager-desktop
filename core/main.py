@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import (
     QFrame,
     QHeaderView,
     QHBoxLayout,
-    QGroupBox, QAction, QMenuBar, QStatusBar, QMainWindow
+    QGroupBox, QAction, QMenuBar, QStatusBar, QMainWindow, QScrollArea
 )
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
@@ -500,6 +500,11 @@ class MainWindow(QMainWindow):
         about_action.triggered.connect(self.show_about)
         help_menu.addAction(about_action)
 
+        shortcuts_action = QAction('Keyboard shortcuts', self)
+        shortcuts_action.triggered.connect(self.sound_manager.play_click)
+        shortcuts_action.triggered.connect(self._show_keyboard_shortcuts)
+        help_menu.addAction(shortcuts_action)
+
         help_action = QAction('Help', self)
         help_action.setShortcut('F1')
         help_action.triggered.connect(self.sound_manager.play_click)
@@ -586,6 +591,21 @@ class MainWindow(QMainWindow):
             <li>No web dependencies or internet required</li>
             </ul>
             <p><b>Copyright © 2026, <a href="https://github.com/smartlegionlab/">Alexander Suvorov</a>. All rights reserved.</b></p>
+            """
+        )
+
+    def _show_keyboard_shortcuts(self):
+        self.sound_manager.play_notify()
+
+        QMessageBox.about(
+            self,
+            "Keyboard Shortcuts",
+            f"""<h2>Keyboard Shortcuts</h2>
+
+            <p><b>F1</b> - Show Help</p>
+            <p><b>Ctrl + Q</b> - Exit Application</p>
+            <p><b>Ctrl + P</b> - Create New Password</p>
+            <p><b>Ctrl + Shift + S</b> - Toggle Sounds</p>
             """
         )
 
