@@ -1,3 +1,4 @@
+# Copyright (©) 2026, Alexander Suvorov. All rights reserved.
 from PyQt5.QtMultimedia import QSound
 from PyQt5.QtCore import QObject, pyqtSignal
 
