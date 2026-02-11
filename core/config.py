@@ -13,5 +13,6 @@ class Config:
     btn_remove_pass_title = '- Delete'
     btn_get_password_title = 'Get Password'
     btn_help_title = 'Help'
+    btn_about_title = 'About'
     btn_exit_title = 'Exit'
     version = "v2.2.4"

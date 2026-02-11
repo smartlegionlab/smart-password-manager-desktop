@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import (
     QFrame,
     QHeaderView,
     QHBoxLayout,
-    QGroupBox
+    QGroupBox, QAction
 )
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
@@ -407,6 +407,12 @@ class MainWindow(QWidget):
         self.btn_help.clicked.connect(self.show_help)
         button_layout.addWidget(self.btn_help)
 
+        self.btn_about = QPushButton(self.config.btn_about_title)
+        self.btn_about.setMinimumHeight(40)
+        self.btn_about.clicked.connect(self.sound_manager.play_click)
+        self.btn_about.clicked.connect(self.show_about)
+        button_layout.addWidget(self.btn_about)
+
         self.btn_exit = QPushButton(self.config.btn_exit_title)
         self.btn_exit.setMinimumHeight(40)
         self.btn_exit.clicked.connect(self.close)
@@ -447,6 +453,41 @@ class MainWindow(QWidget):
         self.setLayout(self.main_layout)
         self._init()
         self.center_window()
+
+    def setup_menu_bar(self):
+        menubar = self.menuBar()
+
+        file_menu = menubar.addMenu('File')
+
+        exit_action = QAction('Exit', self)
+        exit_action.setShortcut('Ctrl+Q')
+        exit_action.triggered.connect(self.close)
+        file_menu.addAction(exit_action)
+
+        sounds_menu = menubar.addMenu('Sounds')
+
+        sound_action = QAction('Enable Sounds', self)
+        sound_action.setCheckable(True)
+        sound_action.setChecked(True)
+        sound_action.triggered.connect(self.toggle_sounds)
+        sounds_menu.addAction(sound_action)
+
+        self.sound_manager.sound_enabled_changed.connect(
+            sound_action.setChecked
+        )
+
+        help_menu = menubar.addMenu('Help')
+
+        about_action = QAction('About', self)
+        about_action.triggered.connect(self.on_click)
+        about_action.triggered.connect(self.show_about)
+        help_menu.addAction(about_action)
+
+        help_action = QAction('Help', self)
+        help_action.setShortcut('F1')
+        help_action.triggered.connect(self.on_click)
+        help_action.triggered.connect(self.show_help)
+        help_menu.addAction(help_action)
 
     def center_window(self):
         frame = self.frameGeometry()
@@ -509,6 +550,27 @@ class MainWindow(QWidget):
         msg_box.setIcon(QMessageBox.Information)
         msg_box.setStandardButtons(QMessageBox.Ok)
         msg_box.exec_()
+
+    def show_about(self):
+        self.sound_manager.play_about()
+        QMessageBox.about(
+            self,
+            "About Smart Password Manager",
+            f"""<h2>Smart Password Manager {self.config.version}</h2>
+            <p>Cross-platform desktop manager for deterministic smart passwords.</p>
+            <p><b>Features:</b></p>
+            <ul>
+            <li>Eliminates password storage completely</li>
+            <li>Verify secret knowledge without exposure</li>
+            <li>See all your password metadata at a glance</li>
+            <li>Update descriptions and lengths anytime</li>
+            <li>Hidden secret phrase entry with show/hide toggle</li>
+            <li>Quick password copying for account setup</li>
+            <li>No web dependencies or internet required</li>
+            </ul>
+            <p><b>Copyright © 2026, <a href="https://github.com/smartlegionlab/">Alexander Suvorov</a>. All rights reserved.</b></p>
+            """
+        )
 
     def update_password_count(self):
         count = len(self.smart_pass_man.passwords)
