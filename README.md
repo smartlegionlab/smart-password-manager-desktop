@@ -1,4 +1,4 @@
-# Smart Password Manager Desktop <sup>v2.2.5</sup>
+# Smart Password Manager Desktop <sup>v2.2.6</sup>
 
 ---
 
@@ -200,12 +200,14 @@ python app.py
 
 ### ⌨️ Keyboard Shortcuts
 
-| Shortcut       | Action              | Description                       |
-|----------------|---------------------|-----------------------------------|
-| `F1`           | Help                | Show help                         |
-| `Ctrl+Q`       | Exit                | Close the application             |
-| `Ctrl+P`       | Create new password | Open "Create password" dialog     |
-| `Ctrl+Shift+S` | Toggle sounds       | Enable/Disable app's sounds       |
+| Shortcut       | Action              | Description                   |
+|----------------|---------------------|-------------------------------|
+| `F1`           | Help                | Show help                     |
+| `Ctrl+Q`       | Exit                | Close the application         |
+| `Ctrl+P`       | Create new password | Open "Create password" dialog |
+| `Ctrl+Shift+S` | Toggle sounds       | Enable/Disable app's sounds   |
+| `Ctrl+/`       | Keyboard shortcuts  | Keyboard shortcuts            |
+| `Ctrl+I`       | About               | About                         |
 
 ### Dialogs Overview
 
@@ -334,7 +336,7 @@ Length Strategy:
 **Best Practices:**
 1. **Unique per service** - Different secret for each account type
 2. **Memorable but complex** - Phrases you can remember
-3. **Case-sensitive** - v2.2.5 enforces exact case matching
+3. **Case-sensitive** - v2.2.6 enforces exact case matching
 4. **No digital storage** - Keep only in memory
 5. **Backup plan** - Physical written backup in secure location
 
@@ -415,7 +417,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ## ⚠️ Security Warnings
 
-**Version Incompatibility**: v2.2.5 passwords are incompatible with v1.x.
+**Version Incompatibility**: v2.2.6 passwords are incompatible with v1.x.
 Never mix secret phrases across different versions.
 
 ### Secret Phrase Security
@@ -486,11 +488,11 @@ Usage of this software constitutes your **FULL AND UNCONDITIONAL ACCEPTANCE** of
 
 ---
 
-**Version**: 2.2.5 | [**Author**](https://smartlegionlab.ru): [Alexander Suvorov](https://alexander-suvorov.ru)
+**Version**: 2.2.6 | [**Author**](https://smartlegionlab.ru): [Alexander Suvorov](https://alexander-suvorov.ru)
 
 ---
 
-**Note**: This is v2.2.5. If migrating from v1.x, all passwords must be regenerated with new secret phrases.
+**Note**: This is v2.2.6. If migrating from v1.x, all passwords must be regenerated with new secret phrases.
 
 ---
 
