@@ -182,6 +182,24 @@ class MainWindow(QMainWindow):
 
         file_menu = self.menu_bar.addMenu('File')
 
+        export_menu = file_menu.addMenu('Export')
+
+        export_action = QAction('Export passwords...', self)
+        export_action.setShortcut('Ctrl+E')
+        export_action.triggered.connect(self.sound_manager.play_click)
+        export_action.triggered.connect(self.export_passwords)
+        export_menu.addAction(export_action)
+
+        import_menu = file_menu.addMenu('Import')
+
+        import_action = QAction('Import passwords...', self)
+        import_action.setShortcut('Ctrl+I')
+        import_action.triggered.connect(self.sound_manager.play_click)
+        import_action.triggered.connect(self.import_passwords)
+        import_menu.addAction(import_action)
+
+        import_menu.addSeparator()
+
         exit_action = QAction('Exit', self)
         exit_action.setShortcut('Ctrl+Q')
         exit_action.triggered.connect(self.close)
@@ -211,7 +229,7 @@ class MainWindow(QMainWindow):
         help_menu = self.menu_bar.addMenu('Help')
 
         about_action = QAction('About', self)
-        about_action.setShortcut('Ctrl+I')
+        about_action.setShortcut('Ctrl+Shift+A')
         about_action.triggered.connect(self.sound_manager.play_click)
         about_action.triggered.connect(self.show_about)
         help_menu.addAction(about_action)
@@ -271,7 +289,9 @@ class MainWindow(QMainWindow):
             <p><b>Ctrl + P</b> - Create New Password</p>
             <p><b>Ctrl + Shift + S</b> - Toggle Sounds</p>
             <p><b>Ctrl + /</b> - Keyboard shortcuts</p>
-            <p><b>Ctrl + I</b> - About</p>
+            <p><b>Ctrl + Shift + A</b> - About</p>
+            <p><b>Ctrl + I</b> - Import Passwords</p>
+            <p><b>Ctrl + E</b> - Export Passwords</p>
             """
         )
 
@@ -601,6 +621,38 @@ class MainWindow(QMainWindow):
         self.sound_manager.set_enabled(enabled)
         status = "enabled" if enabled else "disabled"
         self.status_bar.showMessage(f'Sounds {status}', 2000)
+
+    def export_passwords(self):
+        from core.dialogs.export_import_dialog import ExportImportDialog
+
+        dialog = ExportImportDialog(
+            self,
+            mode="export",
+            smart_pass_man=self.smart_pass_man,
+            sound_manager=self.sound_manager
+        )
+        dialog.exec_()
+
+    def import_passwords(self):
+        from core.dialogs.export_import_dialog import ExportImportDialog
+
+        dialog = ExportImportDialog(
+            self,
+            mode="import",
+            smart_pass_man=self.smart_pass_man,
+            sound_manager=self.sound_manager
+        )
+
+        if dialog.exec_() == QDialog.Accepted:
+            self.refresh_table()
+            self.update_password_count()
+            self.status_bar.showMessage('Passwords imported successfully', 3000)
+
+    def refresh_table(self):
+        self.table_widget.setRowCount(0)
+
+        for password in self.smart_pass_man.passwords.values():
+            self.add_item(password)
 
     def closeEvent(self, event):
         self.sound_manager.play_error()

@@ -194,7 +194,8 @@ python app.py
 | `Ctrl+P`       | Create new password | Open "Create password" dialog |
 | `Ctrl+Shift+S` | Toggle sounds       | Enable/Disable app's sounds   |
 | `Ctrl+/`       | Keyboard shortcuts  | Keyboard shortcuts            |
-| `Ctrl+I`       | About               | About                         |
+| `Ctrl+I`       | Import Passwords    | Import Passwords              |
+| `Ctrl+Shift+A` | About dialog        | About dialog                  |
 
 ### Dialogs Overview
 
