@@ -1,4 +1,4 @@
-# Smart Password Manager Desktop <sup>v2.2.7</sup>
+# Smart Password Manager Desktop <sup>v2.2.8</sup>
 
 ---
 
@@ -31,7 +31,8 @@
 5. **Edit Metadata**: Update password descriptions and lengths
 6. **Copy to Clipboard**: One-click password copying for easy use
 7. **Verify Secrets**: Prove knowledge of secrets without exposing them
-8. **Cross-Platform Management**: Windows, Linux and macOS support with consistent interface
+8. **Export/Import**: Backup and restore your password metadata
+9. **Cross-Platform Management**: Windows, Linux and macOS support with consistent interface
 
 **Key Features:**
 - ✅ **No Password Database**: Eliminates password storage completely
@@ -41,6 +42,7 @@
 - ✅ **Edit Functionality**: Update descriptions and lengths anytime
 - ✅ **Secure Input**: Hidden secret phrase entry with show/hide toggle
 - ✅ **Copy to Clipboard**: Quick password copying for account setup
+- ✅ **Export/Import**: Backup and restore functionality
 - ✅ **Desktop Native**: No web dependencies or internet required
 
 **Security Model:**
@@ -85,6 +87,8 @@ Powered by **[smartpasslib v2.2.0+](https://github.com/smartlegionlab/smartpassl
 - Service description
 - Password length parameter
 
+**Export format**: Same JSON structure, can be backed up and restored across different machines running the same software version.
+
 **Security model**: Proof of secret knowledge without secret storage or password transmission.
 
 ---
@@ -104,6 +108,26 @@ Starting from smartpasslib v2.2.0, configuration files are stored in:
 - Original file is backed up as `~/.cases.json.bak`
 - Migration is one-time and non-destructive
 - All your existing passwords are preserved
+
+---
+
+## 🆕 What's New in v2.2.8
+
+### Import/Export Functionality
+
+- **Export passwords**: Save your password metadata to JSON file
+- **Import passwords**: Restore from previously exported files
+- **Export options**: Choose between pretty or minified JSON format
+- **Metadata inclusion**: Optional timestamp and version info in export
+- **Safe import**: Merges with existing data, never overwrites existing entries
+- **Keyboard shortcuts**: `Ctrl+E` for export, `Ctrl+I` for import
+
+### Keyboard Shortcuts Added
+
+| Shortcut | Action | Description |
+|----------|--------|-------------|
+| `Ctrl+E` | Export passwords | Save metadata to JSON file |
+| `Ctrl+I` | Import passwords | Load metadata from JSON file |
 
 ---
 
@@ -161,6 +185,18 @@ python app.py
 2. Confirm deletion
 3. Only metadata removed - password can be recreated
 
+### Exporting Passwords
+1. Go to **File → Export → Export passwords...**
+2. Choose export format (readable or minified JSON)
+3. Select location and filename
+4. Click **Export**
+
+### Importing Passwords
+1. Go to **File → Import → Import passwords...**
+2. Select previously exported JSON file
+3. Review import summary
+4. Click **OK** to refresh the view
+
 ---
 
 ## 🏗️ Core Components
@@ -187,15 +223,16 @@ python app.py
 
 ### ⌨️ Keyboard Shortcuts
 
-| Shortcut       | Action              | Description                   |
-|----------------|---------------------|-------------------------------|
-| `F1`           | Help                | Show help                     |
-| `Ctrl+Q`       | Exit                | Close the application         |
-| `Ctrl+P`       | Create new password | Open "Create password" dialog |
-| `Ctrl+Shift+S` | Toggle sounds       | Enable/Disable app's sounds   |
-| `Ctrl+/`       | Keyboard shortcuts  | Keyboard shortcuts            |
-| `Ctrl+I`       | Import Passwords    | Import Passwords              |
-| `Ctrl+Shift+A` | About dialog        | About dialog                  |
+| Shortcut | Action | Description |
+|----------|--------|-------------|
+| `F1` | Help | Show help |
+| `Ctrl+Q` | Exit | Close the application |
+| `Ctrl+P` | Create new password | Open "Create password" dialog |
+| `Ctrl+Shift+S` | Toggle sounds | Enable/Disable app's sounds |
+| `Ctrl+/` | Keyboard shortcuts | Keyboard shortcuts |
+| `Ctrl+Shift+A` | About dialog | About dialog |
+| `Ctrl+E` | Export passwords | Export metadata to JSON file |
+| `Ctrl+I` | Import passwords | Import metadata from JSON file |
 
 ### Dialogs Overview
 
@@ -222,6 +259,12 @@ python app.py
 - Copy to clipboard button
 - Service description header
 - Security notes and reminders
+
+**Export/Import Dialog:**
+- File selection with browse button
+- Format options (pretty/minified JSON)
+- Metadata inclusion toggle
+- Import warnings and statistics
 
 ---
 
@@ -291,7 +334,6 @@ pyinstaller --onefile --windowed --name "smart_pass_man.exe" --additional-hooks-
 5. Rename shortcut to "Smart Pass Manager"
 6. Double-click to start
 
-
 **What you get:**
 - Single file: `smart_pass_man.exe` (~50MB)
 - No Python required to run
@@ -324,9 +366,10 @@ Length Strategy:
 **Best Practices:**
 1. **Unique per service** - Different secret for each account type
 2. **Memorable but complex** - Phrases you can remember
-3. **Case-sensitive** - v2.2.7 enforces exact case matching
+3. **Case-sensitive** - v2.2.8 enforces exact case matching
 4. **No digital storage** - Keep only in memory
 5. **Backup plan** - Physical written backup in secure location
+6. **Export regularly** - Backup metadata after adding new passwords
 
 ### Editing Strategy
 
@@ -340,6 +383,14 @@ Length Strategy:
 - Increasing length: Password extended with new characters
 - Decreasing length: Password truncated (first N characters kept)
 - Consistency: First characters remain the same
+
+### Backup Strategy
+
+**Recommended workflow:**
+1. Export metadata after adding new passwords
+2. Store exports in secure, encrypted location
+3. Keep exports across different machines for synchronization
+4. Test import on a separate machine before relying on backups
 
 ---
 
@@ -359,7 +410,7 @@ Length Strategy:
 
 ### Data Compatibility
 - Uses same `~/.config/smart_password_manager/passwords.json` format as CLI tools
-- Compatible metadata with smartpasslib ecosystem
+- Export files compatible across all ecosystem tools
 - Consistent cryptographic operations across platforms
 
 ---
@@ -369,6 +420,7 @@ Length Strategy:
 - Cross-platform compatibility verification
 - Secret phrase validation testing
 - Clipboard operations verification
+- Import/Export functionality testing
 
 ---
 
@@ -416,6 +468,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 5. **Secure storage required**: Digital storage of secret phrases is prohibited
 
 **Critical**: Test password regeneration with non-essential accounts before production use
+
+### Export/Import Security Notes
+
+- Export files contain ONLY metadata (public keys, descriptions, lengths)
+- No passwords or secret phrases are ever exported
+- Export files are plain JSON - store them securely
+- Treat exported metadata as sensitive information
 
 ---
 
