@@ -1,17 +1,17 @@
-# Smart Password Manager Desktop <sup>v2.2.6</sup>
+# Smart Password Manager Desktop <sup>v2.2.7</sup>
 
 ---
 
 **Cross-platform desktop manager for deterministic smart passwords. Generate, manage, and retrieve passwords without storing them. Your secret phrase is the only key you need.**
 
 ---
-| `Ctrl+Delete`  | Delete Local        | Remove local repository copy      |
 
 [![GitHub top language](https://img.shields.io/github/languages/top/smartlegionlab/smart-password-manager-desktop)](https://github.com/smartlegionlab/smart-password-manager-desktop)
 [![GitHub license](https://img.shields.io/github/license/smartlegionlab/smart-password-manager-desktop)](https://github.com/smartlegionlab/smart-password-manager-desktop/blob/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/v/release/smartlegionlab/smart-password-manager-desktop)](https://github.com/smartlegionlab/smart-password-manager-desktop/)
 [![GitHub stars](https://img.shields.io/github/stars/smartlegionlab/smart-password-manager-desktop?style=social)](https://github.com/smartlegionlab/smart-password-manager-desktop/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/smartlegionlab/smart-password-manager-desktop?style=social)](https://github.com/smartlegionlab/smart-password-manager-desktop/network/members)
+![Platform](https://img.shields.io/badge/platform-windows%20%7C%20linux%20%7C%20macos-lightgrey)
 
 ---
 
@@ -31,7 +31,7 @@
 5. **Edit Metadata**: Update password descriptions and lengths
 6. **Copy to Clipboard**: One-click password copying for easy use
 7. **Verify Secrets**: Prove knowledge of secrets without exposing them
-8. **Cross-Platform Management**: Windows and Linux support with consistent interface
+8. **Cross-Platform Management**: Windows, Linux and macOS support with consistent interface
 
 **Key Features:**
 - ✅ **No Password Database**: Eliminates password storage completely
@@ -71,7 +71,7 @@
 
 ## 🔬 Technical Foundation
 
-Powered by **[smartpasslib v2.1.0+](https://github.com/smartlegionlab/smartpasslib)** - The core library for deterministic password generation.
+Powered by **[smartpasslib v2.2.0+](https://github.com/smartlegionlab/smartpasslib)** - The core library for deterministic password generation.
 
 **Key principle**: Instead of storing passwords, you store verification metadata. The actual password is regenerated on-demand from your secret phrase.
 
@@ -80,7 +80,7 @@ Powered by **[smartpasslib v2.1.0+](https://github.com/smartlegionlab/smartpassl
 - The actual password
 - Any reversible password data
 
-**What IS stored** (in `~/.cases.json`):
+**What IS stored** (in `~/.config/smart_password_manager/passwords.json`):
 - Public verification key (hash of secret)
 - Service description
 - Password length parameter
@@ -89,34 +89,21 @@ Powered by **[smartpasslib v2.1.0+](https://github.com/smartlegionlab/smartpassl
 
 ---
 
-## 🆕 What's New in v2.2.5
+## 📁 File Locations
 
-### Major Improvements:
+Starting from smartpasslib v2.2.0, configuration files are stored in:
 
-**New App's sounds:**
-- Added click sound to buttons
-- Added notify sound
-- Added error sound
-- Added about sound to about
+| Platform | Configuration Path |
+|----------|-------------------|
+| Linux | `~/.config/smart_password_manager/passwords.json` |
+| macOS | `~/.config/smart_password_manager/passwords.json` |
+| Windows | `C:\Users\Username\.config\smart_password_manager\passwords.json` |
 
-**Enhanced User Interface:**
-- Added menu bar
-- Added status bar
-- Added keyboard's shortcuts
-
-### New Features:
-
-**Keyboard's shortcuts:**
-```python
-# Use app with your keyboard
-# Look for shortcuts in "Help/Keyboard shortcuts"
-```
-
-**Improved UI:**
-- Added a menu bar for keyboard interaction
-- Added sounds "Enable/Disable" feature (Default: Disable)
-- Added app's about
-- Added a status bar for user awareness
+**Automatic Migration**:
+- Old `~/.cases.json` files are automatically migrated on first run
+- Original file is backed up as `~/.cases.json.bak`
+- Migration is one-time and non-destructive
+- All your existing passwords are preserved
 
 ---
 
@@ -280,7 +267,7 @@ python -m venv venv
 # Install PyInstaller in virtual environment
 pip install pyinstaller
 pip install PyQt5==5.15.9
-pip install smartpasslib==2.1.0
+pip install smartpasslib==2.2.0
 ```
 
 #### Step 6: Build Executable
@@ -336,7 +323,7 @@ Length Strategy:
 **Best Practices:**
 1. **Unique per service** - Different secret for each account type
 2. **Memorable but complex** - Phrases you can remember
-3. **Case-sensitive** - v2.2.6 enforces exact case matching
+3. **Case-sensitive** - v2.2.7 enforces exact case matching
 4. **No digital storage** - Keep only in memory
 5. **Backup plan** - Physical written backup in secure location
 
@@ -370,7 +357,7 @@ Length Strategy:
 - **[Web Smart Password Manager](https://github.com/smartlegionlab/smart-password-manager)** - Browser-based access
 
 ### Data Compatibility
-- Uses same `~/.cases.json` format as CLI tools
+- Uses same `~/.config/smart_password_manager/passwords.json` format as CLI tools
 - Compatible metadata with smartpasslib ecosystem
 - Consistent cryptographic operations across platforms
 
@@ -416,9 +403,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ---
 
 ## ⚠️ Security Warnings
-
-**Version Incompatibility**: v2.2.6 passwords are incompatible with v1.x.
-Never mix secret phrases across different versions.
 
 ### Secret Phrase Security
 
@@ -485,14 +469,6 @@ This is experimental software. It is not:
 Usage of this software constitutes your **FULL AND UNCONDITIONAL ACCEPTANCE** of this disclaimer. If you do not accept **ALL** terms and conditions, **DO NOT USE THE SOFTWARE.**
 
 **BY PROCEEDING, YOU ACKNOWLEDGE THAT YOU HAVE READ THIS DISCLAIMER IN ITS ENTIRETY, UNDERSTAND ITS TERMS COMPLETELY, AND ACCEPT THEM WITHOUT RESERVATION OR EXCEPTION.**
-
----
-
-**Version**: 2.2.6 | [**Author**](https://smartlegionlab.ru): [Alexander Suvorov](https://alexander-suvorov.ru)
-
----
-
-**Note**: This is v2.2.6. If migrating from v1.x, all passwords must be regenerated with new secret phrases.
 
 ---
 

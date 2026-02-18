@@ -47,7 +47,7 @@ class Config:
             <p><b>Important Notes:</b></p>
             <ul>
             <li>🔐 Never share your secret phrases</li>
-            <li>📝 Back up your .cases.json file</li>
+            <li>📝 Back up your /home/user/.config/smart_password_manager/passwords.json file</li>
             <li>⚙️ Secret phrases are case-sensitive</li>
             <li>✏️ You can edit password descriptions anytime</li>
             <li>📏 Changing password length generates a different password!</li>
