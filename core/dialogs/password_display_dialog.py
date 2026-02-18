@@ -78,3 +78,9 @@ class PasswordDisplayDialog(QDialog):
         clipboard.setText(self.password_display.text())
         self.copy_button.setText("✅ Copied!")
         self.copy_button.setStyleSheet("background-color: #2e7d32; color: white;")
+
+        main_window = self.parent()
+        while main_window and not hasattr(main_window, 'show_status_message'):
+            main_window = main_window.parent()
+        if main_window:
+            main_window.show_status_message('Password copied to clipboard', 2000)

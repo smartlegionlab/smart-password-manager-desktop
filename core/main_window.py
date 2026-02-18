@@ -257,6 +257,7 @@ class MainWindow(QMainWindow):
         self.update_password_count()
         for password in self.smart_pass_man.passwords.values():
             self.add_item(password)
+        self.show_status_message(f'Loaded {self.smart_pass_man.password_count} passwords', 3000)
 
     def show_help(self):
         self.sound_manager.play_notify()
@@ -431,6 +432,7 @@ class MainWindow(QMainWindow):
                         length_item = self.table_widget.item(row, 1)
                         if length_item:
                             length_item.setText(f"{new_length} chars")
+                    self.show_status_message('Password metadata updated', 3000)
 
                     msg_box = QMessageBox(self)
                     msg_box.setWindowTitle('Updated')
@@ -485,6 +487,7 @@ class MainWindow(QMainWindow):
                 msg_box.setWindowTitle('Deleted')
                 msg_box.setTextFormat(Qt.RichText)
                 msg_box.setText(f'Password metadata for <b>{description}</b> has been deleted.')
+                self.show_status_message(f'Password entry for "{description}" deleted', 3000)
                 msg_box.setIcon(QMessageBox.Information)
                 msg_box.setStandardButtons(QMessageBox.Ok)
                 msg_box.exec_()
@@ -529,6 +532,7 @@ class MainWindow(QMainWindow):
                     msg_box.setIcon(QMessageBox.Warning)
                     msg_box.setStandardButtons(QMessageBox.Ok)
                     msg_box.exec_()
+                    self.show_status_message('Duplicate secret phrase detected', 3000)
                     return
 
                 smart_password = SmartPassword(
@@ -545,11 +549,13 @@ class MainWindow(QMainWindow):
                 self.smart_pass_man.add_smart_password(smart_password)
 
                 self.add_item(smart_password)
+                self.show_status_message(f'Password created for "{description}"', 3000)
 
                 display_dialog = PasswordDisplayDialog(self, description, password, self.sound_manager)
                 display_dialog.exec_()
 
             except Exception as e:
+                self.show_status_message('Failed to create password', 3000)
                 QMessageBox.critical(
                     self,
                     'Error',
@@ -560,6 +566,7 @@ class MainWindow(QMainWindow):
         self.sound_manager.play_notify()
         smart_password = self.smart_pass_man.get_smart_password(public_key)
         if not smart_password:
+            self.show_status_message('Password metadata not found', 3000)
             QMessageBox.critical(
                 self,
                 'Error',
@@ -573,6 +580,7 @@ class MainWindow(QMainWindow):
             secret = dialog.get_secret()
 
             if not secret:
+                self.show_status_message('Missing secret phrase', 3000)
                 QMessageBox.warning(
                     self,
                     'Missing Secret',
@@ -591,11 +599,12 @@ class MainWindow(QMainWindow):
                         secret=secret,
                         length=smart_password.length
                     )
-
+                    self.show_status_message(f'Password retrieved for "{description}"', 3000)
                     display_dialog = PasswordDisplayDialog(self, description, password, self.sound_manager)
                     display_dialog.exec_()
 
                 else:
+                    self.show_status_message('Invalid secret phrase', 3000)
                     msg_box = QMessageBox(self)
                     msg_box.setWindowTitle('Invalid Secret')
                     msg_box.setTextFormat(Qt.RichText)
@@ -611,6 +620,7 @@ class MainWindow(QMainWindow):
                     msg_box.exec_()
 
             except Exception as e:
+                self.show_status_message('Failed to generate password', 3000)
                 QMessageBox.critical(
                     self,
                     'Error',
@@ -620,7 +630,7 @@ class MainWindow(QMainWindow):
     def toggle_sounds(self, enabled: bool):
         self.sound_manager.set_enabled(enabled)
         status = "enabled" if enabled else "disabled"
-        self.status_bar.showMessage(f'Sounds {status}', 2000)
+        self.show_status_message(f'Sounds {status}', 2000)
 
     def export_passwords(self):
         from core.dialogs.export_import_dialog import ExportImportDialog
@@ -631,7 +641,9 @@ class MainWindow(QMainWindow):
             smart_pass_man=self.smart_pass_man,
             sound_manager=self.sound_manager
         )
-        dialog.exec_()
+
+        if dialog.exec_() == QDialog.Accepted:
+            self.show_status_message('Passwords exported successfully', 3000)
 
     def import_passwords(self):
         from core.dialogs.export_import_dialog import ExportImportDialog
@@ -646,13 +658,34 @@ class MainWindow(QMainWindow):
         if dialog.exec_() == QDialog.Accepted:
             self.refresh_table()
             self.update_password_count()
-            self.status_bar.showMessage('Passwords imported successfully', 3000)
+            self.show_status_message(f'Passwords imported successfully. '
+                                     f'Total: {self.smart_pass_man.password_count}', 3000)
 
     def refresh_table(self):
         self.table_widget.setRowCount(0)
 
         for password in self.smart_pass_man.passwords.values():
             self.add_item(password)
+
+    def show_status_message(self, message, duration=3000):
+        self.status_bar.showMessage(message, duration)
+
+    def update_status_on_action(self, action_name):
+        messages = {
+            'add': 'Password created successfully',
+            'get': 'Password retrieved successfully',
+            'edit': 'Password metadata updated',
+            'delete': 'Password entry deleted',
+            'export': 'Passwords exported successfully',
+            'import': 'Passwords imported successfully',
+            'copy': 'Password copied to clipboard',
+            'sound_on': 'Sounds enabled',
+            'sound_off': 'Sounds disabled',
+            'ready': 'Ready',
+            'duplicate': 'Duplicate secret phrase detected',
+            'invalid_secret': 'Invalid secret phrase'
+        }
+        self.status_bar.showMessage(messages.get(action_name, 'Action completed'), 3000)
 
     def closeEvent(self, event):
         self.sound_manager.play_error()
