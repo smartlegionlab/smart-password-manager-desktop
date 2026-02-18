@@ -124,10 +124,14 @@ class ExportImportDialog(QDialog):
         self.sound_manager.play_click()
 
         if self.mode == "export":
+            from datetime import datetime
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            default_filename = f"passwords_export_{timestamp}.json"
+
             file_path, _ = QFileDialog.getSaveFileName(
                 self,
                 "Export Passwords",
-                str(Path.home() / "passwords_export.json"),
+                str(Path.home() / default_filename),
                 "JSON Files (*.json);;All Files (*)"
             )
         else:

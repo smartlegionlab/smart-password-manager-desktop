@@ -111,23 +111,13 @@ Starting from smartpasslib v2.2.0, configuration files are stored in:
 
 ---
 
-## 🆕 What's New in v2.2.9
+## 🆕 What's New in v2.2.10
 
-### Import/Export Functionality
+### Export Improvements
 
-- **Export passwords**: Save your password metadata to JSON file
-- **Import passwords**: Restore from previously exported files
-- **Export options**: Choose between pretty or minified JSON format
-- **Metadata inclusion**: Optional timestamp and version info in export
-- **Safe import**: Merges with existing data, never overwrites existing entries
-- **Keyboard shortcuts**: `Ctrl+E` for export, `Ctrl+I` for import
-
-### Keyboard Shortcuts Added
-
-| Shortcut | Action | Description |
-|----------|--------|-------------|
-| `Ctrl+E` | Export passwords | Save metadata to JSON file |
-| `Ctrl+I` | Import passwords | Load metadata from JSON file |
+- **Auto-timestamped filenames**: Export files now include date and time (e.g., `passwords_export_20250218_143022.json`)
+- **Prevent accidental overwrites**: Multiple exports to same folder won't replace each other
+- **Better file organization**: Timestamps make it easy to track backup history
 
 ---
 
@@ -188,8 +178,11 @@ python app.py
 ### Exporting Passwords
 1. Go to **File → Export → Export passwords...**
 2. Choose export format (readable or minified JSON)
-3. Select location and filename
-4. Click **Export**
+3. Select location (filename is auto-generated with timestamp: `passwords_export_YYYYMMDD_HHMMSS.json`)
+4. You can rename the file if needed
+5. Click **Export**
+
++ **Note**: Auto-generated timestamps prevent accidental file overwrites when exporting multiple times to the same folder.
 
 ### Importing Passwords
 1. Go to **File → Import → Import passwords...**
