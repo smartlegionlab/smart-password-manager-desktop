@@ -1,4 +1,4 @@
-# Smart Password Manager Desktop <sup>v2.2.9</sup>
+# Smart Password Manager Desktop <sup>v2.2.10</sup>
 
 ---
 
@@ -359,7 +359,7 @@ Length Strategy:
 **Best Practices:**
 1. **Unique per service** - Different secret for each account type
 2. **Memorable but complex** - Phrases you can remember
-3. **Case-sensitive** - v2.2.9 enforces exact case matching
+3. **Case-sensitive** - v2.2.10 enforces exact case matching
 4. **No digital storage** - Keep only in memory
 5. **Backup plan** - Physical written backup in secure location
 6. **Export regularly** - Backup metadata after adding new passwords
