@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import (
     QFrame,
     QHeaderView,
     QHBoxLayout,
-    QAction, QMenuBar, QStatusBar, QMainWindow
+    QAction, QMenuBar, QStatusBar, QMainWindow, QMenu
 )
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
@@ -100,6 +100,8 @@ class MainWindow(QMainWindow):
         self.table_widget.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeToContents)
 
         self.main_layout.addWidget(self.table_widget)
+
+        self.setup_table_context_menu()
 
         button_layout = QHBoxLayout()
         button_layout.setSpacing(10)
@@ -245,6 +247,42 @@ class MainWindow(QMainWindow):
         help_action.triggered.connect(self.sound_manager.play_click)
         help_action.triggered.connect(self.show_help)
         help_menu.addAction(help_action)
+
+    def setup_table_context_menu(self):
+        self.table_widget.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.table_widget.customContextMenuRequested.connect(self.show_table_context_menu)
+
+    def show_table_context_menu(self, position):
+        item = self.table_widget.itemAt(position)
+        if not item:
+            return
+
+        row = item.row()
+        public_key = None
+
+        for col in [2, 3, 4]:
+            widget = self.table_widget.cellWidget(row, col)
+            if widget and hasattr(widget, 'public_key'):
+                public_key = widget.public_key
+                break
+
+        if not public_key:
+            return
+
+        context_menu = QMenu(self)
+
+        get_action = context_menu.addAction("🔑 Get Password")
+        get_action.triggered.connect(lambda checked, pk=public_key: self.get_password(pk))
+
+        edit_action = context_menu.addAction("✏️ Edit Metadata")
+        edit_action.triggered.connect(lambda checked, pk=public_key: self.edit_password(pk))
+
+        context_menu.addSeparator()
+
+        delete_action = context_menu.addAction("🗑️ Delete Entry")
+        delete_action.triggered.connect(lambda checked, pk=public_key: self.remove_password(pk))
+
+        context_menu.exec_(self.table_widget.viewport().mapToGlobal(position))
 
     def center_window(self):
         frame = self.frameGeometry()

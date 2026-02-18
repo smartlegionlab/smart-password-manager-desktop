@@ -111,13 +111,16 @@ Starting from smartpasslib v2.2.0, configuration files are stored in:
 
 ---
 
-## 🆕 What's New in v2.2.10
+## 🆕 What's New in v2.3.0
 
-### Export Improvements
+### Context Menu for Password Table
 
-- **Auto-timestamped filenames**: Export files now include date and time (e.g., `passwords_export_20250218_143022.json`)
-- **Prevent accidental overwrites**: Multiple exports to same folder won't replace each other
-- **Better file organization**: Timestamps make it easy to track backup history
+- **Right-click anywhere** on a password row to open context menu
+- **Quick access** to Get, Edit, and Delete actions
+- **Visual icons** for better recognition (🔑, ✏️, 🗑️)
+- **Seamless integration** - buttons remain for one-click access
+
+This enhancement provides an alternative interaction method while maintaining the familiar button interface.
 
 ---
 
@@ -226,6 +229,22 @@ python app.py
 | `Ctrl+Shift+A` | About dialog | About dialog |
 | `Ctrl+E` | Export passwords | Export metadata to JSON file |
 | `Ctrl+I` | Import passwords | Import metadata from JSON file |
+
+---
+
+### 🖱️ Context Menu
+
+Right-click on any password row to access a context menu with all actions:
+
+| Menu Item | Action | Description |
+|-----------|--------|-------------|
+| 🔑 Get Password | One-click access | Generate and display password |
+| ✏️ Edit Metadata | Quick edit | Modify description or length |
+| 🗑️ Delete Entry | Direct deletion | Remove password metadata |
+
+This provides an alternative to the table buttons for users who prefer context menus, while keeping the buttons for quick one-click access.
+
+---
 
 ### Dialogs Overview
 
