@@ -79,6 +79,7 @@ class MainWindow(QMainWindow):
         self.table_widget.setColumnCount(5)
         self.table_widget.setHorizontalHeaderLabels(['Description', 'Length', 'Get', 'Edit', 'Delete'])
         self.table_widget.setEditTriggers(QTableWidget.NoEditTriggers)
+        self.table_widget.setSelectionMode(QTableWidget.SingleSelection)
         self.table_widget.setAlternatingRowColors(True)
         self.table_widget.setStyleSheet("""
             QTableWidget {
@@ -252,6 +253,55 @@ class MainWindow(QMainWindow):
         self.table_widget.setContextMenuPolicy(Qt.CustomContextMenu)
         self.table_widget.customContextMenuRequested.connect(self.show_table_context_menu)
 
+        shortcuts = [
+            ('Ctrl+G', 'Get Password', self.get_password_for_selected_row),
+            ('Ctrl+Shift+E', 'Edit Password', self.edit_password_for_selected_row),
+            ('Del', 'Delete Password', self.delete_selected_row)
+        ]
+
+        for shortcut, name, callback in shortcuts:
+            action = QAction(name, self)
+            action.setShortcut(shortcut)
+            action.triggered.connect(callback)
+            self.addAction(action)
+
+    def _get_public_key_for_row(self, row):
+        if row < 0:
+            return None
+
+        for col in [2, 3, 4]:
+            widget = self.table_widget.cellWidget(row, col)
+            if widget and hasattr(widget, 'public_key'):
+                return widget.public_key
+        return None
+
+    def _execute_action_for_selected_row(self, action_name):
+        current_row = self.table_widget.currentRow()
+        public_key = self._get_public_key_for_row(current_row)
+
+        if not public_key:
+            self.show_status_message('No row selected', 2000)
+            return
+
+        method_map = {
+            'get': 'get_password',
+            'edit': 'edit_password',
+            'delete': 'remove_password'
+        }
+
+        method_name = method_map.get(action_name)
+        if method_name:
+            getattr(self, method_name)(public_key)
+
+    def get_password_for_selected_row(self):
+        self._execute_action_for_selected_row('get')
+
+    def edit_password_for_selected_row(self):
+        self._execute_action_for_selected_row('edit')
+
+    def delete_selected_row(self):
+        self._execute_action_for_selected_row('delete')
+
     def show_table_context_menu(self, position):
         item = self.table_widget.itemAt(position)
         if not item:
@@ -272,14 +322,17 @@ class MainWindow(QMainWindow):
         context_menu = QMenu(self)
 
         get_action = context_menu.addAction("🔑 Get Password")
+        get_action.setShortcut("Ctrl+G")
         get_action.triggered.connect(lambda checked, pk=public_key: self.get_password(pk))
 
         edit_action = context_menu.addAction("✏️ Edit Metadata")
+        edit_action.setShortcut("Ctrl+Shift+E")
         edit_action.triggered.connect(lambda checked, pk=public_key: self.edit_password(pk))
 
         context_menu.addSeparator()
 
         delete_action = context_menu.addAction("🗑️ Delete Entry")
+        delete_action.setShortcut("Del")
         delete_action.triggered.connect(lambda checked, pk=public_key: self.remove_password(pk))
 
         context_menu.exec_(self.table_widget.viewport().mapToGlobal(position))
@@ -321,16 +374,24 @@ class MainWindow(QMainWindow):
         QMessageBox.about(
             self,
             "Keyboard Shortcuts",
-            f"""<h2>Keyboard Shortcuts</h2>
+            f"""<h2 style="color: #2a82da">Global Keyboard Shortcuts</h2>
 
-            <p><b>F1</b> - Show Help</p>
-            <p><b>Ctrl + Q</b> - Exit Application</p>
-            <p><b>Ctrl + P</b> - Create New Password</p>
-            <p><b>Ctrl + Shift + S</b> - Toggle Sounds</p>
-            <p><b>Ctrl + /</b> - Keyboard shortcuts</p>
-            <p><b>Ctrl + Shift + A</b> - About</p>
-            <p><b>Ctrl + I</b> - Import Passwords</p>
-            <p><b>Ctrl + E</b> - Export Passwords</p>
+            <p><b style="color: #2a82da">F1</b> - Show Help</p>
+            <p><b style="color: #2a82da">Ctrl + Q</b> - Exit Application</p>
+            <p><b style="color: #2a82da">Ctrl + P</b> - Create New Password</p>
+            <p><b style="color: #2a82da">Ctrl + Shift + S</b> - Toggle Sounds</p>
+            <p><b style="color: #2a82da">Ctrl + /</b> - Keyboard shortcuts</p>
+            <p><b style="color: #2a82da">Ctrl + Shift + A</b> - About</p>
+            <p><b style="color: #2a82da">Ctrl + I</b> - Import Passwords</p>
+            <p><b style="color: #2a82da">Ctrl + E</b> - Export Passwords</p>
+            
+            <hr>
+            
+            <h2 style="color: #2a82da">Password's Keyboard Shortcuts</h2>
+            
+            <p><b style="color: #2a82da">Ctrl + G</b> - Get Password</p>
+            <p><b style="color: #2a82da">Ctrl + Shift + E</b> - Edit Password</p>
+            <p><b style="color: #2a82da">Del</b> - Delete Password</p>
             """
         )
 

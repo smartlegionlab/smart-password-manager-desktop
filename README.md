@@ -1,4 +1,4 @@
-# Smart Password Manager Desktop <sup>v2.3.0</sup>
+# Smart Password Manager Desktop <sup>v2.3.1</sup>
 
 ---
 
@@ -97,30 +97,17 @@ Powered by **[smartpasslib v2.2.0+](https://github.com/smartlegionlab/smartpassl
 
 Starting from smartpasslib v2.2.0, configuration files are stored in:
 
-| Platform | Configuration Path |
-|----------|-------------------|
-| Linux | `~/.config/smart_password_manager/passwords.json` |
-| macOS | `~/.config/smart_password_manager/passwords.json` |
-| Windows | `C:\Users\Username\.config\smart_password_manager\passwords.json` |
+| Platform | Configuration Path                                                |
+|----------|:------------------------------------------------------------------|
+| Linux    | `~/.config/smart_password_manager/passwords.json`                 |
+| macOS    | `~/.config/smart_password_manager/passwords.json`                 |
+| Windows  | `C:\Users\Username\.config\smart_password_manager\passwords.json` |
 
 **Automatic Migration**:
 - Old `~/.cases.json` files are automatically migrated on first run
 - Original file is backed up as `~/.cases.json.bak`
 - Migration is one-time and non-destructive
 - All your existing passwords are preserved
-
----
-
-## 🆕 What's New in v2.3.0
-
-### Context Menu for Password Table
-
-- **Right-click anywhere** on a password row to open context menu
-- **Quick access** to Get, Edit, and Delete actions
-- **Visual icons** for better recognition (🔑, ✏️, 🗑️)
-- **Seamless integration** - buttons remain for one-click access
-
-This enhancement provides an alternative interaction method while maintaining the familiar button interface.
 
 ---
 
@@ -219,16 +206,19 @@ python app.py
 
 ### ⌨️ Keyboard Shortcuts
 
-| Shortcut | Action | Description |
-|----------|--------|-------------|
-| `F1` | Help | Show help |
-| `Ctrl+Q` | Exit | Close the application |
-| `Ctrl+P` | Create new password | Open "Create password" dialog |
-| `Ctrl+Shift+S` | Toggle sounds | Enable/Disable app's sounds |
-| `Ctrl+/` | Keyboard shortcuts | Keyboard shortcuts |
-| `Ctrl+Shift+A` | About dialog | About dialog |
-| `Ctrl+E` | Export passwords | Export metadata to JSON file |
-| `Ctrl+I` | Import passwords | Import metadata from JSON file |
+| Shortcut       | Action              | Description                    |
+|----------------|---------------------|--------------------------------|
+| `F1`           | Help                | Show help                      |
+| `Ctrl+Q`       | Exit                | Close the application          |
+| `Ctrl+P`       | Create new password | Open "Create password" dialog  |
+| `Ctrl+Shift+S` | Toggle sounds       | Enable/Disable app's sounds    |
+| `Ctrl+/`       | Keyboard shortcuts  | Keyboard shortcuts             |
+| `Ctrl+Shift+A` | About dialog        | About dialog                   |
+| `Ctrl+E`       | Export passwords    | Export metadata to JSON file   |
+| `Ctrl+I`       | Import passwords    | Import metadata from JSON file |
+| `Ctrl+G`       | Get password        | Get selected password          |
+| `Ctrl+Shift+E` | Edit password       | Edit selected password         |
+| `Del`          | Delete password     | Delete selected password       |
 
 ---
 
@@ -236,11 +226,11 @@ python app.py
 
 Right-click on any password row to access a context menu with all actions:
 
-| Menu Item | Action | Description |
-|-----------|--------|-------------|
-| 🔑 Get Password | One-click access | Generate and display password |
-| ✏️ Edit Metadata | Quick edit | Modify description or length |
-| 🗑️ Delete Entry | Direct deletion | Remove password metadata |
+| Menu Item     | Action           | Description                   | Shortcuts      |
+|---------------|------------------|-------------------------------|----------------|
+| Get Password  | One-click access | Generate and display password | `Ctrl+G`       |
+| Edit Metadata | Quick edit       | Modify description or length  | `Ctrl+Shift+E` |
+| Delete Entry  | Direct deletion  | Remove password metadata      | `Del`          |
 
 This provides an alternative to the table buttons for users who prefer context menus, while keeping the buttons for quick one-click access.
 
@@ -378,7 +368,7 @@ Length Strategy:
 **Best Practices:**
 1. **Unique per service** - Different secret for each account type
 2. **Memorable but complex** - Phrases you can remember
-3. **Case-sensitive** - v2.3.0 enforces exact case matching
+3. **Case-sensitive** - v2.3.1 enforces exact case matching
 4. **No digital storage** - Keep only in memory
 5. **Backup plan** - Physical written backup in secure location
 6. **Export regularly** - Backup metadata after adding new passwords
@@ -440,7 +430,7 @@ Length Strategy:
 
 **[BSD 3-Clause License](LICENSE)**
 
-Copyright (c) 2026, Alexander Suvorov
+Copyright (©) 2026, Alexander Suvorov
 
 ```
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
