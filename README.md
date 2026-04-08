@@ -25,13 +25,13 @@
 
 ---
 
-## **🔐 Core Principles:**
+## **Core Principles:**
 
-- 🔐 **Zero-Password Storage**: No passwords are ever stored or transmitted
-- 🔑 **Deterministic Regeneration**: Passwords are recreated identically from your secret phrase
-- 📝 **Metadata Management**: Store only descriptions and verification keys
-- 🖥️ **Local Processing**: All cryptographic operations happen on your device
-- 🔄 **On-Demand Discovery**: Passwords exist only when you generate them
+- **Zero-Password Storage**: No passwords are ever stored or transmitted
+- **Deterministic Regeneration**: Passwords are recreated identically from your secret phrase
+- **Metadata Management**: Store only descriptions and verification keys
+- **Local Processing**: All cryptographic operations happen on your device
+- **On-Demand Discovery**: Passwords exist only when you generate them
 
 **What You Can Do:**
 1. **Create Smart Passwords**: Generate deterministic passwords from secret phrases
@@ -45,15 +45,15 @@
 9. **Cross-Platform Management**: Windows, Linux and macOS support with consistent interface
 
 **Key Features:**
-- ✅ **No Password Database**: Eliminates password storage completely
-- ✅ **Dark Theme Interface**: Easy on the eyes during extended use
-- ✅ **Public Key Verification**: Verify secret knowledge without exposure
-- ✅ **Table View**: See all your password metadata at a glance
-- ✅ **Edit Functionality**: Update descriptions and lengths anytime
-- ✅ **Secure Input**: Hidden secret phrase entry with show/hide toggle
-- ✅ **Copy to Clipboard**: Quick password copying for account setup
-- ✅ **Export/Import**: Backup and restore functionality
-- ✅ **Desktop Native**: No web dependencies or internet required
+- **No Password Database**: Eliminates password storage completely
+- **Dark Theme Interface**: Easy on the eyes during extended use
+- **Public Key Verification**: Verify secret knowledge without exposure
+- **Table View**: See all your password metadata at a glance
+- **Edit Functionality**: Update descriptions and lengths anytime
+- **Secure Input**: Hidden secret phrase entry with show/hide toggle
+- **Copy to Clipboard**: Quick password copying for account setup
+- **Export/Import**: Backup and restore functionality
+- **Desktop Native**: No web dependencies or internet required
 
 **Security Model:**
 - **Proof of Knowledge**: Verify you know a secret without storing it
@@ -64,24 +64,14 @@
 
 ---
 
-## ⚠️ Critical Notice
-
-**BEFORE USING THIS SOFTWARE, READ THE COMPLETE LEGAL DISCLAIMER BELOW**
-
-[View Legal Disclaimer & Liability Waiver](#-legal-disclaimer)
-
-*Usage of this software constitutes acceptance of all terms and conditions.*
-
----
-
-## 📚 Research Paradigms & Publications
+## Research Paradigms & Publications
 
 - **[Pointer-Based Security Paradigm](https://doi.org/10.5281/zenodo.17204738)** - Architectural Shift from Data Protection to Data Non-Existence
 - **[Local Data Regeneration Paradigm](https://doi.org/10.5281/zenodo.17264327)** - Ontological Shift from Data Transmission to Synchronous State Discovery
 
 ---
 
-## 🔬 Technical Foundation
+## Technical Foundation
 
 Powered by **[smartpasslib v2.2.0+](https://github.com/smartlegionlab/smartpasslib)** - The core library for deterministic password generation.
 
@@ -103,7 +93,7 @@ Powered by **[smartpasslib v2.2.0+](https://github.com/smartlegionlab/smartpassl
 
 ---
 
-## 📁 File Locations
+## File Locations
 
 Starting from smartpasslib v2.2.0, configuration files are stored in:
 
@@ -121,7 +111,7 @@ Starting from smartpasslib v2.2.0, configuration files are stored in:
 
 ---
 
-## 📦 Installation & Quick Start
+## Installation & Quick Start
 
 ### Prerequisites
 - **Python 3.7+** required
@@ -149,7 +139,7 @@ python app.py
 
 ---
 
-## 🚀 Quick Usage Guide
+## Quick Usage Guide
 
 ### Creating Your First Password
 1. Click **Add** button
@@ -171,7 +161,7 @@ python app.py
 4. Confirm changes
 
 ### Deleting an Entry
-1. Click **Delete** button (🗑️)
+1. Click **Delete** button
 2. Confirm deletion
 3. Only metadata removed - password can be recreated
 
@@ -192,7 +182,7 @@ python app.py
 
 ---
 
-## 🏗️ Core Components
+## Core Components
 
 ### Main Interface Features
 
@@ -214,7 +204,7 @@ python app.py
 - Copy to clipboard with visual feedback
 - No internet connectivity required
 
-### ⌨️ Keyboard Shortcuts
+### Keyboard Shortcuts
 
 | Shortcut       | Action              | Description                    |
 |----------------|---------------------|--------------------------------|
@@ -232,7 +222,7 @@ python app.py
 
 ---
 
-### 🖱️ Context Menu
+### Context Menu
 
 Right-click on any password row to access a context menu with all actions:
 
@@ -280,7 +270,7 @@ This provides an alternative to the table buttons for users who prefer context m
 
 ---
 
-## 📦 Windows Standalone Executable
+## Windows Standalone Executable
 
 ### Creating a Single-File *.exe
 
@@ -296,7 +286,7 @@ Build a standalone `smart_pass_man.exe` that runs without Python installation:
 #### Step 2: Install Python
 1. Download Python installer from: https://python.org/downloads/
 2. Run installer
-3. **IMPORTANT:** Check ✅ "Add Python to PATH"
+3. **IMPORTANT:** Check "Add Python to PATH"
 4. Click "Install Now"
 
 #### Step 3: Open Command Prompt
@@ -354,7 +344,7 @@ pyinstaller --onefile --windowed --name "smart_pass_man.exe" --additional-hooks-
 
 ---
 
-## 💡 Advanced Usage
+## Advanced Usage
 
 ### Password Management Strategy
 
@@ -406,7 +396,7 @@ Length Strategy:
 
 ---
 
-## 🔧 Ecosystem Integration
+## Ecosystem Integration
 
 ### Part of Smart Password Suite
 
@@ -436,7 +426,7 @@ Length Strategy:
 
 ---
 
-## 📜 License
+## License
 
 **[BSD 3-Clause License](LICENSE)**
 
@@ -444,7 +434,7 @@ Copyright (©) 2026, Alexander Suvorov
 
 ---
 
-## 🆘 Support
+## Support
 
 - **Desktop Manager Issues**: [GitHub Issues](https://github.com/smartlegionlab/smart-password-manager-desktop/issues)
 - **Core Library Issues**: [smartpasslib Issues](https://github.com/smartlegionlab/smartpasslib/issues)
@@ -454,7 +444,7 @@ Copyright (©) 2026, Alexander Suvorov
 
 ---
 
-## ⚠️ Security Warnings
+## Security Warnings
 
 ### Secret Phrase Security
 

@@ -46,13 +46,13 @@ class Config:
 
             <p><b>Important Notes:</b></p>
             <ul>
-            <li>🔐 Never share your secret phrases</li>
-            <li>📝 Back up your /home/user/.config/smart_password_manager/passwords.json file</li>
-            <li>⚙️ Secret phrases are case-sensitive</li>
-            <li>✏️ You can edit password descriptions anytime</li>
-            <li>📏 Changing password length generates a different password!</li>
-            <li>⚠️ First N characters remain same, new characters are added/removed</li>
-            <li>🗑️ Deleting entry only removes metadata - password can be recreated</li>
+            <li>Never share your secret phrases</li>
+            <li>Back up your /home/user/.config/smart_password_manager/passwords.json file</li>
+            <li>Secret phrases are case-sensitive</li>
+            <li>You can edit password descriptions anytime</li>
+            <li>Changing password length generates a different password!</li>
+            <li>First N characters remain same, new characters are added/removed</li>
+            <li>Deleting entry only removes metadata - password can be recreated</li>
             </ul>
 
             <hr>
