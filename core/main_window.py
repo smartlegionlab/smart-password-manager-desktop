@@ -26,6 +26,7 @@ from core.dialogs.secret_input_dialog import SecretInputDialog
 from core.utils.config import Config
 from core.utils.sound_manager import SoundManager
 
+
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)

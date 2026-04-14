@@ -59,6 +59,7 @@ class Config:
             <p><b>Links:</b></p>
             <p>
             📂 <a href="{url}" style="color: #2a82da;">GitHub Repository</a><br>
+            📂 <a href="{url}/blob/master/DISCLAIMER.md" style="color: #2a82da;">DISCLAIMER</a><br>
             🐛 <a href="{url}/issues" style="color: #2a82da;">Report Issues</a>
             </p>
             """

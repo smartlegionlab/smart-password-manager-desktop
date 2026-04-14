@@ -1,4 +1,4 @@
-# Smart Password Manager Desktop <sup>v2.3.3</sup>
+# Smart Password Manager Desktop <sup>v3.0.0</sup>
 
 ---
 
@@ -73,11 +73,22 @@
 
 ## Technical Foundation
 
-Powered by **[smartpasslib v2.2.0+](https://github.com/smartlegionlab/smartpasslib)** - The core library for deterministic password generation.
+Powered by **smartpasslib v3.0.0+** — The core library for deterministic password generation.
 
-**Key principle**: Instead of storing passwords, you store verification metadata. The actual password is regenerated on-demand from your secret phrase.
+> ⚠️ **BREAKING CHANGE NOTICE**  
+> **smartpasslib v3.0.0 is NOT backward compatible with v2.x.x**  
+> Passwords generated with v2.x.x cannot be regenerated using v3.0.0 due to fundamental changes in the deterministic generation algorithm.
 
-**What's NOT stored**:
+**What this means for you:**
+- All passwords created with **v2.3.3 or earlier** must be **regenerated** after upgrading
+- Old metadata (`passwords.json`) remains readable but will produce **different passwords** if used with v3.0.0
+- You have two options:
+  1. **Before upgrading** — manually retrieve and save all passwords from old version
+  2. **After upgrading** — re-enter your secret phrases and recreate each entry with correct passwords
+
+**Key principle** (unchanged): Instead of storing passwords, you store verification metadata. The actual password is regenerated on-demand from your secret phrase.
+
+**What's NOT stored** (unchanged):
 - Your secret phrase
 - The actual password
 - Any reversible password data
@@ -87,7 +98,7 @@ Powered by **[smartpasslib v2.2.0+](https://github.com/smartlegionlab/smartpassl
 - Service description
 - Password length parameter
 
-**Export format**: Same JSON structure, can be backed up and restored across different machines running the same software version.
+**Export format**: Same JSON structure, but v3.0.0 exports are **incompatible** with older versions. Always note which version created the export.
 
 **Security model**: Proof of secret knowledge without secret storage or password transmission.
 
@@ -179,6 +190,45 @@ python app.py
 2. Select previously exported JSON file
 3. Review import summary
 4. Click **OK** to refresh the view
+
+---
+
+## Migration Section
+
+### Migrating from v2.x.x to v3.0.0
+
+**⚠️ Before upgrading — follow these steps carefully**
+
+**Step 1: Document your existing passwords**
+- Open your current Smart Password Manager (v2.3.3 or earlier)
+- For each service, click **Get** and copy the generated password
+- Save passwords in a secure temporary location (e.g., encrypted note)
+
+**Alternative method (more secure but manual):**
+- Write down for each service: **Service description + Secret phrase + Length**
+- After upgrading, you'll manually recreate entries and update passwords in services
+
+**Step 2: Export old metadata (optional backup)**
+- **File → Export → Export passwords...**
+- Save the JSON file as `passwords_v2_backup.json`
+
+**Step 3: Upgrade to v3.0.0**
+```bash
+# Update smartpasslib
+pip install smartpasslib==3.0.0
+
+# Or rebuild executable with new version
+```
+
+**Step 4: Migrate your data**
+- Option A: Start fresh — delete old `passwords.json` and add entries manually
+- Option B: Keep metadata but manually verify each password (not recommended — easy to make mistakes)
+
+**Step 5: Update passwords in all your services**
+- After regenerating passwords with v3.0.0, update them in each website/service
+- Test login before removing old access
+
+**Important**: v2.x.x and v3.0.0 cannot share the same metadata file. Keep them completely separate.
 
 ---
 
@@ -313,7 +363,7 @@ python -m venv venv
 # Install PyInstaller in virtual environment
 pip install pyinstaller
 pip install PyQt5==5.15.9
-pip install smartpasslib==2.2.0
+pip install smartpasslib==3.0.0
 ```
 
 #### Step 6: Build Executable
@@ -368,7 +418,7 @@ Length Strategy:
 **Best Practices:**
 1. **Unique per service** - Different secret for each account type
 2. **Memorable but complex** - Phrases you can remember
-3. **Case-sensitive** - v2.3.3 enforces exact case matching
+3. **Case-sensitive** - v3.0.0 enforces exact case matching
 4. **No digital storage** - Keep only in memory
 5. **Backup plan** - Physical written backup in secure location
 6. **Export regularly** - Backup metadata after adding new passwords
@@ -426,6 +476,15 @@ Length Strategy:
 
 ---
 
+## Version History
+
+| Version | smartpasslib | Status | Migration Required |
+|---------|--------------|--------|---------------------|
+| v2.3.3 and below | v2.x.x | ❌ Deprecated/Unsupported | Must migrate to v3.0.0 |
+| v3.0.0+ | v3.0.0 | ✅ Current | N/A |
+
+---
+
 ## License
 
 **[BSD 3-Clause License](LICENSE)**
@@ -476,3 +535,6 @@ Copyright (©) 2026, Alexander Suvorov
 ![Main Interface 3](https://github.com/smartlegionlab/smart-password-manager-desktop/raw/master/data/images/smartpassman3.png)
 
 ![Main Interface 4](https://github.com/smartlegionlab/smart-password-manager-desktop/raw/master/data/images/smartpassman4.png)
+
+---
+
