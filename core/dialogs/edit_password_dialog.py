@@ -41,7 +41,7 @@ class EditPasswordDialog(QDialog):
         length_layout.addWidget(self.length_label)
 
         self.length_input = QSpinBox(self)
-        self.length_input.setMinimum(4)
+        self.length_input.setMinimum(12)
         self.length_input.setMaximum(100)
         self.length_input.setValue(current_length)
         self.length_input.setSuffix(" characters")

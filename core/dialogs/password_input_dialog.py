@@ -35,11 +35,17 @@ class PasswordInputDialog(QDialog):
 
         secret_group = QGroupBox("Secret Phrase")
         secret_layout = QVBoxLayout()
-        self.secret_label = QLabel('Your Secret Phrase:')
+        self.secret_label = QLabel('Your Secret Phrase (minimum 12 characters):')
         secret_layout.addWidget(self.secret_label)
+
+        self.secret_example_label = QLabel('Example: "MyCat🐱Hippo2026" or "P@ssw0rd!LongSecret"')
+        self.secret_example_label.setStyleSheet("color: #888; font-size: 11px; font-style: italic;")
+        secret_layout.addWidget(self.secret_example_label)
+
         self.secret_input = QLineEdit(self)
-        self.secret_input.setPlaceholderText("Enter your secret phrase")
+        self.secret_input.setPlaceholderText("Enter your secret phrase (min. 12 characters)")
         self.secret_input.setEchoMode(QLineEdit.Password)
+        self.secret_input.textChanged.connect(self.check_inputs)
         secret_layout.addWidget(self.secret_input)
 
         self.show_secret_checkbox = QPushButton("👁 Show")
@@ -48,15 +54,21 @@ class PasswordInputDialog(QDialog):
         self.show_secret_checkbox.clicked.connect(self.sound_manager.play_click)
         self.show_secret_checkbox.clicked.connect(self.toggle_secret_visibility)
         secret_layout.addWidget(self.show_secret_checkbox, alignment=Qt.AlignRight)
+
+        self.secret_warning_label = QLabel("⚠️ Secret phrase must be at least 12 characters")
+        self.secret_warning_label.setStyleSheet("color: #e74c3c; font-size: 11px;")
+        self.secret_warning_label.setVisible(False)
+        secret_layout.addWidget(self.secret_warning_label)
+
         secret_group.setLayout(secret_layout)
         self.layout.addWidget(secret_group)
 
         settings_group = QGroupBox("Password Settings")
         settings_layout = QHBoxLayout()
-        self.length_label = QLabel('Password Length:')
+        self.length_label = QLabel('Password Length (minimum 12):')
         settings_layout.addWidget(self.length_label)
         self.length_input = QSpinBox(self)
-        self.length_input.setMinimum(4)
+        self.length_input.setMinimum(12)
         self.length_input.setMaximum(100)
         self.length_input.setValue(16)
         self.length_input.setSuffix(" characters")
@@ -79,6 +91,9 @@ class PasswordInputDialog(QDialog):
         button_layout.addWidget(self.submit_button)
         self.layout.addLayout(button_layout)
 
+        self.submit_button.setEnabled(False)
+        self.description_input.textChanged.connect(self.check_inputs)
+
     def toggle_secret_visibility(self):
         if self.show_secret_checkbox.isChecked():
             self.secret_input.setEchoMode(QLineEdit.Normal)
@@ -87,5 +102,26 @@ class PasswordInputDialog(QDialog):
             self.secret_input.setEchoMode(QLineEdit.Password)
             self.show_secret_checkbox.setText("👁 Show")
 
+    def check_inputs(self):
+        description = self.description_input.text().strip()
+        secret = self.secret_input.text()
+
+        secret_valid = len(secret) >= 12
+        self.secret_warning_label.setVisible(not secret_valid and len(secret) > 0)
+
+        description_valid = bool(description)
+
+        self.submit_button.setEnabled(secret_valid and description_valid)
+
     def get_inputs(self):
-        return self.description_input.text(), self.secret_input.text(), self.length_input.value()
+        description = self.description_input.text().strip()
+        secret = self.secret_input.text()
+        length = self.length_input.value()
+
+        if not description:
+            return None, None, None
+
+        if len(secret) < 12:
+            return None, None, None
+
+        return description, secret, length

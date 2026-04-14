@@ -1,4 +1,4 @@
-# Smart Password Manager Desktop <sup>v3.0.1</sup>
+# Smart Password Manager Desktop <sup>v3.0.2</sup>
 
 ---
 
@@ -41,8 +41,8 @@
 ### What changed:
 
 - The core password generation algorithm has been completely redesigned
-- Passwords created with v2.3.3 or earlier **cannot be regenerated** using v3.0.1
-- Old metadata (`passwords.json`) will produce **different passwords** if used with v3.0.1
+- Passwords created with v2.3.3 or earlier **cannot be regenerated** using v3.0.2
+- Old metadata (`passwords.json`) will produce **different passwords** if used with v3.0.2
 
 ### What you need to do:
 
@@ -108,11 +108,11 @@ Powered by **smartpasslib v3.0.0+** — The core library for deterministic passw
 
 > ⚠️ **BREAKING CHANGE NOTICE**  
 > **smartpasslib v3.0.0 is NOT backward compatible with v2.x.x**  
-> Passwords generated with v2.x.x cannot be regenerated using v3.0.1 due to fundamental changes in the deterministic generation algorithm.
+> Passwords generated with v2.x.x cannot be regenerated using v3.0.2 due to fundamental changes in the deterministic generation algorithm.
 
 **What this means for you:**
 - All passwords created with **v2.3.3 or earlier** must be **regenerated** after upgrading
-- Old metadata (`passwords.json`) remains readable but will produce **different passwords** if used with v3.0.1
+- Old metadata (`passwords.json`) remains readable but will produce **different passwords** if used with v3.0.2
 - You have two options:
   1. **Before upgrading** — manually retrieve and save all passwords from old version
   2. **After upgrading** — re-enter your secret phrases and recreate each entry with correct passwords
@@ -129,7 +129,7 @@ Powered by **smartpasslib v3.0.0+** — The core library for deterministic passw
 - Service description
 - Password length parameter
 
-**Export format**: Same JSON structure, but v3.0.1 exports are **incompatible** with older versions. Always note which version created the export.
+**Export format**: Same JSON structure, but v3.0.2 exports are **incompatible** with older versions. Always note which version created the export.
 
 **Security model**: Proof of secret knowledge without secret storage or password transmission.
 
@@ -186,7 +186,8 @@ python app.py
 ### Creating Your First Password
 1. Click **Add** button
 2. Enter service description (e.g., "GitHub Account")
-3. Enter your secret phrase (never shared or stored)
+3. Enter your secret phrase (minimum 12 characters, never stored)
+   - Good examples: `"MyCat🐱Hippo2026"` or `"P@ssw0rd!LongSecret"`
 4. Set password length (16-24 recommended)
 5. Click **Create Password** - password appears for copying
 
@@ -226,7 +227,7 @@ python app.py
 
 ## Migration Section
 
-### Migrating from v2.x.x to v3.0.1
+### Migrating from v2.x.x to v3.0.2
 
 **⚠️ Before upgrading — follow these steps carefully**
 
@@ -256,10 +257,10 @@ pip install smartpasslib==3.0.0
 - Option B: Keep metadata but manually verify each password (not recommended — easy to make mistakes)
 
 **Step 5: Update passwords in all your services**
-- After regenerating passwords with v3.0.1, update them in each website/service
+- After regenerating passwords with v3.0.2, update them in each website/service
 - Test login before removing old access
 
-**Important**: v2.x.x and v3.0.1 cannot share the same metadata file. Keep them completely separate.
+**Important**: v2.x.x and v3.0.2 cannot share the same metadata file. Keep them completely separate.
 
 ---
 
@@ -446,10 +447,32 @@ Length Strategy:
 
 ### Secret Phrase Management
 
-**Best Practices:**
+**Your secret phrase is the only key to all your passwords. Keep it safe, keep it secret.**
+
+#### Minimum Requirements (enforced by the app):
+- **At least 12 characters** — shorter secrets are not accepted
+- **Case-sensitive** — "MySecret" and "mysecret" are different
+
+#### Strong Secret Examples:
+```
+✅ "MyCat🐱Hippo2026"        — emoji + mixed case + numbers
+✅ "P@ssw0rd!LongSecret"     — special chars + numbers + length
+✅ "КотБегемот2026НаДиете"   — Cyrillic + numbers
+✅ "Correct-Horse-Battery-42" — memorable phrase with separator
+```
+
+#### Weak Secret Examples (avoid):
+```
+❌ "password"                — dictionary word, too short
+❌ "1234567890"              — only digits, too short
+❌ "qwerty123"               — keyboard pattern
+❌ "mysecret"                — common phrase, too short
+```
+
+#### Best Practices:
 1. **Unique per service** - Different secret for each account type
 2. **Memorable but complex** - Phrases you can remember
-3. **Case-sensitive** - v3.0.1 enforces exact case matching
+3. **Case-sensitive** - v3.0.2 enforces exact case matching
 4. **No digital storage** - Keep only in memory
 5. **Backup plan** - Physical written backup in secure location
 6. **Export regularly** - Backup metadata after adding new passwords
@@ -511,8 +534,8 @@ Length Strategy:
 
 | Version | smartpasslib | Status | Migration Required |
 |---------|--------------|--------|---------------------|
-| v2.3.3 and below | v2.x.x | ❌ Deprecated/Unsupported | Must migrate to v3.0.1 |
-| v3.0.1+ | v3.0.0 | ✅ Current | N/A |
+| v2.3.3 and below | v2.x.x | ❌ Deprecated/Unsupported | Must migrate to v3.0.2 |
+| v3.0.2+ | v3.0.0 | ✅ Current | N/A |
 
 ---
 
@@ -547,6 +570,18 @@ Copyright (©) 2026, [Alexander Suvorov](https://github.com/smartlegionlab)
 5. **Secure storage required**: Digital storage of secret phrases is prohibited
 
 **Critical**: Test password regeneration with non-essential accounts before production use
+
+### Secret Phrase Strength
+
+**The security of your passwords depends entirely on your secret phrase.**
+
+- **Minimum 12 characters** is enforced by the application
+- Short secrets (under 12 chars) are **automatically rejected**
+- Weak secrets like "password123" or "qwerty" will be rejected
+- Use a mix of: uppercase, lowercase, numbers, symbols, emoji, or Cyrillic
+- A 12-character secret with diverse character types provides **practical brute-force immunity**
+
+**Remember:** The app cannot recover your secret phrase. If you lose it, all passwords are permanently lost.
 
 ### Export/Import Security Notes
 

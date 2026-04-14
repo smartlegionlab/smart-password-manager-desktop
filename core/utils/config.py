@@ -37,7 +37,7 @@ class Config:
             <ol>
             <li>Click <b>Add</b> to create a new password entry</li>
             <li>Enter password description (e.g., "GitHub")</li>
-            <li>Enter and remember your secret phrase</li>
+            <li>Enter and remember your secret phrase (minimum 12 characters); Example: <b>"MyCat🐱Hippo2026"</b> or <b>"P@ssw0rd!LongSecret"</b></li>
             <li>Select password length (recommended: 16-24 characters)</li>
             <li>Click <b>Get</b> to generate password</li>
             <li>Click <b>Edit</b> to change description or length</li>
