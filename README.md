@@ -1,4 +1,4 @@
-# Smart Password Manager Desktop <sup>v3.0.0</sup>
+# Smart Password Manager Desktop <sup>v3.0.1</sup>
 
 ---
 
@@ -22,6 +22,37 @@
 **Summary:** Software provided "AS IS" without warranty. You assume all risks.
 
 **Full legal disclaimer:** See [DISCLAIMER.md](DISCLAIMER.md)
+
+---
+
+## 🔄 Important: smartpasslib v3.0.0 Breaking Change
+
+> **⚠️ This release (v3.0.0) uses [smartpasslib](https://github.com/smartlegionlab/smartpasslib) v3.0.0, which is NOT backward compatible with v2.x.x**
+
+### Why the change?
+
+**Smartpasslib v3.0.0 introduces fundamental improvements:**
+- **Stronger cryptographic algorithm** — enhanced deterministic generation with better entropy distribution
+- **Improved performance** — faster password generation, especially for longer passwords
+- **Better cross-platform consistency** — identical results guaranteed across all platforms
+- **Extended character set support** — wider range of special characters for stronger passwords
+- **Future-proof architecture** — easier updates and security patches
+
+### What changed:
+
+- The core password generation algorithm has been completely redesigned
+- Passwords created with v2.3.3 or earlier **cannot be regenerated** using v3.0.1
+- Old metadata (`passwords.json`) will produce **different passwords** if used with v3.0.1
+
+### What you need to do:
+
+1. **Before upgrading** — retrieve and save all your existing passwords from the old version
+2. **After upgrading** — recreate each password using the same secret phrases + lengths
+3. **Update** your passwords on all websites/services
+
+**No automatic migration** — you must manually regenerate every password.
+
+📖 **Full migration instructions** → see [Migration Section](#migration-section)
 
 ---
 
@@ -77,11 +108,11 @@ Powered by **smartpasslib v3.0.0+** — The core library for deterministic passw
 
 > ⚠️ **BREAKING CHANGE NOTICE**  
 > **smartpasslib v3.0.0 is NOT backward compatible with v2.x.x**  
-> Passwords generated with v2.x.x cannot be regenerated using v3.0.0 due to fundamental changes in the deterministic generation algorithm.
+> Passwords generated with v2.x.x cannot be regenerated using v3.0.1 due to fundamental changes in the deterministic generation algorithm.
 
 **What this means for you:**
 - All passwords created with **v2.3.3 or earlier** must be **regenerated** after upgrading
-- Old metadata (`passwords.json`) remains readable but will produce **different passwords** if used with v3.0.0
+- Old metadata (`passwords.json`) remains readable but will produce **different passwords** if used with v3.0.1
 - You have two options:
   1. **Before upgrading** — manually retrieve and save all passwords from old version
   2. **After upgrading** — re-enter your secret phrases and recreate each entry with correct passwords
@@ -98,7 +129,7 @@ Powered by **smartpasslib v3.0.0+** — The core library for deterministic passw
 - Service description
 - Password length parameter
 
-**Export format**: Same JSON structure, but v3.0.0 exports are **incompatible** with older versions. Always note which version created the export.
+**Export format**: Same JSON structure, but v3.0.1 exports are **incompatible** with older versions. Always note which version created the export.
 
 **Security model**: Proof of secret knowledge without secret storage or password transmission.
 
@@ -195,7 +226,7 @@ python app.py
 
 ## Migration Section
 
-### Migrating from v2.x.x to v3.0.0
+### Migrating from v2.x.x to v3.0.1
 
 **⚠️ Before upgrading — follow these steps carefully**
 
@@ -225,10 +256,10 @@ pip install smartpasslib==3.0.0
 - Option B: Keep metadata but manually verify each password (not recommended — easy to make mistakes)
 
 **Step 5: Update passwords in all your services**
-- After regenerating passwords with v3.0.0, update them in each website/service
+- After regenerating passwords with v3.0.1, update them in each website/service
 - Test login before removing old access
 
-**Important**: v2.x.x and v3.0.0 cannot share the same metadata file. Keep them completely separate.
+**Important**: v2.x.x and v3.0.1 cannot share the same metadata file. Keep them completely separate.
 
 ---
 
@@ -418,7 +449,7 @@ Length Strategy:
 **Best Practices:**
 1. **Unique per service** - Different secret for each account type
 2. **Memorable but complex** - Phrases you can remember
-3. **Case-sensitive** - v3.0.0 enforces exact case matching
+3. **Case-sensitive** - v3.0.1 enforces exact case matching
 4. **No digital storage** - Keep only in memory
 5. **Backup plan** - Physical written backup in secure location
 6. **Export regularly** - Backup metadata after adding new passwords
@@ -458,7 +489,7 @@ Length Strategy:
 - **[CLI Smart Password Manager](https://github.com/smartlegionlab/clipassman/)** - Command-line management
 
 **Web Interface:**
-- **[Web Smart Password Manager](https://github.com/smartlegionlab/smart-password-manager)** - Browser-based access
+- **[Web Smart Password Manager](https://github.com/smartlegionlab/smart-password-manager-web)** - Browser-based access
 
 ### Data Compatibility
 - Uses same `~/.config/smart_password_manager/passwords.json` format as CLI tools
@@ -480,8 +511,8 @@ Length Strategy:
 
 | Version | smartpasslib | Status | Migration Required |
 |---------|--------------|--------|---------------------|
-| v2.3.3 and below | v2.x.x | ❌ Deprecated/Unsupported | Must migrate to v3.0.0 |
-| v3.0.0+ | v3.0.0 | ✅ Current | N/A |
+| v2.3.3 and below | v2.x.x | ❌ Deprecated/Unsupported | Must migrate to v3.0.1 |
+| v3.0.1+ | v3.0.0 | ✅ Current | N/A |
 
 ---
 
@@ -489,7 +520,7 @@ Length Strategy:
 
 **[BSD 3-Clause License](LICENSE)**
 
-Copyright (©) 2026, Alexander Suvorov
+Copyright (©) 2026, [Alexander Suvorov](https://github.com/smartlegionlab)
 
 ---
 
