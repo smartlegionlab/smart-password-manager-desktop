@@ -1,4 +1,6 @@
 # Copyright (©) 2026, Alexander Suvorov. All rights reserved.
+import os
+
 from PyQt5.QtWidgets import (
     QDesktopWidget,
     QWidget,
@@ -14,7 +16,7 @@ from PyQt5.QtWidgets import (
     QHBoxLayout,
     QAction, QMenuBar, QStatusBar, QMainWindow, QMenu
 )
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont, QIcon
 from PyQt5.QtCore import Qt
 from PyQt5.QtMultimedia import QSound
 from smartpasslib import SmartPasswordManager, SmartPassword, SmartPasswordMaster
@@ -34,6 +36,8 @@ class MainWindow(QMainWindow):
         self.smart_pass_man = SmartPasswordManager()
         self.setWindowTitle(f'{self.config.app_name} {self.config.version}')
         self.resize(800, 600)
+
+        self.setup_application_icon()
 
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
@@ -181,6 +185,16 @@ class MainWindow(QMainWindow):
 
         self._init()
         self.center_window()
+
+    def setup_application_icon(self):
+        icon_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "icons", "icon.png")
+
+        if not os.path.exists(icon_path):
+            icon_path = os.path.join(os.path.dirname(__file__), "icon.png")
+
+        if os.path.exists(icon_path):
+            icon = QIcon(icon_path)
+            self.setWindowIcon(icon)
 
     def setup_menu_bar(self):
 
@@ -357,24 +371,31 @@ class MainWindow(QMainWindow):
         msg_box.setWindowTitle('Smart Password Manager Help')
         msg_box.setTextFormat(Qt.RichText)
         msg_box.setText(self.config.help_text)
-        msg_box.setIcon(QMessageBox.Information)
+        msg_box.setIcon(QMessageBox.NoIcon)
         msg_box.setStandardButtons(QMessageBox.Ok)
         msg_box.exec_()
 
     def show_about(self):
         self.sound_manager.play_about()
-        QMessageBox.about(
-            self,
-            "About Smart Password Manager",
-            self.config.about_text
-        )
+
+        msg_box = QMessageBox(self)
+        msg_box.setWindowTitle("About Smart Password Manager")
+        msg_box.setTextFormat(Qt.RichText)
+        msg_box.setText(self.config.about_text)
+
+        msg_box.setIcon(QMessageBox.NoIcon)
+
+        msg_box.setStandardButtons(QMessageBox.Ok)
+
+        msg_box.exec_()
 
     def _show_keyboard_shortcuts(self):
         self.sound_manager.play_notify()
 
-        QMessageBox.about(
-            self,
-            "Keyboard Shortcuts",
+        msg_box = QMessageBox(self)
+        msg_box.setWindowTitle("Keyboard Shortcuts")
+        msg_box.setTextFormat(Qt.RichText)
+        msg_box.setText(
             f"""<h2 style="color: #2a82da">Global Keyboard Shortcuts</h2>
 
             <p><b style="color: #2a82da">F1</b> - Show Help</p>
@@ -385,16 +406,22 @@ class MainWindow(QMainWindow):
             <p><b style="color: #2a82da">Ctrl + Shift + A</b> - About</p>
             <p><b style="color: #2a82da">Ctrl + I</b> - Import Passwords</p>
             <p><b style="color: #2a82da">Ctrl + E</b> - Export Passwords</p>
-            
+
             <hr>
-            
+
             <h2 style="color: #2a82da">Password's Keyboard Shortcuts</h2>
-            
+
             <p><b style="color: #2a82da">Ctrl + G</b> - Get Password</p>
             <p><b style="color: #2a82da">Ctrl + Shift + E</b> - Edit Password</p>
             <p><b style="color: #2a82da">Del</b> - Delete Password</p>
             """
         )
+
+        msg_box.setIcon(QMessageBox.NoIcon)
+
+        msg_box.setStandardButtons(QMessageBox.Ok)
+
+        msg_box.exec_()
 
     def update_password_count(self):
         count = len(self.smart_pass_man.passwords)
