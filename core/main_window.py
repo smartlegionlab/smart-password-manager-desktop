@@ -1,5 +1,6 @@
 # Copyright (©) 2026, Alexander Suvorov. All rights reserved.
 import os
+import sys
 
 from PyQt5.QtWidgets import (
     QDesktopWidget,
@@ -196,9 +197,22 @@ class MainWindow(QMainWindow):
             icon = QIcon(icon_path)
             self.setWindowIcon(icon)
 
+    def create_desktop_entry(self):
+        from core.dialogs.desktop_entry_dialog import DesktopEntryDialog
+
+        dialog = DesktopEntryDialog(self, self.sound_manager)
+        dialog.exec_()
+
     def setup_menu_bar(self):
 
         file_menu = self.menu_bar.addMenu('File')
+
+        if sys.platform.startswith('linux'):
+            desktop_entry_action = QAction('Create Desktop Entry...', self)
+            desktop_entry_action.triggered.connect(self.sound_manager.play_click)
+            desktop_entry_action.triggered.connect(self.create_desktop_entry)
+            file_menu.addAction(desktop_entry_action)
+            file_menu.addSeparator()
 
         export_menu = file_menu.addMenu('Export')
 
