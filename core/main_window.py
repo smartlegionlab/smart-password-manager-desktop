@@ -15,7 +15,7 @@ from PyQt5.QtWidgets import (
     QFrame,
     QHeaderView,
     QHBoxLayout,
-    QAction, QMenuBar, QStatusBar, QMainWindow, QMenu
+    QAction, QMenuBar, QStatusBar, QMainWindow, QMenu, QScrollArea
 )
 from PyQt5.QtGui import QFont, QIcon
 from PyQt5.QtCore import Qt
@@ -381,13 +381,80 @@ class MainWindow(QMainWindow):
 
     def show_help(self):
         self.sound_manager.play_notify()
-        msg_box = QMessageBox(self)
-        msg_box.setWindowTitle('Smart Password Manager Help')
-        msg_box.setTextFormat(Qt.RichText)
-        msg_box.setText(self.config.help_text)
-        msg_box.setIcon(QMessageBox.NoIcon)
-        msg_box.setStandardButtons(QMessageBox.Ok)
-        msg_box.exec_()
+
+        dialog = QDialog(self)
+        dialog.setWindowTitle('Smart Password Manager Help')
+        dialog.setMinimumWidth(650)
+        dialog.setMinimumHeight(500)
+
+        layout = QVBoxLayout(dialog)
+        layout.setSpacing(10)
+
+        title_label = QLabel(f"<h2 style='color: #2a82da;'>Smart Password Manager Help</h2>")
+        title_label.setTextFormat(Qt.RichText)
+        title_label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(title_label)
+
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setFrameShape(QFrame.NoFrame)
+
+        content_widget = QWidget()
+        content_layout = QVBoxLayout(content_widget)
+
+        help_label = QLabel(self.config.help_text)
+        help_label.setTextFormat(Qt.RichText)
+        help_label.setWordWrap(True)
+        help_label.setOpenExternalLinks(True)
+        help_label.setTextInteractionFlags(Qt.TextBrowserInteraction)
+        help_label.setStyleSheet("""
+            QLabel {
+                background-color: #2a2a2a;
+                padding: 15px;
+                border-radius: 5px;
+            }
+            a {
+                color: #2a82da;
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+        """)
+
+        content_layout.addWidget(help_label)
+        scroll_area.setWidget(content_widget)
+        layout.addWidget(scroll_area)
+
+        button_layout = QHBoxLayout()
+        button_layout.addStretch()
+
+        ok_button = QPushButton("OK")
+        ok_button.setMinimumWidth(100)
+        ok_button.setMinimumHeight(35)
+        ok_button.setStyleSheet("""
+            QPushButton {
+                background-color: #2a82da;
+                color: white;
+                font-weight: bold;
+                border-radius: 5px;
+                padding: 8px 16px;
+            }
+            QPushButton:hover {
+                background-color: #1a72ca;
+            }
+        """)
+        ok_button.clicked.connect(dialog.accept)
+        button_layout.addWidget(ok_button)
+        button_layout.addStretch()
+        layout.addLayout(button_layout)
+
+        dialog.setModal(True)
+        x = self.x() + (self.width() - dialog.width()) // 2
+        y = self.y() + (self.height() - dialog.height()) // 2
+        dialog.move(x, y)
+
+        dialog.exec_()
 
     def show_about(self):
         self.sound_manager.play_about()

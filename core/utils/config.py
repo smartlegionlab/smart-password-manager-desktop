@@ -24,56 +24,66 @@ class Config:
     copyright_text = (f'Copyright © {date_}, <a href="{github_url}" style="color: #2a82da; '
                       f'text-decoration: none;">{author}</a>. All rights reserved.')
     help_text = f"""
-            <h3>Smart Password Manager Help {version}</h3>
+        <h3>Smart Password Manager Help {version}</h3>
 
-            <p><b>How it works:</b></p>
-            <ul>
-            <li>Each password is generated from your secret phrase</li>
-            <li>No passwords are stored - regenerate when needed</li>
-            <li>Same secret phrase always generates the same password</li>
-            </ul>
+        <p><b>How it works:</b></p>
+        <ul>
+        <li>Each password is generated from your secret phrase</li>
+        <li>No passwords are stored - regenerate when needed</li>
+        <li>Same secret phrase always generates the same password</li>
+        </ul>
 
-            <p><b>Basic Steps:</b></p>
-            <ol>
-            <li>Click <b>Add</b> to create a new password entry</li>
-            <li>Enter password description (e.g., "GitHub")</li>
-            <li>Enter and remember your secret phrase (minimum 12 characters); Example: <b>"MyCat🐱Hippo2026"</b> or <b>"P@ssw0rd!LongSecret"</b></li>
-            <li>Select password length (recommended: 16-24 characters)</li>
-            <li>Click <b>Get</b> to generate password</li>
-            <li>Click <b>Edit</b> to change description or length</li>
-            <li>Click <b>Delete</b> to remove entry (doesn't delete password)</li>
-            </ol>
+        <p><b>Basic Steps:</b></p>
+        <ol>
+        <li>Click <b>Add</b> to create a new password entry</li>
+        <li>Enter password description (e.g., "GitHub")</li>
+        <li>Enter and remember your secret phrase (minimum 12 characters); Example: <b>"MyCat🐱Hippo2026"</b> or <b>"P@ssw0rd!LongSecret"</b></li>
+        <li>Select password length (recommended: 16-24 characters)</li>
+        <li>Click <b>Get</b> to generate password</li>
+        <li>Click <b>Edit</b> to change description or length</li>
+        <li>Click <b>Delete</b> to remove entry (doesn't delete password)</li>
+        </ol>
 
-            <p><b>Important Notes:</b></p>
-            <ul>
-            <li>Never share your secret phrases</li>
-            <li>Back up your /home/user/.config/smart_password_manager/passwords.json file</li>
-            <li>Secret phrases are case-sensitive</li>
-            <li>You can edit password descriptions anytime</li>
-            <li>Changing password length generates a different password!</li>
-            <li>First N characters remain same, new characters are added/removed</li>
-            <li>Deleting entry only removes metadata - password can be recreated</li>
-            </ul>
+        <p><b>Desktop Integration:</b></p>
+        <ul>
+        <li><b>File → Create Desktop Entry</b> — Create application shortcut in your system menu (Linux only)</li>
+        <li>Choose between Application Menu (~/.local/share/applications/) and/or Desktop (~/Desktop/)</li>
+        <li>After creation, you may need to log out and back in for the entry to appear</li>
+        <li>Desktop shortcuts may show "Unsecured Application Launcher" — right-click → "Allow Launching" (one-time only)</li>
+        </ul>
 
-            <hr>
-            <p><b>Links:</b></p>
-            <p>
-            📂 <a href="{url}" style="color: #2a82da;">GitHub Repository</a><br>
-            📂 <a href="{url}/blob/master/DISCLAIMER.md" style="color: #2a82da;">DISCLAIMER</a><br>
-            🐛 <a href="{url}/issues" style="color: #2a82da;">Report Issues</a>
-            </p>
-            """
+        <p><b>Important Notes:</b></p>
+        <ul>
+        <li>Never share your secret phrases</li>
+        <li>Back up your /home/user/.config/smart_password_manager/passwords.json file</li>
+        <li>Secret phrases are case-sensitive</li>
+        <li>You can edit password descriptions anytime</li>
+        <li>Changing password length generates a different password!</li>
+        <li>First N characters remain same, new characters are added/removed</li>
+        <li>Deleting entry only removes metadata - password can be recreated</li>
+        </ul>
+
+        <hr>
+        <p><b>Links:</b></p>
+        <p>
+        📂 <a href="{url}" style="color: #2a82da;">GitHub Repository</a><br>
+        📂 <a href="{url}/blob/master/DISCLAIMER.md" style="color: #2a82da;">DISCLAIMER</a><br>
+        🐛 <a href="{url}/issues" style="color: #2a82da;">Report Issues</a>
+        </p>
+        """
+
     about_text = f"""<h2>{app_name} {ver}</h2>
-            <p>Cross-platform desktop manager for deterministic smart passwords.</p>
-            <p><b>Features:</b></p>
-            <ul>
-            <li>Eliminates password storage completely</li>
-            <li>Verify secret knowledge without exposure</li>
-            <li>See all your password metadata at a glance</li>
-            <li>Update descriptions and lengths anytime</li>
-            <li>Hidden secret phrase entry with show/hide toggle</li>
-            <li>Quick password copying for account setup</li>
-            <li>No web dependencies or internet required</li>
-            </ul>
-            <p><b>Copyright © {date_}, <a href="{github_url}/">{author_}</a>. All rights reserved.</b></p>
-            """
+        <p>Cross-platform desktop manager for deterministic smart passwords.</p>
+        <p><b>Features:</b></p>
+        <ul>
+        <li>Eliminates password storage completely</li>
+        <li>Verify secret knowledge without exposure</li>
+        <li>See all your password metadata at a glance</li>
+        <li>Update descriptions and lengths anytime</li>
+        <li>Hidden secret phrase entry with show/hide toggle</li>
+        <li>Quick password copying for account setup</li>
+        <li>No web dependencies or internet required</li>
+        <li>Linux desktop entry creation (Application Menu / Desktop shortcuts)</li>
+        </ul>
+        <p><b>Copyright © {date_}, <a href="{github_url}/">{author_}</a>. All rights reserved.</b></p>
+        """

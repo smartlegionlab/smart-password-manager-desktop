@@ -1,4 +1,4 @@
-# Smart Password Manager Desktop <sup>v3.0.2</sup>
+# Smart Password Manager Desktop <sup>v3.0.3</sup>
 
 ---
 
@@ -11,7 +11,7 @@
 [![GitHub release](https://img.shields.io/github/v/release/smartlegionlab/smart-password-manager-desktop)](https://github.com/smartlegionlab/smart-password-manager-desktop/)
 [![GitHub stars](https://img.shields.io/github/stars/smartlegionlab/smart-password-manager-desktop?style=social)](https://github.com/smartlegionlab/smart-password-manager-desktop/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/smartlegionlab/smart-password-manager-desktop?style=social)](https://github.com/smartlegionlab/smart-password-manager-desktop/network/members)
-![Platform](https://img.shields.io/badge/platform-windows%20%7C%20linux%20%7C%20macos-lightgrey)
+![Platform](https://img.shields.io/badge/platform-linux-lightgrey)
 
 ---
 
@@ -41,8 +41,8 @@
 ### What changed:
 
 - The core password generation algorithm has been completely redesigned
-- Passwords created with v2.3.3 or earlier **cannot be regenerated** using v3.0.2
-- Old metadata (`passwords.json`) will produce **different passwords** if used with v3.0.2
+- Passwords created with v2.3.3 or earlier **cannot be regenerated** using v3.0.3
+- Old metadata (`passwords.json`) will produce **different passwords** if used with v3.0.3
 
 ### What you need to do:
 
@@ -85,6 +85,7 @@
 - **Copy to Clipboard**: Quick password copying for account setup
 - **Export/Import**: Backup and restore functionality
 - **Desktop Native**: No web dependencies or internet required
+- **Linux Desktop Integration**: Create application shortcuts in system menu (Linux only)
 
 **Security Model:**
 - **Proof of Knowledge**: Verify you know a secret without storing it
@@ -104,15 +105,15 @@
 
 ## Technical Foundation
 
-Powered by **smartpasslib v3.0.0+** — The core library for deterministic password generation.
+Powered by [**smartpasslib**](https://github.com/smartlegionlab/smartpasslib) — The core library for deterministic password generation.
 
 > ⚠️ **BREAKING CHANGE NOTICE**  
 > **smartpasslib v3.0.0 is NOT backward compatible with v2.x.x**  
-> Passwords generated with v2.x.x cannot be regenerated using v3.0.2 due to fundamental changes in the deterministic generation algorithm.
+> Passwords generated with v2.x.x cannot be regenerated using v3.0.3 due to fundamental changes in the deterministic generation algorithm.
 
 **What this means for you:**
 - All passwords created with **v2.3.3 or earlier** must be **regenerated** after upgrading
-- Old metadata (`passwords.json`) remains readable but will produce **different passwords** if used with v3.0.2
+- Old metadata (`passwords.json`) remains readable but will produce **different passwords** if used with v3.0.3
 - You have two options:
   1. **Before upgrading** — manually retrieve and save all passwords from old version
   2. **After upgrading** — re-enter your secret phrases and recreate each entry with correct passwords
@@ -129,7 +130,7 @@ Powered by **smartpasslib v3.0.0+** — The core library for deterministic passw
 - Service description
 - Password length parameter
 
-**Export format**: Same JSON structure, but v3.0.2 exports are **incompatible** with older versions. Always note which version created the export.
+**Export format**: Same JSON structure, but v3.0.3 exports are **incompatible** with older versions. Always note which version created the export.
 
 **Security model**: Proof of secret knowledge without secret storage or password transmission.
 
@@ -142,8 +143,6 @@ Starting from smartpasslib v2.2.0, configuration files are stored in:
 | Platform | Configuration Path                                                |
 |----------|:------------------------------------------------------------------|
 | Linux    | `~/.config/smart_password_manager/passwords.json`                 |
-| macOS    | `~/.config/smart_password_manager/passwords.json`                 |
-| Windows  | `C:\Users\Username\.config\smart_password_manager\passwords.json` |
 
 **Automatic Migration**:
 - Old `~/.cases.json` files are automatically migrated on first run
@@ -169,8 +168,7 @@ cd smart-password-manager-desktop
 python -m venv venv
 
 # Activate virtual environment
-# Linux/macOS: source venv/bin/activate
-# Windows: venv\Scripts\activate
+source venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
@@ -227,7 +225,7 @@ python app.py
 
 ## Migration Section
 
-### Migrating from v2.x.x to v3.0.2
+### Migrating from v2.x.x to v3.0.3
 
 **⚠️ Before upgrading — follow these steps carefully**
 
@@ -248,8 +246,6 @@ python app.py
 ```bash
 # Update smartpasslib
 pip install smartpasslib==3.0.0
-
-# Or rebuild executable with new version
 ```
 
 **Step 4: Migrate your data**
@@ -257,10 +253,10 @@ pip install smartpasslib==3.0.0
 - Option B: Keep metadata but manually verify each password (not recommended — easy to make mistakes)
 
 **Step 5: Update passwords in all your services**
-- After regenerating passwords with v3.0.2, update them in each website/service
+- After regenerating passwords with v3.0.3, update them in each website/service
 - Test login before removing old access
 
-**Important**: v2.x.x and v3.0.2 cannot share the same metadata file. Keep them completely separate.
+**Important**: v2.x.x and v3.0.3 cannot share the same metadata file. Keep them completely separate.
 
 ---
 
@@ -285,6 +281,35 @@ pip install smartpasslib==3.0.0
 - Show/hide toggle for verification
 - Copy to clipboard with visual feedback
 - No internet connectivity required
+
+---
+
+### Desktop Integration (Linux)
+
+**Creating Application Shortcuts:**
+
+The application allows you to create desktop entries directly from the menu:
+
+1. **Go to File → Create Desktop Entry**
+2. **Choose locations:**
+   - ✓ Application Menu (`~/.local/share/applications/`) - adds to system app menu
+   - □ Desktop (`~/Desktop/`) - creates shortcut on desktop
+3. **Click "Create Entry"**
+
+**What happens:**
+- Creates `.desktop` file(s) with proper configuration
+- Sets executable permissions automatically
+- Uses application icon if available
+
+**After creation:**
+- **Application Menu**: Log out and back in (or restart desktop) for entry to appear
+- **Desktop shortcut**: May show "Unsecured Application Launcher" warning
+  - Right-click on shortcut → "Allow Launching" or "Trust"
+  - This is a one-time security confirmation
+
+**Note:** This feature is only available on Linux systems with desktop environments that support `.desktop` files (GNOME, KDE, XFCE, etc.).
+
+---
 
 ### Keyboard Shortcuts
 
@@ -352,80 +377,6 @@ This provides an alternative to the table buttons for users who prefer context m
 
 ---
 
-## Windows Standalone Executable
-
-### Creating a Single-File *.exe
-
-Build a standalone `smart_pass_man.exe` that runs without Python installation:
-
-#### Step 1: Get the Project Files
-1. **Download project ZIP:**
-   - Go to: https://github.com/smartlegionlab/smart-password-manager-desktop
-   - Click green "Code" button
-   - Select "Download ZIP"
-   - Extract to: `C:\smart-password-manager-desktop-master\`
-
-#### Step 2: Install Python
-1. Download Python installer from: https://python.org/downloads/
-2. Run installer
-3. **IMPORTANT:** Check "Add Python to PATH"
-4. Click "Install Now"
-
-#### Step 3: Open Command Prompt
-1. Press `Win + R`
-2. Type `cmd`, press Enter
-3. Navigate to project folder:
-   ```cmd
-   cd C:\smart-password-manager-desktop-master
-   ```
-
-#### Step 4: Create Virtual Environment
-```cmd
-# Create virtual environment
-python -m venv venv
-
-# Activate it (IMPORTANT!)
-.\venv\Scripts\activate
-
-# You should see (venv) in your command prompt
-```
-
-#### Step 5: Install Dependencies
-```cmd
-# Install PyInstaller in virtual environment
-pip install pyinstaller
-pip install PyQt5==5.15.9
-pip install smartpasslib==3.0.0
-```
-
-#### Step 6: Build Executable
-```cmd
-# Build single .exe file
-
-pyinstaller --onefile --windowed --name "smart_pass_man.exe" --additional-hooks-dir=. app.py
-
-# Wait for build to complete (1-2 minutes)
-```
-
-#### Step 7: Find and Use
-**Location:** `C:\smart-password-manager-desktop-master\dist\smart_pass_man.exe`
-
-**Create desktop shortcut:**
-1. Open `C:\smart-password-manager-desktop-master\dist\` folder
-2. Right-click `smart_pass_man.exe`
-3. Select "Create shortcut"
-4. Drag shortcut to desktop
-5. Rename shortcut to "Smart Pass Manager"
-6. Double-click to start
-
-**What you get:**
-- Single file: `smart_pass_man.exe` (~50MB)
-- No Python required to run
-- Works on any Windows 10/11 PC
-- Can be copied to USB drive
-
----
-
 ## Advanced Usage
 
 ### Password Management Strategy
@@ -472,7 +423,7 @@ Length Strategy:
 #### Best Practices:
 1. **Unique per service** - Different secret for each account type
 2. **Memorable but complex** - Phrases you can remember
-3. **Case-sensitive** - v3.0.2 enforces exact case matching
+3. **Case-sensitive** - v3.0.3 enforces exact case matching
 4. **No digital storage** - Keep only in memory
 5. **Backup plan** - Physical written backup in secure location
 6. **Export regularly** - Backup metadata after adding new passwords
@@ -500,19 +451,42 @@ Length Strategy:
 
 ---
 
-## Ecosystem Integration
+## Cross-Platform Compatibility
 
-### Part of Smart Password Suite
+Smart Password Manager Desktop (Python) produces **identical passwords** to:
 
-**Core Technology:**
-- **[smartpasslib](https://github.com/smartlegionlab/smartpasslib)** - Core password generation library
+| Platform         | Application                                                                             |
+|------------------|-----------------------------------------------------------------------------------------|
+| Python CLI       | [CLI PassMan](https://github.com/smartlegionlab/clipassman)                             |
+| Python CLI Gen   | [CLI PassGen](https://github.com/smartlegionlab/clipassgen)                             |
+| Desktop (C#)     | [Desktop Manager](https://github.com/smartlegionlab/SmartPasswordManagerCsharpDesktop)  |
+| CLI C#           | [CLI Manager (C#)](https://github.com/smartlegionlab/SmartPasswordManagerCsharpCli)     |
+| CLI Generator C# | [CLI Generator (C#)](https://github.com/smartlegionlab/SmartPasswordGeneratorCsharpCli) |
+| Web              | [Web Manager](https://github.com/smartlegionlab/smart-password-manager-web)             |
+| Android          | [Android Manager](https://github.com/smartlegionlab/smart-password-manager-android)     |
 
-**Console Applications:**
-- **[CLI Smart Password Generator](https://github.com/smartlegionlab/clipassgen/)** - Terminal-based generation
-- **[CLI Smart Password Manager](https://github.com/smartlegionlab/clipassman/)** - Command-line management
+## Ecosystem
 
-**Web Interface:**
-- **[Web Smart Password Manager](https://github.com/smartlegionlab/smart-password-manager-web)** - Browser-based access
+**Core Libraries:**
+- **[smartpasslib](https://github.com/smartlegionlab/smartpasslib)** - Python
+- **[smartpasslib-js](https://github.com/smartlegionlab/smartpasslib-js)** - JavaScript
+- **[smartpasslib-kotlin](https://github.com/smartlegionlab/smartpasslib-kotlin)** - Kotlin
+- **[smartpasslib-go](https://github.com/smartlegionlab/smartpasslib-go)** - Go
+- **[smartpasslib-csharp](https://github.com/smartlegionlab/smartpasslib-csharp)** - C#
+
+**CLI Applications:**
+- **[CLI PassMan (Python)](https://github.com/smartlegionlab/clipassman)**
+- **[CLI PassGen (Python)](https://github.com/smartlegionlab/clipassgen)**
+- **[CLI Manager (C#)](https://github.com/smartlegionlab/SmartPasswordManagerCsharpCli)**
+- **[CLI Generator (C#)](https://github.com/smartlegionlab/SmartPasswordGeneratorCsharpCli)**
+
+**Desktop Applications:**
+- **[Desktop Manager (Python)](https://github.com/smartlegionlab/smart-password-manager-desktop)** (this)
+- **[Desktop Manager (C#)](https://github.com/smartlegionlab/SmartPasswordManagerCsharpDesktop)**
+
+**Other:**
+- **[Web Manager](https://github.com/smartlegionlab/smart-password-manager-web)**
+- **[Android Manager](https://github.com/smartlegionlab/smart-password-manager-android)**
 
 ### Data Compatibility
 - Uses same `~/.config/smart_password_manager/passwords.json` format as CLI tools
@@ -532,10 +506,10 @@ Length Strategy:
 
 ## Version History
 
-| Version | smartpasslib | Status | Migration Required |
-|---------|--------------|--------|---------------------|
-| v2.3.3 and below | v2.x.x | ❌ Deprecated/Unsupported | Must migrate to v3.0.2 |
-| v3.0.2+ | v3.0.0 | ✅ Current | N/A |
+| Version          | smartpasslib | Status                   | Migration Required     |
+|------------------|--------------|--------------------------|------------------------|
+| v2.3.3 and below | v2.x.x       | ❌ Deprecated/Unsupported | Must migrate to v3.0.3 |
+| v3.0.3+          | v3.0.0       | ✅ Current                | N/A                    |
 
 ---
 
