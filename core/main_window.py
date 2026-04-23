@@ -26,7 +26,7 @@ from core.dialogs.edit_password_dialog import EditPasswordDialog
 from core.dialogs.password_display_dialog import PasswordDisplayDialog
 from core.dialogs.password_input_dialog import PasswordInputDialog
 from core.dialogs.secret_input_dialog import SecretInputDialog
-from core.utils.config import Config
+from core.models.config import Config
 from core.utils.sound_manager import SoundManager
 
 
