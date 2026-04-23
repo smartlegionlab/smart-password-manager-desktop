@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import (
     QGroupBox
 )
 
-from core.models.styles import EditPasswordDialogStyles
+from core.models.styles.edit_password_dialog_styles import EditPasswordDialogStyles
 
 
 class EditPasswordDialog(QDialog):

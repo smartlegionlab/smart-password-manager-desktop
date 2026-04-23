@@ -16,7 +16,7 @@ from PyQt5.QtWidgets import (
 )
 
 from core.models.configs.export_import_config import ExportImportDialogConfig
-from core.models.styles import ExportImportDialogStyles
+from core.models.styles.export_import_dialog_styles import ExportImportDialogStyles
 
 
 class ExportImportDialog(QDialog):

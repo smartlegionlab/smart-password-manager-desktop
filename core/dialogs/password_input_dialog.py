@@ -11,7 +11,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt
 
-from core.models.styles import PasswordInputDialogStyles
+from core.models.styles.password_input_dialog_styles import PasswordInputDialogStyles
 
 
 class PasswordInputDialog(QDialog):

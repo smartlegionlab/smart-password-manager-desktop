@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt
 
-from core.models.styles import SecretInputDialogStyles
+from core.models.styles.secret_input_dialog_styles import SecretInputDialogStyles
 
 
 class SecretInputDialog(QDialog):

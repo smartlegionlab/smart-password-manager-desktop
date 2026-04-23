@@ -15,7 +15,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 
 from core import __version__ as ver
-from core.models.styles import DesktopEntryDialogStyles
+from core.models.styles.desktop_entry_dialog_styles import DesktopEntryDialogStyles
 
 
 class DesktopEntryDialog(QDialog):
