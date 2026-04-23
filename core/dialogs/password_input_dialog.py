@@ -11,12 +11,16 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt
 
+from core.models.styles import PasswordInputDialogStyles
+
 
 class PasswordInputDialog(QDialog):
     def __init__(self, parent=None, sound_manager=None):
         super().__init__(parent)
         self.setWindowTitle('Create Smart Password')
         self.setMinimumWidth(400)
+
+        self.styles = PasswordInputDialogStyles()
 
         self.sound_manager = sound_manager
 
@@ -39,7 +43,7 @@ class PasswordInputDialog(QDialog):
         secret_layout.addWidget(self.secret_label)
 
         self.secret_example_label = QLabel('Example: "MyCat🐱Hippo2026" or "P@ssw0rd!LongSecret"')
-        self.secret_example_label.setStyleSheet("color: #888; font-size: 11px; font-style: italic;")
+        self.secret_example_label.setStyleSheet(self.styles.secret_example_label_style)
         secret_layout.addWidget(self.secret_example_label)
 
         self.secret_input = QLineEdit(self)
@@ -53,10 +57,10 @@ class PasswordInputDialog(QDialog):
         self.show_secret_checkbox.setMaximumWidth(100)
         self.show_secret_checkbox.clicked.connect(self.sound_manager.play_click)
         self.show_secret_checkbox.clicked.connect(self.toggle_secret_visibility)
-        secret_layout.addWidget(self.show_secret_checkbox, alignment=Qt.AlignRight)
+        secret_layout.addWidget(self.show_secret_checkbox, alignment=Qt.AlignmentFlag.AlignCenter)
 
         self.secret_warning_label = QLabel("⚠️ Secret phrase must be at least 12 characters")
-        self.secret_warning_label.setStyleSheet("color: #e74c3c; font-size: 11px;")
+        self.secret_warning_label.setStyleSheet(self.styles.secret_warning_label_style)
         self.secret_warning_label.setVisible(False)
         secret_layout.addWidget(self.secret_warning_label)
 
@@ -87,7 +91,7 @@ class PasswordInputDialog(QDialog):
         self.submit_button.setDefault(True)
         self.submit_button.clicked.connect(self.sound_manager.play_click)
         self.submit_button.clicked.connect(self.accept)
-        self.submit_button.setStyleSheet("background-color: #2a82da; color: white;")
+        self.submit_button.setStyleSheet(self.styles.submit_button_style)
         button_layout.addWidget(self.submit_button)
         self.layout.addLayout(button_layout)
 

@@ -10,6 +10,8 @@ from PyQt5.QtWidgets import (
     QGroupBox
 )
 
+from core.models.styles import EditPasswordDialogStyles
+
 
 class EditPasswordDialog(QDialog):
     def __init__(self, parent=None, current_description="", current_length=16, sound_manager=None):
@@ -17,7 +19,7 @@ class EditPasswordDialog(QDialog):
         self.current_length = current_length
         self.setWindowTitle('Edit Password Metadata')
         self.setMinimumWidth(400)
-
+        self.styles = EditPasswordDialogStyles()
         self.sound_manager = sound_manager
 
         self.layout = QVBoxLayout(self)
@@ -49,7 +51,7 @@ class EditPasswordDialog(QDialog):
         length_layout.addWidget(self.length_input)
 
         self.length_warning = QLabel("")
-        self.length_warning.setStyleSheet("color: #ff9800; font-style: italic;")
+        self.length_warning.setStyleSheet(self.styles.length_warning_style)
         length_layout.addWidget(self.length_warning)
 
         length_layout.addStretch()
@@ -61,7 +63,7 @@ class EditPasswordDialog(QDialog):
             "(first characters remain the same).</i>"
         )
         note.setWordWrap(True)
-        note.setStyleSheet("color: #888;")
+        note.setStyleSheet(self.styles.note_style)
         self.layout.addWidget(note)
 
         button_layout = QHBoxLayout()
@@ -74,7 +76,7 @@ class EditPasswordDialog(QDialog):
         self.submit_button.setDefault(True)
         self.submit_button.clicked.connect(self.sound_manager.play_click)
         self.submit_button.clicked.connect(self.accept)
-        self.submit_button.setStyleSheet("background-color: #ff9800; color: white;")
+        self.submit_button.setStyleSheet(self.styles.submit_button_style)
         button_layout.addWidget(self.submit_button)
         self.layout.addLayout(button_layout)
 

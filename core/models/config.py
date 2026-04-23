@@ -10,18 +10,10 @@ class Config:
     app_name = 'Smart Password Manager'
     description = f'{app_name}'
     copyright = f'Copyright © {date_}, {author}. All rights reserved.'
-    github_url = "https://github.com/smartlegionlab"
-    url = f'{github_url}/smart-password-manager-desktop/'
+    author_url = "https://github.com/smartlegionlab"
+    github_url = f'{author_url}/smart-password-manager-desktop/'
     version = f"v{ver}"
-    label_len_title = 'Password length'
-    btn_new_pass_title = '+ Add'
-    btn_edit_pass_title = 'Edit'
-    btn_remove_pass_title = '- Delete'
-    btn_get_password_title = 'Get Password'
-    btn_help_title = 'Help'
-    btn_about_title = 'About'
-    btn_exit_title = 'Exit'
-    copyright_text = (f'Copyright © {date_}, <a href="{github_url}" style="color: #2a82da; '
+    copyright_text = (f'Copyright © {date_}, <a href="{author_url}" style="color: #2a82da; '
                       f'text-decoration: none;">{author}</a>. All rights reserved.')
     help_text = f"""
         <h3>Smart Password Manager Help {version}</h3>
@@ -66,9 +58,9 @@ class Config:
         <hr>
         <p><b>Links:</b></p>
         <p>
-        📂 <a href="{url}" style="color: #2a82da;">GitHub Repository</a><br>
-        📂 <a href="{url}/blob/master/DISCLAIMER.md" style="color: #2a82da;">DISCLAIMER</a><br>
-        🐛 <a href="{url}/issues" style="color: #2a82da;">Report Issues</a>
+        📂 <a href="{github_url}" style="color: #2a82da;">GitHub Repository</a><br>
+        📂 <a href="{github_url}/blob/master/DISCLAIMER.md" style="color: #2a82da;">DISCLAIMER</a><br>
+        🐛 <a href="{github_url}/issues" style="color: #2a82da;">Report Issues</a>
         </p>
         """
 
@@ -85,5 +77,24 @@ class Config:
         <li>No web dependencies or internet required</li>
         <li>Linux desktop entry creation (Application Menu / Desktop shortcuts)</li>
         </ul>
-        <p><b>Copyright © {date_}, <a href="{github_url}/">{author_}</a>. All rights reserved.</b></p>
+        <p><b>Copyright © {date_}, <a href="{author_url}/">{author_}</a>. All rights reserved.</b></p>
+        """
+    short_cuts_text = f"""<h2 style="color: #2a82da">Global Keyboard Shortcuts</h2>
+
+        <p><b style="color: #2a82da">F1</b> - Show Help</p>
+        <p><b style="color: #2a82da">Ctrl + Q</b> - Exit Application</p>
+        <p><b style="color: #2a82da">Ctrl + P</b> - Create New Password</p>
+        <p><b style="color: #2a82da">Ctrl + Shift + S</b> - Toggle Sounds</p>
+        <p><b style="color: #2a82da">Ctrl + /</b> - Keyboard shortcuts</p>
+        <p><b style="color: #2a82da">Ctrl + Shift + A</b> - About</p>
+        <p><b style="color: #2a82da">Ctrl + I</b> - Import Passwords</p>
+        <p><b style="color: #2a82da">Ctrl + E</b> - Export Passwords</p>
+
+        <hr>
+
+        <h2 style="color: #2a82da">Password's Keyboard Shortcuts</h2>
+
+        <p><b style="color: #2a82da">Ctrl + G</b> - Get Password</p>
+        <p><b style="color: #2a82da">Ctrl + Shift + E</b> - Edit Password</p>
+        <p><b style="color: #2a82da">Del</b> - Delete Password</p>
         """

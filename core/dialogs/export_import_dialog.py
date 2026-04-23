@@ -7,12 +7,15 @@ from PyQt5.QtWidgets import (
     QGroupBox, QRadioButton, QButtonGroup
 )
 
+from core.models.styles import ExportImportDialogStyles
+
 
 class ExportImportDialog(QDialog):
     def __init__(self, parent=None, mode="export", smart_pass_man=None, sound_manager=None):
         super().__init__(parent)
         self.mode = mode
         self.smart_pass_man = smart_pass_man
+        self.styles = ExportImportDialogStyles()
         self.sound_manager = sound_manager
         self.selected_file = None
 
@@ -25,7 +28,7 @@ class ExportImportDialog(QDialog):
 
         instruction = QLabel(self._get_instruction_text())
         instruction.setWordWrap(True)
-        instruction.setStyleSheet("color: #aaa; padding: 5px;")
+        instruction.setStyleSheet(self.styles.instruction_style)
         self.layout.addWidget(instruction)
 
         if mode == "export":
@@ -36,7 +39,7 @@ class ExportImportDialog(QDialog):
 
         file_select_layout = QHBoxLayout()
         self.file_path_label = QLabel("No file selected")
-        self.file_path_label.setStyleSheet("color: #888; font-style: italic;")
+        self.file_path_label.setStyleSheet(self.styles.file_path_label_style)
         self.file_path_label.setWordWrap(True)
         file_select_layout.addWidget(self.file_path_label)
 
@@ -55,7 +58,7 @@ class ExportImportDialog(QDialog):
                 "If public keys conflict, existing entries will be preserved."
             )
             warning.setWordWrap(True)
-            warning.setStyleSheet("color: #ff9800; background-color: #332200; padding: 8px; border-radius: 4px;")
+            warning.setStyleSheet(self.styles.warning_style)
             self.layout.addWidget(warning)
 
         button_layout = QHBoxLayout()
@@ -72,9 +75,9 @@ class ExportImportDialog(QDialog):
         self.action_button.setEnabled(False)
 
         if mode == "export":
-            self.action_button.setStyleSheet("background-color: #2a82da; color: white;")
+            self.action_button.setStyleSheet(self.styles.action_button_export_style)
         else:
-            self.action_button.setStyleSheet("background-color: #ff9800; color: white;")
+            self.action_button.setStyleSheet(self.styles.action_button_import_style)
 
         button_layout.addWidget(self.action_button)
         self.layout.addLayout(button_layout)
@@ -145,7 +148,7 @@ class ExportImportDialog(QDialog):
         if file_path:
             self.selected_file = file_path
             self.file_path_label.setText(file_path)
-            self.file_path_label.setStyleSheet("color: #2a82da;")
+            self.file_path_label.setStyleSheet(self.styles.file_path_label_new_style)
             self.action_button.setEnabled(True)
 
     def execute(self):
@@ -165,11 +168,19 @@ class ExportImportDialog(QDialog):
                 from datetime import datetime
                 from smartpasslib import __version__ as lib_version
                 from core import __version__ as app_version
+                from core import __app_type__ as app_type
+                from core import __lib_name__ as lib_name
+                from core import __app_name__ as app_name
+                from core import __lib_lang__ as lib_lang
 
                 export_data["_metadata"] = {
                     "exported_at": datetime.now().isoformat(),
+                    "app_name": app_name,
                     "app_version": app_version,
+                    "app_type": app_type,
+                    "lib_name": lib_name,
                     "lib_version": lib_version,
+                    "lib_lang": lib_lang,
                     "count": self.smart_pass_man.password_count
                 }
 
@@ -204,7 +215,7 @@ class ExportImportDialog(QDialog):
                 import_data = json.load(f)
 
             if "_metadata" in import_data:
-                metadata = import_data.pop("_metadata")
+                _ = import_data.pop("_metadata")
 
             added = 0
             skipped = 0

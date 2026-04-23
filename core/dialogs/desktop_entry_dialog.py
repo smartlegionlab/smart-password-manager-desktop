@@ -15,12 +15,14 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 
 from core import __version__ as ver
+from core.models.styles import DesktopEntryDialogStyles
 
 
 class DesktopEntryDialog(QDialog):
     def __init__(self, parent=None, sound_manager=None):
         super().__init__(parent)
         self.parent = parent
+        self.styles = DesktopEntryDialogStyles()
         self.sound_manager = sound_manager
         self.setWindowTitle("Create Desktop Entry")
         self.setMinimumWidth(550)
@@ -34,19 +36,6 @@ class DesktopEntryDialog(QDialog):
         self.setup_ui()
         self.center_dialog()
 
-    def find_icon_path(self):
-        possible_paths = [
-            os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data", "icons", "icon.png"),
-            os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "icons", "icon.png"),
-            os.path.join(os.path.dirname(__file__), "..", "..", "data", "icons", "icon.png"),
-            os.path.join(os.path.dirname(sys.argv[0]), "data", "icons", "icon.png"),
-        ]
-
-        for path in possible_paths:
-            if os.path.exists(path):
-                return path
-        return ""
-
     def setup_ui(self):
         layout = QVBoxLayout(self)
         layout.setSpacing(15)
@@ -56,8 +45,8 @@ class DesktopEntryDialog(QDialog):
         title_font.setPointSize(14)
         title_font.setBold(True)
         title_label.setFont(title_font)
-        title_label.setAlignment(Qt.AlignCenter)
-        title_label.setStyleSheet("color: #2a82da; margin: 10px;")
+        title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        title_label.setStyleSheet(self.styles.title_label_style)
         layout.addWidget(title_label)
 
         info_group = QGroupBox("Application Information")
@@ -68,7 +57,7 @@ class DesktopEntryDialog(QDialog):
             f"<b>Application Path:</b> {self.app_path}<br>"
             f"<b>Icon:</b> {self.icon_path if self.icon_path else 'Not found'}"
         )
-        info_text.setTextFormat(Qt.RichText)
+        info_text.setTextFormat(Qt.TextFormat.RichText)
         info_text.setWordWrap(True)
         info_layout.addWidget(info_text)
 
@@ -91,42 +80,21 @@ class DesktopEntryDialog(QDialog):
             "📌 <b>Note:</b> After creation, you may need to log out and back in "
             "or restart your desktop for the entry to appear in the menu."
         )
-        note_label.setTextFormat(Qt.RichText)
+        note_label.setTextFormat(Qt.TextFormat.RichText)
         note_label.setWordWrap(True)
-        note_label.setStyleSheet("color: #0d47a1; background-color: #e3f2fd; padding: 8px; border-radius: 5px;")
+        note_label.setStyleSheet(self.styles.note_label_style)
         layout.addWidget(note_label)
 
         button_layout = QHBoxLayout()
 
         self.create_btn = QPushButton("Create Entry")
         self.create_btn.setMinimumHeight(40)
-        self.create_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #2a82da;
-                color: white;
-                font-weight: bold;
-                border-radius: 5px;
-                padding: 8px 16px;
-            }
-            QPushButton:hover {
-                background-color: #1a72ca;
-            }
-        """)
+        self.create_btn.setStyleSheet(self.styles.create_btn_style)
         self.create_btn.clicked.connect(self.create_desktop_entry)
 
         self.cancel_btn = QPushButton("Cancel")
         self.cancel_btn.setMinimumHeight(40)
-        self.cancel_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #666;
-                color: white;
-                border-radius: 5px;
-                padding: 8px 16px;
-            }
-            QPushButton:hover {
-                background-color: #555;
-            }
-        """)
+        self.cancel_btn.setStyleSheet(self.styles.cancel_btn_style)
         self.cancel_btn.clicked.connect(self.reject)
 
         button_layout.addWidget(self.create_btn)
@@ -221,6 +189,19 @@ class DesktopEntryDialog(QDialog):
 
         except Exception as e:
             return False, str(e)
+
+    def find_icon_path(self):
+        possible_paths = [
+            os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data", "icons", "icon.png"),
+            os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "icons", "icon.png"),
+            os.path.join(os.path.dirname(__file__), "..", "..", "data", "icons", "icon.png"),
+            os.path.join(os.path.dirname(sys.argv[0]), "data", "icons", "icon.png"),
+        ]
+
+        for path in possible_paths:
+            if os.path.exists(path):
+                return path
+        return ""
 
     def generate_desktop_content(self):
         python_exec = sys.executable

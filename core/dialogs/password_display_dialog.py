@@ -11,12 +11,16 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt
 
+from core.models.styles import PasswordDisplayDialogStyles
+
 
 class PasswordDisplayDialog(QDialog):
     def __init__(self, parent=None, description="", password="", sound_manager=None):
         super().__init__(parent)
         self.setWindowTitle(f'Password for "{description}"')
         self.setMinimumWidth(400)
+
+        self.styles = PasswordDisplayDialogStyles()
 
         self.sound_manager = sound_manager
 
@@ -27,7 +31,7 @@ class PasswordDisplayDialog(QDialog):
 
         header = QLabel(f'<h3>{description}</h3>')
         header.setWordWrap(True)
-        header.setTextFormat(Qt.RichText)
+        header.setTextFormat(Qt.TextFormat.RichText)
         self.layout.addWidget(header)
 
         password_group = QGroupBox("Generated Password")
@@ -36,16 +40,7 @@ class PasswordDisplayDialog(QDialog):
         self.password_display = QLineEdit()
         self.password_display.setText(password)
         self.password_display.setReadOnly(True)
-        self.password_display.setStyleSheet("""
-            QLineEdit {
-                font-family: monospace;
-                font-size: 14px;
-                padding: 8px;
-                background-color: #2a2a2a;
-                border: 1px solid #444;
-                border-radius: 4px;
-            }
-        """)
+        self.password_display.setStyleSheet(self.styles.password_display_style)
         password_layout.addWidget(self.password_display)
 
         copy_layout = QHBoxLayout()
@@ -64,7 +59,7 @@ class PasswordDisplayDialog(QDialog):
             "It's not stored anywhere - regenerate it when needed.</i>"
         )
         note.setWordWrap(True)
-        note.setStyleSheet("color: #888;")
+        note.setStyleSheet(self.styles.note_style)
         self.layout.addWidget(note)
 
         self.close_button = QPushButton('Close', self)
@@ -77,7 +72,7 @@ class PasswordDisplayDialog(QDialog):
         clipboard = QApplication.clipboard()
         clipboard.setText(self.password_display.text())
         self.copy_button.setText("✅ Copied!")
-        self.copy_button.setStyleSheet("background-color: #2e7d32; color: white;")
+        self.copy_button.setStyleSheet(self.styles.copy_button_style)
 
         main_window = self.parent()
         while main_window and not hasattr(main_window, 'show_status_message'):

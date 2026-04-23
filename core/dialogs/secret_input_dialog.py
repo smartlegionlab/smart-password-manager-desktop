@@ -9,12 +9,16 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt
 
+from core.models.styles import SecretInputDialogStyles
+
 
 class SecretInputDialog(QDialog):
     def __init__(self, parent=None, description="", sound_manager=None):
         super().__init__(parent)
         self.setWindowTitle(f'Enter Secret Phrase for "{description}"')
         self.setMinimumWidth(350)
+
+        self.styles = SecretInputDialogStyles()
 
         self.sound_manager = sound_manager
 
@@ -23,7 +27,7 @@ class SecretInputDialog(QDialog):
 
         instruction = QLabel(f'Enter the secret phrase for:\n<b>{description}</b>')
         instruction.setWordWrap(True)
-        instruction.setTextFormat(Qt.RichText)
+        instruction.setTextFormat(Qt.TextFormat.RichText)
         self.layout.addWidget(instruction)
 
         self.secret_input = QLineEdit(self)
@@ -36,7 +40,7 @@ class SecretInputDialog(QDialog):
         self.show_secret_checkbox.setMaximumWidth(100)
         self.show_secret_checkbox.clicked.connect(self.sound_manager.play_click)
         self.show_secret_checkbox.clicked.connect(self.toggle_secret_visibility)
-        self.layout.addWidget(self.show_secret_checkbox, alignment=Qt.AlignRight)
+        self.layout.addWidget(self.show_secret_checkbox, alignment=Qt.AlignmentFlag.AlignCenter)
 
         button_layout = QHBoxLayout()
         self.cancel_button = QPushButton('Cancel', self)
@@ -48,7 +52,7 @@ class SecretInputDialog(QDialog):
         self.submit_button.setDefault(True)
         self.submit_button.clicked.connect(self.sound_manager.play_click)
         self.submit_button.clicked.connect(self.accept)
-        self.submit_button.setStyleSheet("background-color: #2a82da; color: white;")
+        self.submit_button.setStyleSheet(self.styles.submit_button_style)
         button_layout.addWidget(self.submit_button)
         self.layout.addLayout(button_layout)
 
