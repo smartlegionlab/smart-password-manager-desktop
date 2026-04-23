@@ -2,11 +2,20 @@
 import json
 from pathlib import Path
 from PyQt5.QtWidgets import (
-    QDialog, QVBoxLayout, QHBoxLayout, QLabel,
-    QPushButton, QFileDialog, QMessageBox, QCheckBox,
-    QGroupBox, QRadioButton, QButtonGroup
+    QDialog,
+    QVBoxLayout,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QFileDialog,
+    QMessageBox,
+    QCheckBox,
+    QGroupBox,
+    QRadioButton,
+    QButtonGroup
 )
 
+from core.models.configs.export_import_config import ExportImportDialogConfig
 from core.models.styles import ExportImportDialogStyles
 
 
@@ -16,6 +25,7 @@ class ExportImportDialog(QDialog):
         self.mode = mode
         self.smart_pass_man = smart_pass_man
         self.styles = ExportImportDialogStyles()
+        self.config = ExportImportDialogConfig()
         self.sound_manager = sound_manager
         self.selected_file = None
 
@@ -84,17 +94,9 @@ class ExportImportDialog(QDialog):
 
     def _get_instruction_text(self):
         if self.mode == "export":
-            return (
-                "Export your password metadata to a JSON file. "
-                "This file contains only public keys, descriptions and lengths - "
-                "no passwords or secret phrases are exported."
-            )
+            return self.config.export_text
         else:
-            return (
-                "Import password metadata from a JSON file. "
-                "The file must contain valid password metadata in the same format as export. "
-                "Existing passwords with the same public keys will NOT be overwritten."
-            )
+            return self.config.import_text
 
     def _get_action_text(self):
         return "Export" if self.mode == "export" else "Import"
@@ -166,21 +168,15 @@ class ExportImportDialog(QDialog):
 
             if self.include_metadata.isChecked():
                 from datetime import datetime
-                from smartpasslib import __version__ as lib_version
-                from core import __version__ as app_version
-                from core import __app_type__ as app_type
-                from core import __lib_name__ as lib_name
-                from core import __app_name__ as app_name
-                from core import __lib_lang__ as lib_lang
 
                 export_data["_metadata"] = {
                     "exported_at": datetime.now().isoformat(),
-                    "app_name": app_name,
-                    "app_version": app_version,
-                    "app_type": app_type,
-                    "lib_name": lib_name,
-                    "lib_version": lib_version,
-                    "lib_lang": lib_lang,
+                    "app_name": self.config.app_long_name,
+                    "app_version": self.config.version,
+                    "app_type": self.config.app_type,
+                    "lib_name": self.config.lib_name,
+                    "lib_version": self.config.lib_version,
+                    "lib_lang": self.config.lib_lang,
                     "count": self.smart_pass_man.password_count
                 }
 

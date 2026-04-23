@@ -26,7 +26,7 @@ from core.dialogs.edit_password_dialog import EditPasswordDialog
 from core.dialogs.password_display_dialog import PasswordDisplayDialog
 from core.dialogs.password_input_dialog import PasswordInputDialog
 from core.dialogs.secret_input_dialog import SecretInputDialog
-from core.models.config import Config
+from core.models.configs.main_window_config import MainWindowConfig
 from core.models.styles import MainWindowStyles
 from core.utils.sound_manager import SoundManager
 
@@ -34,7 +34,7 @@ from core.utils.sound_manager import SoundManager
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.config = Config()
+        self.config = MainWindowConfig()
         self.styles = MainWindowStyles()
         self.smart_pass_man = SmartPasswordManager()
         self.setWindowTitle(f'{self.config.app_name} {self.config.version}')
