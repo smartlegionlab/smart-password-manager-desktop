@@ -1,7 +1,7 @@
 # Copyright (©) 2026, Alexander Suvorov. All rights reserved.
 """Cross-platform desktop manager for deterministic smart passwords. Generate, manage, and
 retrieve passwords without storing them. Your secret phrase is the only key you need."""
-__version__ = '3.0.3'
+__version__ = '3.1.0'
 __author__ = 'Alexander Suvorov'
 __app_name__ = "Smart Password Manager"
 

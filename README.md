@@ -1,4 +1,4 @@
-# Smart Password Manager Desktop <sup>v3.0.3</sup>
+# Smart Password Manager Desktop <sup>v3.1.0</sup>
 
 ---
 
@@ -21,38 +21,7 @@
 
 **Summary:** Software provided "AS IS" without warranty. You assume all risks.
 
-**Full legal disclaimer:** See [DISCLAIMER.md](DISCLAIMER.md)
-
----
-
-## 🔄 Important: smartpasslib v3.0.0 Breaking Change
-
-> **⚠️ This release (v3.0.0) uses [smartpasslib](https://github.com/smartlegionlab/smartpasslib) v3.0.0, which is NOT backward compatible with v2.x.x**
-
-### Why the change?
-
-**Smartpasslib v3.0.0 introduces fundamental improvements:**
-- **Stronger cryptographic algorithm** — enhanced deterministic generation with better entropy distribution
-- **Improved performance** — faster password generation, especially for longer passwords
-- **Better cross-platform consistency** — identical results guaranteed across all platforms
-- **Extended character set support** — wider range of special characters for stronger passwords
-- **Future-proof architecture** — easier updates and security patches
-
-### What changed:
-
-- The core password generation algorithm has been completely redesigned
-- Passwords created with v2.3.3 or earlier **cannot be regenerated** using v3.0.3
-- Old metadata (`passwords.json`) will produce **different passwords** if used with v3.0.3
-
-### What you need to do:
-
-1. **Before upgrading** — retrieve and save all your existing passwords from the old version
-2. **After upgrading** — recreate each password using the same secret phrases + lengths
-3. **Update** your passwords on all websites/services
-
-**No automatic migration** — you must manually regenerate every password.
-
-📖 **Full migration instructions** → see [Migration Section](#migration-section)
+**Full legal disclaimer:** See [DISCLAIMER.md](https://github.com/smartlegionlab/smart-password-manager-desktop/blob/master/DISCLAIMER.md)
 
 ---
 
@@ -73,7 +42,6 @@
 6. **Copy to Clipboard**: One-click password copying for easy use
 7. **Verify Secrets**: Prove knowledge of secrets without exposing them
 8. **Export/Import**: Backup and restore your password metadata
-9. **Cross-Platform Management**: Windows, Linux and macOS support with consistent interface
 
 **Key Features:**
 - **No Password Database**: Eliminates password storage completely
@@ -96,27 +64,19 @@
 
 ---
 
-## Research Paradigms & Publications
+## 🔄 Important: smartpasslib v3.x.x+ Breaking Change
 
-- **[Pointer-Based Security Paradigm](https://doi.org/10.5281/zenodo.17204738)** - Architectural Shift from Data Protection to Data Non-Existence
-- **[Local Data Regeneration Paradigm](https://doi.org/10.5281/zenodo.17264327)** - Ontological Shift from Data Transmission to Synchronous State Discovery
+> **⚠️ This release uses [smartpasslib](https://github.com/smartlegionlab/smartpasslib) v3.x.x+, which is NOT backward compatible with v2.x.x**
+
+Passwords created with v2.x.x or earlier **cannot be regenerated** using v3.x.x+.
+
+📖 **Full migration instructions** → see [MIGRATION.md](https://github.com/smartlegionlab/smart-password-manager-desktop/blob/master/MIGRATION.md)
 
 ---
 
 ## Technical Foundation
 
 Powered by [**smartpasslib**](https://github.com/smartlegionlab/smartpasslib) — The core library for deterministic password generation.
-
-> ⚠️ **BREAKING CHANGE NOTICE**  
-> **smartpasslib v3.0.0 is NOT backward compatible with v2.x.x**  
-> Passwords generated with v2.x.x cannot be regenerated using v3.0.3 due to fundamental changes in the deterministic generation algorithm.
-
-**What this means for you:**
-- All passwords created with **v2.3.3 or earlier** must be **regenerated** after upgrading
-- Old metadata (`passwords.json`) remains readable but will produce **different passwords** if used with v3.0.3
-- You have two options:
-  1. **Before upgrading** — manually retrieve and save all passwords from old version
-  2. **After upgrading** — re-enter your secret phrases and recreate each entry with correct passwords
 
 **Key principle** (unchanged): Instead of storing passwords, you store verification metadata. The actual password is regenerated on-demand from your secret phrase.
 
@@ -130,7 +90,7 @@ Powered by [**smartpasslib**](https://github.com/smartlegionlab/smartpasslib) �
 - Service description
 - Password length parameter
 
-**Export format**: Same JSON structure, but v3.0.3 exports are **incompatible** with older versions. Always note which version created the export.
+**Export format**: Same JSON structure, but v3.x.x exports are **incompatible** with older versions. Always note which version created the export.
 
 **Security model**: Proof of secret knowledge without secret storage or password transmission.
 
@@ -220,43 +180,6 @@ python app.py
 2. Select previously exported JSON file
 3. Review import summary
 4. Click **OK** to refresh the view
-
----
-
-## Migration Section
-
-### Migrating from v2.x.x to v3.0.3
-
-**⚠️ Before upgrading — follow these steps carefully**
-
-**Step 1: Document your existing passwords**
-- Open your current Smart Password Manager (v2.3.3 or earlier)
-- For each service, click **Get** and copy the generated password
-- Save passwords in a secure temporary location (e.g., encrypted note)
-
-**Alternative method (more secure but manual):**
-- Write down for each service: **Service description + Secret phrase + Length**
-- After upgrading, you'll manually recreate entries and update passwords in services
-
-**Step 2: Export old metadata (optional backup)**
-- **File → Export → Export passwords...**
-- Save the JSON file as `passwords_v2_backup.json`
-
-**Step 3: Upgrade to v3.0.0**
-```bash
-# Update smartpasslib
-pip install smartpasslib==3.0.0
-```
-
-**Step 4: Migrate your data**
-- Option A: Start fresh — delete old `passwords.json` and add entries manually
-- Option B: Keep metadata but manually verify each password (not recommended — easy to make mistakes)
-
-**Step 5: Update passwords in all your services**
-- After regenerating passwords with v3.0.3, update them in each website/service
-- Test login before removing old access
-
-**Important**: v2.x.x and v3.0.3 cannot share the same metadata file. Keep them completely separate.
 
 ---
 
@@ -423,7 +346,7 @@ Length Strategy:
 #### Best Practices:
 1. **Unique per service** - Different secret for each account type
 2. **Memorable but complex** - Phrases you can remember
-3. **Case-sensitive** - v3.0.3 enforces exact case matching
+3. **Case-sensitive** - v3.x.x+ enforces exact case matching
 4. **No digital storage** - Keep only in memory
 5. **Backup plan** - Physical written backup in secure location
 6. **Export regularly** - Backup metadata after adding new passwords
@@ -495,27 +418,25 @@ Smart Password Manager Desktop (Python) produces **identical passwords** to:
 
 ---
 
-### Testing
-- Manual testing for UI interactions
-- Cross-platform compatibility verification
-- Secret phrase validation testing
-- Clipboard operations verification
-- Import/Export functionality testing
+## Research Paradigms & Publications
+
+- **[Pointer-Based Security Paradigm](https://doi.org/10.5281/zenodo.17204738)** - Architectural Shift from Data Protection to Data Non-Existence
+- **[Local Data Regeneration Paradigm](https://doi.org/10.5281/zenodo.17264327)** - Ontological Shift from Data Transmission to Synchronous State Discovery
 
 ---
 
 ## Version History
 
-| Version          | smartpasslib | Status                   | Migration Required     |
-|------------------|--------------|--------------------------|------------------------|
-| v2.3.3 and below | v2.x.x       | ❌ Deprecated/Unsupported | Must migrate to v3.0.3 |
-| v3.0.3+          | v3.0.0       | ✅ Current                | N/A                    |
+| Version          | smartpasslib | Status                   | Migration Required      |
+|------------------|--------------|--------------------------|-------------------------|
+| v2.x.x and below | v2.x.x       | ❌ Deprecated/Unsupported | Must migrate to v3.x.x+ |
+| v3.x.x+          | v3.x.x+      | ✅ Current                | N/A                     |
 
 ---
 
 ## License
 
-**[BSD 3-Clause License](LICENSE)**
+**[BSD 3-Clause License](https://github.com/smartlegionlab/smart-password-manager-desktop/blob/master/LICENSE)**
 
 Copyright (©) 2026, [Alexander Suvorov](https://github.com/smartlegionlab)
 
@@ -575,6 +496,4 @@ Copyright (©) 2026, [Alexander Suvorov](https://github.com/smartlegionlab)
 ![Main Interface 3](https://github.com/smartlegionlab/smart-password-manager-desktop/raw/master/data/images/smartpassman3.png)
 
 ![Main Interface 4](https://github.com/smartlegionlab/smart-password-manager-desktop/raw/master/data/images/smartpassman4.png)
-
----
 
