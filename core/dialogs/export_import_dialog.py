@@ -15,7 +15,7 @@ from PyQt5.QtWidgets import (
     QButtonGroup
 )
 
-from core.models.configs.export_import_config import ExportImportDialogConfig
+from core.models.configs.export_import_dialog_config import ExportImportDialogConfig
 from core.models.styles.export_import_dialog_styles import ExportImportDialogStyles
 
 

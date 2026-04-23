@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 
-from core import __version__ as ver
+from core.models.configs.desktop_entry_dialog_config import DesktopEntryDialogConfig
 from core.models.styles.desktop_entry_dialog_styles import DesktopEntryDialogStyles
 
 
@@ -23,6 +23,7 @@ class DesktopEntryDialog(QDialog):
         super().__init__(parent)
         self.parent = parent
         self.styles = DesktopEntryDialogStyles()
+        self.config = DesktopEntryDialogConfig()
         self.sound_manager = sound_manager
         self.setWindowTitle("Create Desktop Entry")
         self.setMinimumWidth(550)
@@ -209,9 +210,9 @@ class DesktopEntryDialog(QDialog):
         exec_line = f'"{python_exec}" "{self.app_path}"'
 
         content = f"""[Desktop Entry]
-Version={ver}
+Version={self.config.version}
 Type=Application
-Name={self.app_name}
+Name={self.config.app_name}
 Comment=Secure deterministic password manager
 Exec={exec_line}
 Icon={self.icon_path if self.icon_path else 'system-run'}
