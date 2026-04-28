@@ -8,7 +8,7 @@ class BaseConfig:
         self.app_name = 'Smart Password Manager'
         self.app_long_name = "Smart Password Manager Desktop (Python)"
         self.author = 'Alexander Suvorov'
-        self.version = '3.1.0'
+        self.version = '3.1.1'
         self.description = ("Cross-platform desktop manager for deterministic smart passwords. "
                        "Generate, manage, and retrieve passwords without storing them. "
                        "Your secret phrase is the only key you need.")

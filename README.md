@@ -1,8 +1,12 @@
-# Smart Password Manager Desktop <sup>v3.1.0</sup>
+# Smart Password Manager Desktop <sup>v3.1.1</sup>
 
 ---
 
 **Cross-platform desktop manager for deterministic smart passwords. Generate, manage, and retrieve passwords without storing them. Your secret phrase is the only key you need.**
+
+**Decentralized by Design**: Unlike traditional password managers that store encrypted vaults on central servers, 
+Smart Password Manager stores nothing. Your secrets never leave your device. Passwords are regenerated on-demand — 
+**no cloud, no database, no trust required**.
 
 ---
 
@@ -25,11 +29,12 @@
 
 ---
 
-## **Core Principles:**
+## Core Principles
 
-- **Zero-Password Storage**: No passwords are ever stored or transmitted
+- **Zero-Storage Security**: No passwords or secret phrases are ever stored or transmitted
+- **Decentralized Architecture**: No central servers, no cloud dependency, no third-party trust required
 - **Deterministic Regeneration**: Passwords are recreated identically from your secret phrase
-- **Metadata Management**: Store only descriptions and verification keys
+- **Metadata Only**: Store only descriptions and verification keys
 - **Local Processing**: All cryptographic operations happen on your device
 - **On-Demand Discovery**: Passwords exist only when you generate them
 
@@ -43,7 +48,9 @@
 7. **Verify Secrets**: Prove knowledge of secrets without exposing them
 8. **Export/Import**: Backup and restore your password metadata
 
-**Key Features:**
+## Key Features
+
+- **Decentralized & Serverless**: No central database, no cloud lock-in, complete user sovereignty
 - **No Password Database**: Eliminates password storage completely
 - **Dark Theme Interface**: Easy on the eyes during extended use
 - **Public Key Verification**: Verify secret knowledge without exposure
@@ -55,8 +62,10 @@
 - **Desktop Native**: No web dependencies or internet required
 - **Linux Desktop Integration**: Create application shortcuts in system menu (Linux only)
 
-**Security Model:**
-- **Proof of Knowledge**: Verify you know a secret without storing it
+## Security Model
+
+- **Proof of Knowledge**: Public keys verify secrets without exposing them
+- **Decentralized Trust**: No third party needed — you control your secrets completely
 - **Deterministic Security**: Same secret + length = same password, always
 - **Metadata Separation**: Non-sensitive data stored separately from verification
 - **Local Processing**: No data leaves your computer
@@ -64,7 +73,7 @@
 
 ---
 
-## 🔄 Important: smartpasslib v3.x.x+ Breaking Change
+## 🔄 Breaking Change (v3.x.x+)
 
 > **⚠️ This release uses [smartpasslib](https://github.com/smartlegionlab/smartpasslib) v3.x.x+, which is NOT backward compatible with v2.x.x**
 
@@ -74,13 +83,33 @@ Passwords created with v2.x.x or earlier **cannot be regenerated** using v3.x.x+
 
 ---
 
+## Research Paradigms & Publications
+
+- **[Pointer-Based Security Paradigm](https://doi.org/10.5281/zenodo.17204738)** - Architectural Shift from Data Protection to Data Non-Existence
+- **[Local Data Regeneration Paradigm](https://doi.org/10.5281/zenodo.17264327)** - Ontological Shift from Data Transmission to Synchronous State Discovery
+
+---
+
 ## Technical Foundation
 
 Powered by [**smartpasslib**](https://github.com/smartlegionlab/smartpasslib) — The core library for deterministic password generation.
 
-**Key principle** (unchanged): Instead of storing passwords, you store verification metadata. The actual password is regenerated on-demand from your secret phrase.
+**Key derivation (same as Python/JS/Kotlin/Go/C# versions):**
 
-**What's NOT stored** (unchanged):
+| Key Type    | Iterations | Purpose                                               |
+|-------------|------------|-------------------------------------------------------|
+| Private Key | 30         | Password generation (never stored, never transmitted) |
+| Public Key  | 60         | Verification (stored locally)                         |
+
+**Character Set:** `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$&*-_`
+
+**Decentralized Architecture**:
+- No central authority required
+- Metadata can be synced via any channel
+- Your security depends only on your secret phrase
+- Works offline — no internet connection required
+
+**What's NOT stored**:
 - Your secret phrase
 - The actual password
 - Any reversible password data
@@ -92,13 +121,11 @@ Powered by [**smartpasslib**](https://github.com/smartlegionlab/smartpasslib) �
 
 **Export format**: Same JSON structure, but v3.x.x exports are **incompatible** with older versions. Always note which version created the export.
 
-**Security model**: Proof of secret knowledge without secret storage or password transmission.
-
 ---
 
 ## File Locations
 
-Starting from smartpasslib v2.2.0, configuration files are stored in:
+Configuration files are stored in:
 
 | Platform | Configuration Path                                                |
 |----------|:------------------------------------------------------------------|
@@ -145,7 +172,7 @@ python app.py
 1. Click **Add** button
 2. Enter service description (e.g., "GitHub Account")
 3. Enter your secret phrase (minimum 12 characters, never stored)
-   - Good examples: `"MyCat🐱Hippo2026"` or `"P@ssw0rd!LongSecret"`
+   - Good examples: `"MyStrongSecretPhrase2026!"` or `"P@ssw0rd!LongSecret"`
 4. Set password length (16-24 recommended)
 5. Click **Create Password** - password appears for copying
 
@@ -329,18 +356,18 @@ Length Strategy:
 
 #### Strong Secret Examples:
 ```
-✅ "MyCat🐱Hippo2026"        — emoji + mixed case + numbers
-✅ "P@ssw0rd!LongSecret"     — special chars + numbers + length
-✅ "КотБегемот2026НаДиете"   — Cyrillic + numbers
-✅ "Correct-Horse-Battery-42" — memorable phrase with separator
+✅ "MyStrongSecretPhrase2026!"   — mixed case + numbers + symbols
+✅ "P@ssw0rd!LongSecret"         — special chars + numbers + length
+✅ "КотБегемот2026НаДиете"       — Cyrillic + numbers
+✅ "Correct-Horse-Battery-42"    — memorable phrase with separator
 ```
 
 #### Weak Secret Examples (avoid):
 ```
-❌ "password"                — dictionary word, too short
-❌ "1234567890"              — only digits, too short
-❌ "qwerty123"               — keyboard pattern
-❌ "mysecret"                — common phrase, too short
+❌ "password"                    — dictionary word, too short
+❌ "1234567890"                  — only digits, too short
+❌ "qwerty123"                   — keyboard pattern
+❌ "mysecret"                    — common phrase, too short
 ```
 
 #### Best Practices:
@@ -350,6 +377,16 @@ Length Strategy:
 4. **No digital storage** - Keep only in memory
 5. **Backup plan** - Physical written backup in secure location
 6. **Export regularly** - Backup metadata after adding new passwords
+
+### Decentralized Nature
+
+**There is no "forgot password" button.** This is by design:
+
+- No central server can reset your passwords
+- No support team can recover your access
+- Your secret phrase is the ONLY key
+
+**This is the price of true decentralization** — you are completely in control.
 
 ### Editing Strategy
 
@@ -398,30 +435,23 @@ Smart Password Manager Desktop (Python) produces **identical passwords** to:
 - **[smartpasslib-csharp](https://github.com/smartlegionlab/smartpasslib-csharp)** - C#
 
 **CLI Applications:**
-- **[CLI PassMan (Python)](https://github.com/smartlegionlab/clipassman)**
-- **[CLI PassGen (Python)](https://github.com/smartlegionlab/clipassgen)**
-- **[CLI Manager (C#)](https://github.com/smartlegionlab/SmartPasswordManagerCsharpCli)**
-- **[CLI Generator (C#)](https://github.com/smartlegionlab/SmartPasswordGeneratorCsharpCli)**
+- **[CLI Smart Password Manager (Python)](https://github.com/smartlegionlab/clipassman)**
+- **[CLI Smart Password Generator (Python)](https://github.com/smartlegionlab/clipassgen)**
+- **[CLI Smart Password Manager (C#)](https://github.com/smartlegionlab/SmartPasswordManagerCsharpCli)**
+- **[CLI Smart Password Generator (C#)](https://github.com/smartlegionlab/SmartPasswordGeneratorCsharpCli)**
 
 **Desktop Applications:**
-- **[Desktop Manager (Python)](https://github.com/smartlegionlab/smart-password-manager-desktop)** (this)
-- **[Desktop Manager (C#)](https://github.com/smartlegionlab/SmartPasswordManagerCsharpDesktop)**
+- **[Desktop Smart Password Manager (Python)](https://github.com/smartlegionlab/smart-password-manager-desktop)** (this)
+- **[Desktop Smart Password Manager (C#)](https://github.com/smartlegionlab/SmartPasswordManagerCsharpDesktop)**
 
 **Other:**
-- **[Web Manager](https://github.com/smartlegionlab/smart-password-manager-web)**
-- **[Android Manager](https://github.com/smartlegionlab/smart-password-manager-android)**
+- **[Web Smart Password Manager](https://github.com/smartlegionlab/smart-password-manager-web)**
+- **[Android Smart Password Manager](https://github.com/smartlegionlab/smart-password-manager-android)**
 
 ### Data Compatibility
 - Uses same `~/.config/smart_password_manager/passwords.json` format as CLI tools
 - Export files compatible across all ecosystem tools
 - Consistent cryptographic operations across platforms
-
----
-
-## Research Paradigms & Publications
-
-- **[Pointer-Based Security Paradigm](https://doi.org/10.5281/zenodo.17204738)** - Architectural Shift from Data Protection to Data Non-Existence
-- **[Local Data Regeneration Paradigm](https://doi.org/10.5281/zenodo.17264327)** - Ontological Shift from Data Transmission to Synchronous State Discovery
 
 ---
 
@@ -431,24 +461,6 @@ Smart Password Manager Desktop (Python) produces **identical passwords** to:
 |------------------|--------------|--------------------------|-------------------------|
 | v2.x.x and below | v2.x.x       | ❌ Deprecated/Unsupported | Must migrate to v3.x.x+ |
 | v3.x.x+          | v3.x.x+      | ✅ Current                | N/A                     |
-
----
-
-## License
-
-**[BSD 3-Clause License](https://github.com/smartlegionlab/smart-password-manager-desktop/blob/master/LICENSE)**
-
-Copyright (©) 2026, [Alexander Suvorov](https://github.com/smartlegionlab)
-
----
-
-## Support
-
-- **Desktop Manager Issues**: [GitHub Issues](https://github.com/smartlegionlab/smart-password-manager-desktop/issues)
-- **Core Library Issues**: [smartpasslib Issues](https://github.com/smartlegionlab/smartpasslib/issues)
-- **Documentation**: Inline help and this README
-
-**Note**: Always test password generation with non-essential accounts first. Implementation security depends on proper usage.
 
 ---
 
@@ -496,4 +508,22 @@ Copyright (©) 2026, [Alexander Suvorov](https://github.com/smartlegionlab)
 ![Main Interface 3](https://github.com/smartlegionlab/smart-password-manager-desktop/raw/master/data/images/smartpassman3.png)
 
 ![Main Interface 4](https://github.com/smartlegionlab/smart-password-manager-desktop/raw/master/data/images/smartpassman4.png)
+
+---
+
+## License
+
+**[BSD 3-Clause License](https://github.com/smartlegionlab/smart-password-manager-desktop/blob/master/LICENSE)**
+
+Copyright (©) 2026, [Alexander Suvorov](https://github.com/smartlegionlab)
+
+---
+
+## Support
+
+- **Desktop Manager Issues**: [GitHub Issues](https://github.com/smartlegionlab/smart-password-manager-desktop/issues)
+- **Core Library Issues**: [smartpasslib Issues](https://github.com/smartlegionlab/smartpasslib/issues)
+- **Documentation**: Inline help and this README
+
+**Note**: Always test password generation with non-essential accounts first. Implementation security depends on proper usage.
 
