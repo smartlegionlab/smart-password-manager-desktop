@@ -26,6 +26,7 @@ from core.dialogs.edit_password_dialog import EditPasswordDialog
 from core.dialogs.password_display_dialog import PasswordDisplayDialog
 from core.dialogs.password_input_dialog import PasswordInputDialog
 from core.dialogs.secret_input_dialog import SecretInputDialog
+from core.dialogs.qr_dialog import QRDialog
 from core.models.configs.main_window_config import MainWindowConfig
 from core.models.styles.main_window_styles import MainWindowStyles
 from core.utils.sound_manager import SoundManager
@@ -84,8 +85,8 @@ class MainWindow(QMainWindow):
         self.main_layout.addLayout(header_layout)
 
         self.table_widget = QTableWidget()
-        self.table_widget.setColumnCount(5)
-        self.table_widget.setHorizontalHeaderLabels(['Description', 'Length', 'Get', 'Edit', 'Delete'])
+        self.table_widget.setColumnCount(6)
+        self.table_widget.setHorizontalHeaderLabels(['Description', 'Length', 'QR', 'Get', 'Edit', 'Delete'])
         self.table_widget.setEditTriggers(QTableWidget.NoEditTriggers)
         self.table_widget.setSelectionMode(QTableWidget.SingleSelection)
         self.table_widget.setAlternatingRowColors(True)
@@ -96,6 +97,7 @@ class MainWindow(QMainWindow):
         self.table_widget.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeToContents)
         self.table_widget.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeToContents)
         self.table_widget.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeToContents)
+        self.table_widget.horizontalHeader().setSectionResizeMode(5, QHeaderView.ResizeToContents)
 
         self.main_layout.addWidget(self.table_widget)
 
@@ -173,7 +175,6 @@ class MainWindow(QMainWindow):
         dialog.exec_()
 
     def setup_menu_bar(self):
-
         file_menu = self.menu_bar.addMenu('File')
 
         if sys.platform.startswith('linux'):
@@ -207,6 +208,13 @@ class MainWindow(QMainWindow):
         file_menu.addAction(exit_action)
 
         passwords_menu = self.menu_bar.addMenu('Passwords')
+
+        qr_action = QAction('📱 Show QR Code for selected', self)
+        qr_action.setShortcut('Ctrl+Alt+R')
+        qr_action.triggered.connect(self.sound_manager.play_click)
+        qr_action.triggered.connect(self.show_qr_for_selected)
+        passwords_menu.addAction(qr_action)
+        passwords_menu.addSeparator()
 
         create_pass_action = QAction('Create new password', self)
         create_pass_action.setShortcut('Ctrl+P')
@@ -252,6 +260,7 @@ class MainWindow(QMainWindow):
         self.table_widget.customContextMenuRequested.connect(self.show_table_context_menu)
 
         shortcuts = [
+            ('Ctrl+R', 'Show QR Code', self.show_qr_for_selected),
             ('Ctrl+G', 'Get Password', self.get_password_for_selected_row),
             ('Ctrl+Shift+E', 'Edit Password', self.edit_password_for_selected_row),
             ('Del', 'Delete Password', self.delete_selected_row)
@@ -267,7 +276,7 @@ class MainWindow(QMainWindow):
         if row < 0:
             return None
 
-        for col in [2, 3, 4]:
+        for col in [2, 3, 4, 5]:
             widget = self.table_widget.cellWidget(row, col)
             if widget and hasattr(widget, 'public_key'):
                 return widget.public_key
@@ -282,6 +291,7 @@ class MainWindow(QMainWindow):
             return
 
         method_map = {
+            'qr': 'show_qr',
             'get': 'get_password',
             'edit': 'edit_password',
             'delete': 'remove_password'
@@ -300,6 +310,9 @@ class MainWindow(QMainWindow):
     def delete_selected_row(self):
         self._execute_action_for_selected_row('delete')
 
+    def show_qr_for_selected_row(self):
+        self._execute_action_for_selected_row('qr')
+
     def show_table_context_menu(self, position):
         item = self.table_widget.itemAt(position)
         if not item:
@@ -308,7 +321,7 @@ class MainWindow(QMainWindow):
         row = item.row()
         public_key = None
 
-        for col in [2, 3, 4]:
+        for col in [2, 3, 4, 5]:
             widget = self.table_widget.cellWidget(row, col)
             if widget and hasattr(widget, 'public_key'):
                 public_key = widget.public_key
@@ -318,6 +331,11 @@ class MainWindow(QMainWindow):
             return
 
         context_menu = QMenu(self)
+
+        qr_action = context_menu.addAction("📱 Show QR Code")
+        qr_action.triggered.connect(lambda checked, pk=public_key: self.show_qr(pk))
+
+        context_menu.addSeparator()
 
         get_action = context_menu.addAction("🔑 Get Password")
         get_action.setShortcut("Ctrl+G")
@@ -445,34 +463,80 @@ class MainWindow(QMainWindow):
         length_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
         self.table_widget.setItem(row_position, 1, length_item)
 
+        qr_button = QPushButton("QR")
+        qr_button.setToolTip("Show QR code for mobile import")
+        qr_button.setStyleSheet("""
+            QPushButton {
+                background-color: #17a2b8;
+                color: white;
+                border-radius: 3px;
+                padding: 5px 10px;
+                min-width: 60px;
+            }
+            QPushButton:hover {
+                background-color: #138496;
+            }
+        """)
+        qr_button.clicked.connect(self.sound_manager.play_click)
+        qr_button.clicked.connect(lambda checked, pk=smart_password.public_key: self.show_qr(pk))
+        qr_button.public_key = smart_password.public_key
+        self.table_widget.setCellWidget(row_position, 2, qr_button)
+
         get_button = QPushButton("Get")
         get_button.setToolTip("Get Smart Password")
         get_button.setStyleSheet(self.styles.get_button_style)
         get_button.clicked.connect(self.sound_manager.play_click)
-        get_button.clicked.connect(lambda checked, pk=smart_password.public_key:
-                                   self.get_password(pk))
+        get_button.clicked.connect(lambda checked, pk=smart_password.public_key: self.get_password(pk))
         get_button.public_key = smart_password.public_key
-        self.table_widget.setCellWidget(row_position, 2, get_button)
+        self.table_widget.setCellWidget(row_position, 3, get_button)
 
         edit_button = QPushButton("Edit")
         edit_button.setToolTip("Edit password description and length")
         edit_button.setStyleSheet(self.styles.edit_button_style)
         edit_button.clicked.connect(self.sound_manager.play_click)
-        edit_button.clicked.connect(lambda checked, pk=smart_password.public_key:
-                                    self.edit_password(pk))
+        edit_button.clicked.connect(lambda checked, pk=smart_password.public_key: self.edit_password(pk))
         edit_button.public_key = smart_password.public_key
-        self.table_widget.setCellWidget(row_position, 3, edit_button)
+        self.table_widget.setCellWidget(row_position, 4, edit_button)
 
         delete_button = QPushButton("Delete")
         delete_button.setToolTip("Delete this password entry")
         delete_button.setStyleSheet(self.styles.delete_button_style)
         delete_button.clicked.connect(self.sound_manager.play_click)
-        delete_button.clicked.connect(lambda checked, pk=smart_password.public_key:
-                                      self.remove_password(pk))
+        delete_button.clicked.connect(lambda checked, pk=smart_password.public_key: self.remove_password(pk))
         delete_button.public_key = smart_password.public_key
-        self.table_widget.setCellWidget(row_position, 4, delete_button)
+        self.table_widget.setCellWidget(row_position, 5, delete_button)
 
         self.update_password_count()
+
+    def show_qr(self, public_key):
+        self.sound_manager.play_notify()
+        smart_password = self.smart_pass_man.get_smart_password(public_key)
+        if not smart_password:
+            self.show_status_message('Password metadata not found', 2000)
+            QMessageBox.warning(self, 'Error', 'Password metadata not found.')
+            return
+
+        dialog = QRDialog(
+            self,
+            description=smart_password.description,
+            public_key=smart_password.public_key,
+            length=smart_password.length,
+            sound_manager=self.sound_manager
+        )
+        dialog.exec_()
+
+    def show_qr_for_selected(self):
+        current_row = self.table_widget.currentRow()
+        if current_row < 0:
+            self.show_status_message('No password selected. Please select a row first.', 2000)
+            QMessageBox.information(self, 'No Selection', 'Please select a password row first.')
+            return
+
+        public_key = self._get_public_key_for_row(current_row)
+        if public_key:
+            self.show_qr(public_key)
+        else:
+            self.show_status_message('Could not find selected password', 2000)
 
     def edit_password(self, public_key):
         self.sound_manager.play_notify()
@@ -593,7 +657,7 @@ class MainWindow(QMainWindow):
 
     def find_row_by_public_key(self, public_key):
         for row in range(self.table_widget.rowCount()):
-            for col in [2, 3, 4]:
+            for col in [2, 3, 4, 5]:
                 widget = self.table_widget.cellWidget(row, col)
                 if widget and hasattr(widget, 'public_key') and widget.public_key == public_key:
                     return row

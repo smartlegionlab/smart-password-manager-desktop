@@ -31,9 +31,16 @@ class PasswordInputDialog(QDialog):
         description_layout = QVBoxLayout()
         self.description_label = QLabel('Password Description (e.g., "GitHub Account"):')
         description_layout.addWidget(self.description_label)
+
         self.description_input = QLineEdit(self)
-        self.description_input.setPlaceholderText("Enter password description")
+        self.description_input.setPlaceholderText("Enter password description (max 255 chars)")
+        self.description_input.textChanged.connect(self.check_inputs)
         description_layout.addWidget(self.description_input)
+
+        self.description_warning = QLabel("")
+        self.description_warning.setStyleSheet("color: #ff9800; font-size: 11px;")
+        description_layout.addWidget(self.description_warning)
+
         description_group.setLayout(description_layout)
         self.layout.addWidget(description_group)
 
@@ -106,14 +113,33 @@ class PasswordInputDialog(QDialog):
             self.secret_input.setEchoMode(QLineEdit.Password)
             self.show_secret_checkbox.setText("👁 Show")
 
+    def validate_description(self, text):
+        forbidden_chars = ['"', '\\']
+
+        for char in forbidden_chars:
+            if char in text:
+                self.description_warning.setText(f"⚠️ Symbol '{char}' is not allowed in description")
+                return False
+
+        if len(text) > 255:
+            self.description_warning.setText("⚠️ Description must be 255 characters or less")
+            return False
+
+        if not text.strip():
+            self.description_warning.setText("⚠️ Description cannot be empty")
+            return False
+
+        self.description_warning.setText("")
+        return True
+
     def check_inputs(self):
-        description = self.description_input.text().strip()
+        description = self.description_input.text()
         secret = self.secret_input.text()
+
+        description_valid = self.validate_description(description)
 
         secret_valid = len(secret) >= 12
         self.secret_warning_label.setVisible(not secret_valid and len(secret) > 0)
-
-        description_valid = bool(description)
 
         self.submit_button.setEnabled(secret_valid and description_valid)
 
@@ -123,6 +149,9 @@ class PasswordInputDialog(QDialog):
         length = self.length_input.value()
 
         if not description:
+            return None, None, None
+
+        if not self.validate_description(description):
             return None, None, None
 
         if len(secret) < 12:

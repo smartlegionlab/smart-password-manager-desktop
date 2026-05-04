@@ -4,6 +4,7 @@ from core.models.configs.base_config import BaseConfig
 class MainWindowConfig(BaseConfig):
     def __init__(self):
         super().__init__()
+
         self.help_text = f"""
             <h3>Smart Password Manager Help {self.version}</h3>
 
@@ -25,6 +26,15 @@ class MainWindowConfig(BaseConfig):
             <li>Click <b>Edit</b> to change description or length</li>
             <li>Click <b>Delete</b> to remove entry (doesn't delete password)</li>
             </ol>
+
+            <p><b>QR Code Export:</b></p>
+            <ul>
+            <li>Click <b>QR</b> button next to any password to generate a QR code</li>
+            <li>Scan with <b>Smart Password Manager Android</b> app to import the password metadata</li>
+            <li>Keyboard shortcut: <b>Ctrl+Shift+R</b> for selected password</li>
+            <li>QR contains only metadata (description, length, public key) - no secrets</li>
+            <li>Right-click on any password row → <b>Show QR Code</b></li>
+            </ul>
 
             <p><b>Desktop Integration:</b></p>
             <ul>
@@ -55,20 +65,22 @@ class MainWindowConfig(BaseConfig):
             """
 
         self.about_text = f"""<h2>{self.app_name} {self.version}</h2>
-                <p>Cross-platform desktop manager for deterministic smart passwords.</p>
-                <p><b>Features:</b></p>
-                <ul>
-                <li>Eliminates password storage completely</li>
-                <li>Verify secret knowledge without exposure</li>
-                <li>See all your password metadata at a glance</li>
-                <li>Update descriptions and lengths anytime</li>
-                <li>Hidden secret phrase entry with show/hide toggle</li>
-                <li>Quick password copying for account setup</li>
-                <li>No web dependencies or internet required</li>
-                <li>Linux desktop entry creation (Application Menu / Desktop shortcuts)</li>
-                </ul>
-                <p><b>Copyright © {self.year}, <a href="{self.github_url}/">{self.author}</a>. All rights reserved.</b></p>
-                """
+            <p>Cross-platform desktop manager for deterministic smart passwords.</p>
+            <p><b>Features:</b></p>
+            <ul>
+            <li>Eliminates password storage completely</li>
+            <li>Verify secret knowledge without exposure</li>
+            <li>See all your password metadata at a glance</li>
+            <li>Update descriptions and lengths anytime</li>
+            <li>Hidden secret phrase entry with show/hide toggle</li>
+            <li>Quick password copying for account setup</li>
+            <li>QR code export for easy migration to Android app</li>
+            <li>No web dependencies or internet required</li>
+            <li>Linux desktop entry creation (Application Menu / Desktop shortcuts)</li>
+            </ul>
+            <p><b>Copyright © {self.year}, <a href="{self.github_url}/">{self.author}</a>. All rights reserved.</b></p>
+            """
+
         self.short_cuts_text = f"""<h2 style="color: #2a82da">Global Keyboard Shortcuts</h2>
 
                 <p><b style="color: #2a82da">F1</b> - Show Help</p>
@@ -84,6 +96,7 @@ class MainWindowConfig(BaseConfig):
 
                 <h2 style="color: #2a82da">Password's Keyboard Shortcuts</h2>
 
+                <p><b style="color: #2a82da">Ctrl + Shift + R</b> - Show QR Code for selected password</p>
                 <p><b style="color: #2a82da">Ctrl + G</b> - Get Password</p>
                 <p><b style="color: #2a82da">Ctrl + Shift + E</b> - Edit Password</p>
                 <p><b style="color: #2a82da">Del</b> - Delete Password</p>

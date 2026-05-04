@@ -1,4 +1,4 @@
-# Smart Password Manager Desktop <sup>v3.1.1</sup>
+# Smart Password Manager Desktop <sup>v3.1.2</sup>
 
 ---
 
@@ -61,6 +61,7 @@ Smart Password Manager stores nothing. Your secrets never leave your device. Pas
 - **Export/Import**: Backup and restore functionality
 - **Desktop Native**: No web dependencies or internet required
 - **Linux Desktop Integration**: Create application shortcuts in system menu (Linux only)
+- **QR Code Export**: Transfer password metadata to Android app via QR code
 
 ## Security Model
 
@@ -217,6 +218,7 @@ python app.py
 **Password Table:**
 - **Description**: Service name or account identifier
 - **Length**: Password character count
+- **QR**: Generate QR code for mobile import
 - **Get**: Regenerate password with secret phrase
 - **Edit**: Modify description and length
 - **Delete**: Remove entry (metadata only)
@@ -261,21 +263,47 @@ The application allows you to create desktop entries directly from the menu:
 
 ---
 
+### QR Code Export to Mobile
+
+The application allows you to export password metadata to the **Smart Password Manager Android** app via QR code:
+
+**How to use:**
+1. Select any password in the table
+2. Click the **QR** button, press **Ctrl+Shift+R**, or right-click and choose **Show QR Code**
+3. A dialog with QR code will appear containing the password metadata
+4. Open the Android app and scan the QR code
+5. The password entry will be automatically added to your mobile device
+
+**What's included in QR:**
+- Password description
+- Password length
+- Public verification key
+
+**What's NOT included:**
+- Your secret phrase (never leaves your device)
+- The actual password
+- Any sensitive information
+
+**Security Note:** QR codes contain only metadata that is already stored locally. Your secret phrase and actual passwords are never embedded in QR codes.
+
+---
+
 ### Keyboard Shortcuts
 
-| Shortcut       | Action              | Description                    |
-|----------------|---------------------|--------------------------------|
-| `F1`           | Help                | Show help                      |
-| `Ctrl+Q`       | Exit                | Close the application          |
-| `Ctrl+P`       | Create new password | Open "Create password" dialog  |
-| `Ctrl+Shift+S` | Toggle sounds       | Enable/Disable app's sounds    |
-| `Ctrl+/`       | Keyboard shortcuts  | Keyboard shortcuts             |
-| `Ctrl+Shift+A` | About dialog        | About dialog                   |
-| `Ctrl+E`       | Export passwords    | Export metadata to JSON file   |
-| `Ctrl+I`       | Import passwords    | Import metadata from JSON file |
-| `Ctrl+G`       | Get password        | Get selected password          |
-| `Ctrl+Shift+E` | Edit password       | Edit selected password         |
-| `Del`          | Delete password     | Delete selected password       |
+| Shortcut       | Action              | Description                       |
+|----------------|---------------------|-----------------------------------|
+| `F1`           | Help                | Show help                         |
+| `Ctrl+Q`       | Exit                | Close the application             |
+| `Ctrl+P`       | Create new password | Open "Create password" dialog     |
+| `Ctrl+Shift+S` | Toggle sounds       | Enable/Disable app's sounds       |
+| `Ctrl+/`       | Keyboard shortcuts  | Keyboard shortcuts                |
+| `Ctrl+Shift+A` | About dialog        | About dialog                      |
+| `Ctrl+E`       | Export passwords    | Export metadata to JSON file      |
+| `Ctrl+I`       | Import passwords    | Import metadata from JSON file    |
+| `Ctrl+G`       | Get password        | Get selected password             |
+| `Ctrl+Shift+E` | Edit password       | Edit selected password            |
+| `Ctrl+Shift+R` | Show QR Code        | Generate QR for selected password |
+| `Del`          | Delete password     | Delete selected password          |
 
 ---
 
@@ -285,6 +313,7 @@ Right-click on any password row to access a context menu with all actions:
 
 | Menu Item     | Action           | Description                   | Shortcuts      |
 |---------------|------------------|-------------------------------|----------------|
+| Show QR Code  | QR generation    | Export metadata to mobile     | `Ctrl+Shift+R` |
 | Get Password  | One-click access | Generate and display password | `Ctrl+G`       |
 | Edit Metadata | Quick edit       | Modify description or length  | `Ctrl+Shift+E` |
 | Delete Entry  | Direct deletion  | Remove password metadata      | `Del`          |
@@ -324,6 +353,13 @@ This provides an alternative to the table buttons for users who prefer context m
 - Format options (pretty/minified JSON)
 - Metadata inclusion toggle
 - Import warnings and statistics
+
+**QR Dialog:**
+- QR code generation for selected password
+- Compact JSON format with description, length, public key
+- Copy JSON to clipboard button
+- Link to Android app for scanning
+- White background with high contrast for easy scanning
 
 ---
 
@@ -424,6 +460,10 @@ Smart Password Manager Desktop (Python) produces **identical passwords** to:
 | CLI Generator C# | [CLI Generator (C#)](https://github.com/smartlegionlab/SmartPasswordGeneratorCsharpCli) |
 | Web              | [Web Manager](https://github.com/smartlegionlab/smart-password-manager-web)             |
 | Android          | [Android Manager](https://github.com/smartlegionlab/smart-password-manager-android)     |
+
+**Cross-platform data transfer:** 
+- **QR codes** - Transfer password metadata from Desktop to Android app seamlessly
+- **Export/Import** - JSON export/import works across all platforms (Desktop, Web, CLI, Android)
 
 ## Ecosystem
 

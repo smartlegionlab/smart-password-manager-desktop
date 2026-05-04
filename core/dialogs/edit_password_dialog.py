@@ -32,8 +32,14 @@ class EditPasswordDialog(QDialog):
         description_layout = QVBoxLayout()
         self.description_input = QLineEdit(self)
         self.description_input.setText(current_description)
-        self.description_input.setPlaceholderText("Enter new password description")
+        self.description_input.setPlaceholderText("Enter new password description (max 255 chars)")
+        self.description_input.textChanged.connect(self.check_inputs)
         description_layout.addWidget(self.description_input)
+
+        self.description_warning = QLabel("")
+        self.description_warning.setStyleSheet("color: #ff9800; font-size: 11px;")
+        description_layout.addWidget(self.description_warning)
+
         description_group.setLayout(description_layout)
         self.layout.addWidget(description_group)
 
@@ -80,7 +86,32 @@ class EditPasswordDialog(QDialog):
         button_layout.addWidget(self.submit_button)
         self.layout.addLayout(button_layout)
 
+        self.submit_button.setEnabled(True)
         self.on_length_changed(current_length)
+
+    def validate_description(self, text):
+        forbidden_chars = ['"', '\\']
+
+        for char in forbidden_chars:
+            if char in text:
+                self.description_warning.setText(f"⚠️ Symbol '{char}' is not allowed in description")
+                return False
+
+        if len(text) > 255:
+            self.description_warning.setText("⚠️ Description must be 255 characters or less")
+            return False
+
+        if not text.strip():
+            self.description_warning.setText("⚠️ Description cannot be empty")
+            return False
+
+        self.description_warning.setText("")
+        return True
+
+    def check_inputs(self):
+        description = self.description_input.text()
+        is_valid = self.validate_description(description)
+        self.submit_button.setEnabled(is_valid)
 
     def on_length_changed(self, new_length):
         if new_length != self.current_length:
@@ -92,4 +123,9 @@ class EditPasswordDialog(QDialog):
             self.length_warning.setText("")
 
     def get_values(self):
-        return self.description_input.text().strip(), self.length_input.value()
+        description = self.description_input.text().strip()
+
+        if not self.validate_description(description):
+            return None, None
+
+        return description, self.length_input.value()
