@@ -32,7 +32,7 @@ class MainWindowConfig(BaseConfig):
             <li>Click <b>QR</b> button next to any password to generate a QR code</li>
             <li>Scan with <b>Smart Password Manager Android</b> app to import the password metadata</li>
             <li>Keyboard shortcut: <b>Ctrl+Shift+R</b> for selected password</li>
-            <li>QR contains only metadata (description, length, public key) - no secrets</li>
+            <li>QR contains only metadata - no secrets</li>
             <li>Right-click on any password row → <b>Show QR Code</b></li>
             </ul>
 

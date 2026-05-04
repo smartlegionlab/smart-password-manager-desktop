@@ -23,7 +23,6 @@ class QRDialog(QDialog):
         self.length = length
 
         self.qr_data = {
-            "d": description,
             "l": length,
             "k": public_key
         }
@@ -66,7 +65,7 @@ class QRDialog(QDialog):
         layout.addWidget(key_label)
 
         note_label = QLabel(
-            'Scan with <a href="https://github.com/smartlegionlab/smart-password-manager-android/releases" '
+            '📲 Scan with <a href="https://github.com/smartlegionlab/smart-password-manager-android/releases" '
             'style="color: #2a82da; text-decoration: none;">Smart Password Manager Android</a>'
         )
         note_label.setOpenExternalLinks(True)

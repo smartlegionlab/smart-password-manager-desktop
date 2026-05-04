@@ -356,7 +356,7 @@ This provides an alternative to the table buttons for users who prefer context m
 
 **QR Dialog:**
 - QR code generation for selected password
-- Compact JSON format with description, length, public key
+- Compact JSON format with length, public key
 - Copy JSON to clipboard button
 - Link to Android app for scanning
 - White background with high contrast for easy scanning

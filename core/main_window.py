@@ -38,7 +38,7 @@ class MainWindow(QMainWindow):
         self.config = MainWindowConfig()
         self.styles = MainWindowStyles()
         self.smart_pass_man = SmartPasswordManager()
-        self.setWindowTitle(f'{self.config.app_name} {self.config.version}')
+        self.setWindowTitle(f'{self.config.app_name}')
         self.resize(800, 600)
 
         self.setup_application_icon()
