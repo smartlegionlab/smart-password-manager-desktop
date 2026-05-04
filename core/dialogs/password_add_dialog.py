@@ -14,7 +14,7 @@ from PyQt5.QtCore import Qt
 from core.models.styles.password_input_dialog_styles import PasswordInputDialogStyles
 
 
-class PasswordInputDialog(QDialog):
+class AddPasswordDialog(QDialog):
     def __init__(self, parent=None, sound_manager=None):
         super().__init__(parent)
         self.setWindowTitle('Create Smart Password')

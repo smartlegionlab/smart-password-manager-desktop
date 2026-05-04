@@ -23,9 +23,9 @@ from PyQt5.QtMultimedia import QSound
 from smartpasslib import SmartPasswordManager, SmartPassword, SmartPasswordMaster
 
 from core.dialogs.edit_password_dialog import EditPasswordDialog
+from core.dialogs.password_add_dialog import AddPasswordDialog
 from core.dialogs.password_display_dialog import PasswordDisplayDialog
-from core.dialogs.password_input_dialog import PasswordInputDialog
-from core.dialogs.secret_input_dialog import SecretInputDialog
+from core.dialogs.password_get_dialog import GetPasswordDialog
 from core.dialogs.qr_dialog import QRDialog
 from core.models.configs.main_window_config import MainWindowConfig
 from core.models.styles.main_window_styles import MainWindowStyles
@@ -665,7 +665,7 @@ class MainWindow(QMainWindow):
 
     def add_password(self):
         self.sound_manager.play_notify()
-        dialog = PasswordInputDialog(self, self.sound_manager)
+        dialog = AddPasswordDialog(self, self.sound_manager)
         if dialog.exec_() == QDialog.Accepted:
             description, secret, length = dialog.get_inputs()
 
@@ -738,7 +738,7 @@ class MainWindow(QMainWindow):
             return
 
         description = smart_password.description
-        dialog = SecretInputDialog(self, description, self.sound_manager)
+        dialog = GetPasswordDialog(self, description, self.sound_manager)
         if dialog.exec_() == QDialog.Accepted:
             secret = dialog.get_secret()
 

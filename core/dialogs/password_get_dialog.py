@@ -14,7 +14,7 @@ from PyQt5.QtCore import Qt
 from core.models.styles.secret_input_dialog_styles import SecretInputDialogStyles
 
 
-class SecretInputDialog(QDialog):
+class GetPasswordDialog(QDialog):
     def __init__(self, parent=None, description="", sound_manager=None):
         super().__init__(parent)
         self.setWindowTitle(f'Enter Secret Phrase')
