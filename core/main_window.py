@@ -14,10 +14,18 @@ from PyQt5.QtWidgets import (
     QFrame,
     QHeaderView,
     QHBoxLayout,
-    QAction, QMenuBar, QStatusBar, QMainWindow, QMenu, QScrollArea, QLineEdit, QGroupBox, QTextEdit
+    QAction,
+    QMenuBar,
+    QStatusBar,
+    QMainWindow,
+    QMenu,
+    QScrollArea,
+    QLineEdit,
+    QGroupBox,
+    QTextEdit
 )
-from PyQt5.QtGui import QFont, QIcon
-from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont, QIcon, QDesktopServices
+from PyQt5.QtCore import Qt, QUrl
 from PyQt5.QtMultimedia import QSound
 from smartpasslib import SmartPasswordManager, SmartPassword, SmartPasswordMaster
 
@@ -95,18 +103,7 @@ class MainWindow(QMainWindow):
         self.btn_add.setMinimumWidth(100)
         self.btn_add.clicked.connect(self.sound_manager.play_click)
         self.btn_add.clicked.connect(self.add_password)
-        self.btn_add.setStyleSheet("""
-            QPushButton {
-                background-color: #2a82da;
-                color: white;
-                font-weight: bold;
-                border-radius: 5px;
-                padding: 8px 16px;
-            }
-            QPushButton:hover {
-                background-color: #1a72ca;
-            }
-        """)
+        self.btn_add.setStyleSheet(self.styles.btn_add)
         top_button_layout.addWidget(self.btn_add)
 
         self.btn_import = QPushButton("Import")
@@ -114,24 +111,13 @@ class MainWindow(QMainWindow):
         self.btn_import.setMinimumWidth(100)
         self.btn_import.clicked.connect(self.sound_manager.play_click)
         self.btn_import.clicked.connect(self.import_passwords)
-        self.btn_import.setStyleSheet("""
-            QPushButton {
-                background-color: #6c757d;
-                color: white;
-                font-weight: bold;
-                border-radius: 5px;
-                padding: 8px 16px;
-            }
-            QPushButton:hover {
-                background-color: #5a6268;
-            }
-        """)
+        self.btn_import.setStyleSheet(self.styles.btn_import)
         top_button_layout.addWidget(self.btn_import)
 
         top_button_layout.addStretch()
 
         self.search_panel = QWidget()
-        self.search_panel.setStyleSheet("background-color: #23232a;")
+        self.search_panel.setStyleSheet(self.styles.search_panel)
         search_layout = QHBoxLayout(self.search_panel)
         search_layout.setContentsMargins(20, 5, 20, 10)
 
@@ -142,15 +128,7 @@ class MainWindow(QMainWindow):
         self.search_input = QLineEdit()
         self.search_input.setPlaceholderText("Search by description or public key...")
         self.search_input.setMinimumHeight(30)
-        self.search_input.setStyleSheet("""
-            QLineEdit {
-                background-color: #2d2d34;
-                color: #f0f0f0;
-                border: 1px solid #444;
-                border-radius: 4px;
-                padding: 5px;
-            }
-        """)
+        self.search_input.setStyleSheet(self.styles.search_input)
         self.search_input.textChanged.connect(self.apply_filter)
         search_layout.addWidget(self.search_input)
 
@@ -158,17 +136,7 @@ class MainWindow(QMainWindow):
         self.btn_clear_search.setMinimumWidth(70)
         self.btn_clear_search.setMinimumHeight(30)
         self.btn_clear_search.clicked.connect(self.clear_search)
-        self.btn_clear_search.setStyleSheet("""
-            QPushButton {
-                background-color: #2a82da;
-                color: white;
-                border-radius: 4px;
-                padding: 5px 10px;
-            }
-            QPushButton:hover {
-                background-color: #1a72ca;
-            }
-        """)
+        self.btn_clear_search.setStyleSheet(self.styles.btn_clear_search)
         search_layout.addWidget(self.btn_clear_search)
 
         self.main_layout.addWidget(self.top_button_panel)
@@ -191,7 +159,7 @@ class MainWindow(QMainWindow):
         self.main_layout.addWidget(self.table_widget)
 
         self.bottom_button_panel = QWidget()
-        self.bottom_button_panel.setStyleSheet("background-color: #23232a;")
+        self.bottom_button_panel.setStyleSheet(self.styles.bottom_button_panel)
         bottom_button_layout = QHBoxLayout(self.bottom_button_panel)
         bottom_button_layout.setContentsMargins(20, 10, 20, 10)
 
@@ -200,18 +168,7 @@ class MainWindow(QMainWindow):
         self.btn_get.setMinimumWidth(100)
         self.btn_get.clicked.connect(self.sound_manager.play_click)
         self.btn_get.clicked.connect(self.get_password_for_selected_row)
-        self.btn_get.setStyleSheet("""
-            QPushButton {
-                background-color: #28a745;
-                color: white;
-                font-weight: bold;
-                border-radius: 5px;
-                padding: 8px 16px;
-            }
-            QPushButton:hover {
-                background-color: #218838;
-            }
-        """)
+        self.btn_get.setStyleSheet(self.styles.btn_get)
         bottom_button_layout.addWidget(self.btn_get)
 
         self.btn_edit = QPushButton("Edit")
@@ -219,18 +176,7 @@ class MainWindow(QMainWindow):
         self.btn_edit.setMinimumWidth(100)
         self.btn_edit.clicked.connect(self.sound_manager.play_click)
         self.btn_edit.clicked.connect(self.edit_password_for_selected_row)
-        self.btn_edit.setStyleSheet("""
-            QPushButton {
-                background-color: #ffc107;
-                color: #282828;
-                font-weight: bold;
-                border-radius: 5px;
-                padding: 8px 16px;
-            }
-            QPushButton:hover {
-                background-color: #e0a800;
-            }
-        """)
+        self.btn_edit.setStyleSheet(self.styles.btn_edit)
         bottom_button_layout.addWidget(self.btn_edit)
 
         self.btn_delete = QPushButton("Delete")
@@ -238,18 +184,7 @@ class MainWindow(QMainWindow):
         self.btn_delete.setMinimumWidth(100)
         self.btn_delete.clicked.connect(self.sound_manager.play_click)
         self.btn_delete.clicked.connect(self.delete_selected_row)
-        self.btn_delete.setStyleSheet("""
-            QPushButton {
-                background-color: #dc3545;
-                color: white;
-                font-weight: bold;
-                border-radius: 5px;
-                padding: 8px 16px;
-            }
-            QPushButton:hover {
-                background-color: #c82333;
-            }
-        """)
+        self.btn_delete.setStyleSheet(self.styles.btn_delete)
         bottom_button_layout.addWidget(self.btn_delete)
 
         self.btn_qr = QPushButton("QR")
@@ -257,18 +192,7 @@ class MainWindow(QMainWindow):
         self.btn_qr.setMinimumWidth(100)
         self.btn_qr.clicked.connect(self.sound_manager.play_click)
         self.btn_qr.clicked.connect(self.show_qr_for_selected)
-        self.btn_qr.setStyleSheet("""
-            QPushButton {
-                background-color: #17a2b8;
-                color: white;
-                font-weight: bold;
-                border-radius: 5px;
-                padding: 8px 16px;
-            }
-            QPushButton:hover {
-                background-color: #138496;
-            }
-        """)
+        self.btn_qr.setStyleSheet(self.styles.btn_qr)
         bottom_button_layout.addWidget(self.btn_qr)
 
         self.btn_export = QPushButton("Export")
@@ -276,18 +200,7 @@ class MainWindow(QMainWindow):
         self.btn_export.setMinimumWidth(100)
         self.btn_export.clicked.connect(self.sound_manager.play_click)
         self.btn_export.clicked.connect(self.export_passwords)
-        self.btn_export.setStyleSheet("""
-            QPushButton {
-                background-color: #6c757d;
-                color: white;
-                font-weight: bold;
-                border-radius: 5px;
-                padding: 8px 16px;
-            }
-            QPushButton:hover {
-                background-color: #5a6268;
-            }
-        """)
+        self.btn_export.setStyleSheet(self.styles.btn_export)
         bottom_button_layout.addWidget(self.btn_export)
 
         bottom_button_layout.addStretch()
@@ -296,18 +209,7 @@ class MainWindow(QMainWindow):
         self.btn_exit.setMinimumHeight(40)
         self.btn_exit.setMinimumWidth(100)
         self.btn_exit.clicked.connect(self.close)
-        self.btn_exit.setStyleSheet("""
-            QPushButton {
-                background-color: #dc3545;
-                color: white;
-                font-weight: bold;
-                border-radius: 5px;
-                padding: 8px 16px;
-            }
-            QPushButton:hover {
-                background-color: #c82333;
-            }
-        """)
+        self.btn_exit.setStyleSheet(self.styles.btn_exit)
         bottom_button_layout.addWidget(self.btn_exit)
 
         self.main_layout.addWidget(self.bottom_button_panel)
@@ -547,7 +449,6 @@ class MainWindow(QMainWindow):
 
         for row, pwd in enumerate(filtered):
             desc_item = QTableWidgetItem(pwd.description)
-            desc_item.setToolTip(pwd.description)
             self.table_widget.setItem(row, 0, desc_item)
 
             length_item = QTableWidgetItem(f"{pwd.length} chars")
@@ -556,7 +457,6 @@ class MainWindow(QMainWindow):
 
             short_key = pwd.public_key[:30] + "..." if len(pwd.public_key) > 30 else pwd.public_key
             key_item = QTableWidgetItem(short_key)
-            key_item.setToolTip(pwd.public_key)
             self.table_widget.setItem(row, 2, key_item)
 
         count = len(filtered)
@@ -607,7 +507,7 @@ class MainWindow(QMainWindow):
 
         button_layout = QHBoxLayout()
         button_layout.addStretch()
-        ok_button = QPushButton("Agree")
+        ok_button = QPushButton("Ok")
         ok_button.setMinimumWidth(100)
         ok_button.setMinimumHeight(35)
         ok_button.setStyleSheet(self.styles.ok_button_style)
@@ -627,62 +527,140 @@ class MainWindow(QMainWindow):
 
         dialog = QDialog(self)
         dialog.setWindowTitle("About Smart Password Manager")
-        dialog.setMinimumWidth(650)
-        dialog.setMinimumHeight(500)
+        dialog.setMinimumWidth(700)
+        dialog.setMinimumHeight(550)
         dialog.setModal(True)
 
         layout = QVBoxLayout(dialog)
         layout.setSpacing(10)
 
-        title_label = QLabel(f"<h2 style='color: #2a82da;'>{self.config.app_name} {self.config.version}</h2>")
+        title_layout = QHBoxLayout()
+        icon_label = QLabel("🔐")
+        icon_label.setStyleSheet("font-size: 32px;")
+        title_layout.addWidget(icon_label)
+
+        title_label = QLabel(f"<h1 style='color: #2a82da; margin: 0;'>{self.config.app_name}</h1>")
         title_label.setTextFormat(Qt.TextFormat.RichText)
-        title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(title_label)
+        title_layout.addWidget(title_label)
+        title_layout.addStretch()
+        layout.addLayout(title_layout)
+
+        version_label = QLabel(f"<b>Version {self.config.version}</b>")
+        version_label.setTextFormat(Qt.TextFormat.RichText)
+        version_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(version_label)
 
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_area.setFrameShape(QFrame.NoFrame)
+        scroll_area.setMinimumHeight(300)
 
         content_widget = QWidget()
         content_layout = QVBoxLayout(content_widget)
+        content_layout.setSpacing(15)
 
-        about_label = QLabel(self.config.about_text)
-        about_label.setTextFormat(Qt.TextFormat.PlainText)
-        about_label.setWordWrap(True)
-        about_label.setStyleSheet("""
-            QLabel {
-                background-color: #2a2a2a;
-                color: #e0e0e0;
-                padding: 15px;
-                font-family: monospace;
-                font-size: 10pt;
-                line-height: 1.4;
-            }
-        """)
-        content_layout.addWidget(about_label)
+        desc_label = QLabel(
+            "Cross-platform desktop manager for deterministic smart passwords.\n"
+            "Generate, manage, and retrieve passwords without storing them.\n"
+            "Your secret phrase is the only key you need."
+        )
+        desc_label.setWordWrap(True)
+        desc_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        desc_label.setStyleSheet(self.styles.desc_label)
+        content_layout.addWidget(desc_label)
+
+        info_frame = QFrame()
+        info_frame.setStyleSheet(self.styles.info_frame)
+        info_layout = QVBoxLayout(info_frame)
+
+        dec_label = QLabel("<b>🔗 DECENTRALIZED BY DESIGN</b>")
+        dec_label.setStyleSheet(self.styles.dec_label)
+        info_layout.addWidget(dec_label)
+
+        dec_text = QLabel(
+            "• No cloud, no database, no trust required\n"
+            "• Your secrets never leave your device\n"
+            "• There is no \"forgot password\" button — you are in complete control"
+        )
+        dec_text.setWordWrap(True)
+        dec_text.setStyleSheet("color: #c0c0c0; padding-left: 15px;")
+        info_layout.addWidget(dec_text)
+
+        info_layout.addSpacing(10)
+
+        sec_label = QLabel("<b>🛡️ SECURITY MODEL</b>")
+        sec_label.setStyleSheet(self.styles.sec_label)
+        info_layout.addWidget(sec_label)
+
+        sec_text = QLabel(
+            "• Proof of Knowledge: Public keys verify secrets without exposing them\n"
+            "• Deterministic Security: Same secret + length = same password\n"
+            "• Zero-Storage: No passwords or secrets are ever stored\n"
+            "• Local Processing: Secrets never leave your device"
+        )
+        sec_text.setWordWrap(True)
+        sec_text.setStyleSheet("color: #c0c0c0; padding-left: 15px;")
+        info_layout.addWidget(sec_text)
+
+        info_layout.addSpacing(10)
+
+        tech_label = QLabel("<b>⚙️ TECHNICAL FOUNDATION</b>")
+        tech_label.setStyleSheet("color: #2a82da;")
+        info_layout.addWidget(tech_label)
+
+        tech_text = QLabel(
+            "Powered by smartpasslib — deterministic password generation library\n"
+            "Key derivation: 30 iterations (private key) / 60 iterations (public key)\n"
+            "Character set: a-z A-Z 0-9 ! @ # $ & * - _"
+        )
+        tech_text.setWordWrap(True)
+        tech_text.setStyleSheet("color: #c0c0c0; padding-left: 15px;")
+        info_layout.addWidget(tech_text)
+
+        content_layout.addWidget(info_frame)
+
+        links_frame = QFrame()
+        links_frame.setStyleSheet(self.styles.links_frame)
+        links_layout = QHBoxLayout(links_frame)
+
+        github_btn = QPushButton("📂 GitHub")
+        github_btn.setStyleSheet(self.styles.github_btn)
+        github_btn.clicked.connect(lambda: QDesktopServices.openUrl(QUrl(self.config.project_url)))
+        links_layout.addWidget(github_btn)
+
+        issues_btn = QPushButton("🐛 Report Issue")
+        issues_btn.setStyleSheet(self.styles.issues_btn)
+        issues_btn.clicked.connect(lambda: QDesktopServices.openUrl(QUrl(f"{self.config.project_url}/issues")))
+        links_layout.addWidget(issues_btn)
+
+        license_btn = QPushButton("📄 License")
+        license_btn.setStyleSheet(self.styles.license_btn)
+        license_btn.clicked.connect(self.show_license)
+        links_layout.addWidget(license_btn)
+
+        disclaimer_btn = QPushButton("⚠️ Disclaimer")
+        disclaimer_btn.setStyleSheet(self.styles.disclaimer_btn)
+        disclaimer_btn.clicked.connect(self.show_disclaimer)
+        links_layout.addWidget(disclaimer_btn)
+
+        content_layout.addWidget(links_frame)
+
+        copyright_label = QLabel(f"Copyright © {self.config.year}, {self.config.author}")
+        copyright_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        copyright_label.setStyleSheet(self.styles.copyright_label)
+        content_layout.addWidget(copyright_label)
 
         scroll_area.setWidget(content_widget)
         layout.addWidget(scroll_area)
 
         button_layout = QHBoxLayout()
         button_layout.addStretch()
-        ok_button = QPushButton("OK")
-        ok_button.setMinimumWidth(100)
-        ok_button.setMinimumHeight(35)
-        ok_button.setStyleSheet("""
-            QPushButton {
-                background-color: #2a82da;
-                color: white;
-                font-weight: bold;
-                border-radius: 5px;
-                padding: 8px 16px;
-            }
-            QPushButton:hover {
-                background-color: #1a72ca;
-            }
-        """)
-        ok_button.clicked.connect(dialog.accept)
-        button_layout.addWidget(ok_button)
+        close_btn = QPushButton("Close")
+        close_btn.setMinimumWidth(100)
+        close_btn.setMinimumHeight(35)
+        close_btn.setStyleSheet(self.styles.close_btn)
+        close_btn.clicked.connect(dialog.accept)
+        button_layout.addWidget(close_btn)
         button_layout.addStretch()
         layout.addLayout(button_layout)
 
@@ -718,16 +696,7 @@ class MainWindow(QMainWindow):
         text_label = QLabel(self.config.disclaimer_text)
         text_label.setTextFormat(Qt.TextFormat.PlainText)
         text_label.setWordWrap(True)
-        text_label.setStyleSheet("""
-            QLabel {
-                background-color: #2a2a2a;
-                color: #e0e0e0;
-                padding: 15px;
-                font-family: monospace;
-                font-size: 10pt;
-                line-height: 1.4;
-            }
-        """)
+        text_label.setStyleSheet(self.styles.text_label)
         content_layout.addWidget(text_label)
 
         scroll_area.setWidget(content_widget)
@@ -738,18 +707,7 @@ class MainWindow(QMainWindow):
         ok_button = QPushButton("Agree")
         ok_button.setMinimumWidth(100)
         ok_button.setMinimumHeight(35)
-        ok_button.setStyleSheet("""
-            QPushButton {
-                background-color: #2a82da;
-                color: white;
-                font-weight: bold;
-                border-radius: 5px;
-                padding: 8px 16px;
-            }
-            QPushButton:hover {
-                background-color: #1a72ca;
-            }
-        """)
+        ok_button.setStyleSheet(self.styles.ok_button)
         ok_button.clicked.connect(dialog.accept)
         button_layout.addWidget(ok_button)
         button_layout.addStretch()
@@ -787,16 +745,7 @@ class MainWindow(QMainWindow):
         text_label = QLabel(self.config.license_text)
         text_label.setTextFormat(Qt.TextFormat.PlainText)
         text_label.setWordWrap(True)
-        text_label.setStyleSheet("""
-            QLabel {
-                background-color: #2a2a2a;
-                color: #e0e0e0;
-                padding: 15px;
-                font-family: monospace;
-                font-size: 10pt;
-                line-height: 1.4;
-            }
-        """)
+        text_label.setStyleSheet(self.styles.text_label_2)
         content_layout.addWidget(text_label)
 
         scroll_area.setWidget(content_widget)
@@ -804,21 +753,10 @@ class MainWindow(QMainWindow):
 
         button_layout = QHBoxLayout()
         button_layout.addStretch()
-        ok_button = QPushButton("OK")
+        ok_button = QPushButton("Agree")
         ok_button.setMinimumWidth(100)
         ok_button.setMinimumHeight(35)
-        ok_button.setStyleSheet("""
-            QPushButton {
-                background-color: #2a82da;
-                color: white;
-                font-weight: bold;
-                border-radius: 5px;
-                padding: 8px 16px;
-            }
-            QPushButton:hover {
-                background-color: #1a72ca;
-            }
-        """)
+        ok_button.setStyleSheet(self.styles.ok_button_2)
         ok_button.clicked.connect(dialog.accept)
         button_layout.addWidget(ok_button)
         button_layout.addStretch()
@@ -857,16 +795,7 @@ class MainWindow(QMainWindow):
         shortcuts_label = QLabel(self.config.short_cuts_text)
         shortcuts_label.setTextFormat(Qt.TextFormat.PlainText)
         shortcuts_label.setWordWrap(True)
-        shortcuts_label.setStyleSheet("""
-            QLabel {
-                background-color: #2a2a2a;
-                color: #e0e0e0;
-                padding: 15px;
-                font-family: monospace;
-                font-size: 10pt;
-                line-height: 1.4;
-            }
-        """)
+        shortcuts_label.setStyleSheet(self.styles.shortcuts_label)
         content_layout.addWidget(shortcuts_label)
 
         scroll_area.setWidget(content_widget)
@@ -877,18 +806,7 @@ class MainWindow(QMainWindow):
         ok_button = QPushButton("OK")
         ok_button.setMinimumWidth(100)
         ok_button.setMinimumHeight(35)
-        ok_button.setStyleSheet("""
-            QPushButton {
-                background-color: #2a82da;
-                color: white;
-                font-weight: bold;
-                border-radius: 5px;
-                padding: 8px 16px;
-            }
-            QPushButton:hover {
-                background-color: #1a72ca;
-            }
-        """)
+        ok_button.setStyleSheet(self.styles.ok_button_3)
         ok_button.clicked.connect(dialog.accept)
         button_layout.addWidget(ok_button)
         button_layout.addStretch()
@@ -1015,16 +933,7 @@ class MainWindow(QMainWindow):
             desc_text.setReadOnly(True)
             desc_text.setMaximumHeight(80)
             desc_text.setMinimumHeight(60)
-            desc_text.setStyleSheet("""
-                QTextEdit {
-                    background-color: #2a2a2a;
-                    color: #f0f0f0;
-                    border: 1px solid #dc3545;
-                    border-radius: 4px;
-                    font-family: monospace;
-                    font-size: 11px;
-                }
-            """)
+            desc_text.setStyleSheet(self.styles.desc_text)
             desc_layout.addWidget(desc_text)
             desc_group.setLayout(desc_layout)
             layout.addWidget(desc_group)
@@ -1041,36 +950,14 @@ class MainWindow(QMainWindow):
             cancel_btn = QPushButton("Cancel")
             cancel_btn.setMinimumHeight(35)
             cancel_btn.setMinimumWidth(100)
-            cancel_btn.setStyleSheet("""
-                QPushButton {
-                    background-color: #6c757d;
-                    color: white;
-                    font-weight: bold;
-                    border-radius: 5px;
-                    padding: 8px 16px;
-                }
-                QPushButton:hover {
-                    background-color: #5a6268;
-                }
-            """)
+            cancel_btn.setStyleSheet(self.styles.cancel_btn)
             cancel_btn.clicked.connect(dialog.reject)
             button_layout.addWidget(cancel_btn)
 
             delete_btn = QPushButton("🗑 Delete")
             delete_btn.setMinimumHeight(35)
             delete_btn.setMinimumWidth(100)
-            delete_btn.setStyleSheet("""
-                QPushButton {
-                    background-color: #dc3545;
-                    color: white;
-                    font-weight: bold;
-                    border-radius: 5px;
-                    padding: 8px 16px;
-                }
-                QPushButton:hover {
-                    background-color: #c82333;
-                }
-            """)
+            delete_btn.setStyleSheet(self.styles.delete_btn)
             delete_btn.clicked.connect(dialog.accept)
             button_layout.addWidget(delete_btn)
 

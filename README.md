@@ -1,4 +1,4 @@
-# Smart Password Manager Desktop <sup>v3.1.3</sup>
+# Smart Password Manager Desktop <sup>v3.2.0</sup>
 
 ---
 
