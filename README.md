@@ -269,7 +269,7 @@ The application allows you to export password metadata to the **Smart Password M
 
 **How to use:**
 1. Select any password in the table
-2. Click the **QR** button, press **Ctrl+Shift+R**, or right-click and choose **Show QR Code**
+2. Click the **QR** button, press **Ctrl+R**, or right-click and choose **Show QR Code**
 3. A dialog with QR code will appear containing the password metadata
 4. Open the Android app and scan the QR code
 5. The password entry will be automatically added to your mobile device
@@ -290,22 +290,25 @@ The application allows you to export password metadata to the **Smart Password M
 
 ### Keyboard Shortcuts
 
-| Shortcut       | Action              | Description                       |
-|----------------|---------------------|-----------------------------------|
-| `F1`           | Help                | Show help                         |
-| `Ctrl+Q`       | Exit                | Close the application             |
-| `Ctrl+P`       | Create new password | Open "Create password" dialog     |
-| `Ctrl+Shift+S` | Toggle sounds       | Enable/Disable app's sounds       |
-| `Ctrl+/`       | Keyboard shortcuts  | Keyboard shortcuts                |
-| `Ctrl+Shift+A` | About dialog        | About dialog                      |
-| `Ctrl+E`       | Export passwords    | Export metadata to JSON file      |
-| `Ctrl+I`       | Import passwords    | Import metadata from JSON file    |
-| `Ctrl+G`       | Get password        | Get selected password             |
-| `Ctrl+Shift+E` | Edit password       | Edit selected password            |
-| `Ctrl+Shift+R` | Show QR Code        | Generate QR for selected password |
-| `Del`          | Delete password     | Delete selected password          |
-
----
+| Shortcut       | Action                                |
+|----------------|---------------------------------------|
+| `F1`           | Show help                             |
+| `Ctrl+Q`       | Exit application                      |
+| `Ctrl+N`       | Create new password                   |
+| `Ctrl+Shift+S` | Toggle sounds                         |
+| `Ctrl+/`       | Keyboard shortcuts                    |
+| `Ctrl+A`       | About                                 |
+| `Ctrl+I`       | Import passwords                      |
+| `Ctrl+E`       | Export passwords                      |
+| `Ctrl+R`       | Show QR code for selected password    |
+| `Ctrl+G`       | Get password                          |
+| `Ctrl+Shift+E` | Edit password                         |
+| `Del`          | Delete password                       |
+| `Ctrl+D`       | Show disclaimer                       |
+| `Ctrl+L`       | Show license                          |
+| `Ctrl+Alt+S`   | Create desktop shortcut               |
+| `F5`           | Refresh list                          |
+| `Enter`        | Get password (when item selected)     |
 
 ### Context Menu
 
@@ -313,9 +316,9 @@ Right-click on any password row to access a context menu with all actions:
 
 | Menu Item     | Action           | Description                   | Shortcuts      |
 |---------------|------------------|-------------------------------|----------------|
-| Show QR Code  | QR generation    | Export metadata to mobile     | `Ctrl+Shift+R` |
 | Get Password  | One-click access | Generate and display password | `Ctrl+G`       |
 | Edit Metadata | Quick edit       | Modify description or length  | `Ctrl+Shift+E` |
+| Show QR Code  | QR generation    | Export metadata to mobile     | `Ctrl+R`       |
 | Delete Entry  | Direct deletion  | Remove password metadata      | `Del`          |
 
 This provides an alternative to the table buttons for users who prefer context menus, while keeping the buttons for quick one-click access.

@@ -213,7 +213,7 @@ class DesktopEntryDialog(QDialog):
 Version={self.config.version}
 Type=Application
 Name={self.config.app_name}
-Comment=Secure deterministic password manager
+Comment=Secure deterministic Smart Password Manager
 Exec={exec_line}
 Icon={self.icon_path if self.icon_path else 'system-run'}
 Terminal=false

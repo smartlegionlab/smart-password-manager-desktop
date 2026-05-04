@@ -1,6 +1,5 @@
 # Copyright (©) 2026, Alexander Suvorov. All rights reserved.
 import os
-import sys
 
 from PyQt5.QtWidgets import (
     QDesktopWidget,
@@ -15,7 +14,7 @@ from PyQt5.QtWidgets import (
     QFrame,
     QHeaderView,
     QHBoxLayout,
-    QAction, QMenuBar, QStatusBar, QMainWindow, QMenu, QScrollArea
+    QAction, QMenuBar, QStatusBar, QMainWindow, QMenu, QScrollArea, QLineEdit, QGroupBox, QTextEdit
 )
 from PyQt5.QtGui import QFont, QIcon
 from PyQt5.QtCore import Qt
@@ -59,34 +58,125 @@ class MainWindow(QMainWindow):
         self.sound_manager.register_sound('error', self.error_sound)
 
         self.main_layout = QVBoxLayout(central_widget)
-        self.main_layout.setSpacing(15)
-        self.main_layout.setContentsMargins(20, 20, 20, 20)
+        self.main_layout.setSpacing(10)
+        self.main_layout.setContentsMargins(0, 0, 0, 0)
 
         self.menu_bar = QMenuBar()
         self.main_layout.setMenuBar(self.menu_bar)
 
         self.setup_menu_bar()
 
-        header_layout = QHBoxLayout()
-        self.label_logo = QLabel(f"{self.config.app_name}")
-        font = QFont()
-        font.setPointSize(20)
-        font.setBold(True)
-        self.label_logo.setFont(font)
-        self.label_logo.setStyleSheet(self.styles.label_logo_style)
-        header_layout.addWidget(self.label_logo)
+        self.header_panel = QWidget()
+        self.header_panel.setStyleSheet("background-color: #19191e;")
+        header_layout = QVBoxLayout(self.header_panel)
+        header_layout.setContentsMargins(20, 15, 20, 15)
 
-        header_layout.addStretch()
+        title_label = QLabel("Smart Password Manager")
+        title_font = QFont()
+        title_font.setPointSize(18)
+        title_font.setBold(True)
+        title_label.setFont(title_font)
+        title_label.setStyleSheet("color: #2a82da;")
+        header_layout.addWidget(title_label)
 
-        self.count_label = QLabel("0 passwords")
-        self.count_label.setStyleSheet(self.styles.count_label_style)
-        header_layout.addWidget(self.count_label)
+        subtitle_label = QLabel("Deterministic smart password manager - same secret + same length = same password")
+        subtitle_label.setStyleSheet("color: #a0a0a0; font-size: 9pt;")
+        header_layout.addWidget(subtitle_label)
 
-        self.main_layout.addLayout(header_layout)
+        self.main_layout.addWidget(self.header_panel)
+
+        self.top_button_panel = QWidget()
+        self.top_button_panel.setStyleSheet("background-color: #23232a;")
+        top_button_layout = QHBoxLayout(self.top_button_panel)
+        top_button_layout.setContentsMargins(20, 10, 20, 10)
+
+        self.btn_add = QPushButton("+ Add")
+        self.btn_add.setMinimumHeight(40)
+        self.btn_add.setMinimumWidth(100)
+        self.btn_add.clicked.connect(self.sound_manager.play_click)
+        self.btn_add.clicked.connect(self.add_password)
+        self.btn_add.setStyleSheet("""
+            QPushButton {
+                background-color: #2a82da;
+                color: white;
+                font-weight: bold;
+                border-radius: 5px;
+                padding: 8px 16px;
+            }
+            QPushButton:hover {
+                background-color: #1a72ca;
+            }
+        """)
+        top_button_layout.addWidget(self.btn_add)
+
+        self.btn_import = QPushButton("Import")
+        self.btn_import.setMinimumHeight(40)
+        self.btn_import.setMinimumWidth(100)
+        self.btn_import.clicked.connect(self.sound_manager.play_click)
+        self.btn_import.clicked.connect(self.import_passwords)
+        self.btn_import.setStyleSheet("""
+            QPushButton {
+                background-color: #6c757d;
+                color: white;
+                font-weight: bold;
+                border-radius: 5px;
+                padding: 8px 16px;
+            }
+            QPushButton:hover {
+                background-color: #5a6268;
+            }
+        """)
+        top_button_layout.addWidget(self.btn_import)
+
+        top_button_layout.addStretch()
+
+        self.search_panel = QWidget()
+        self.search_panel.setStyleSheet("background-color: #23232a;")
+        search_layout = QHBoxLayout(self.search_panel)
+        search_layout.setContentsMargins(20, 5, 20, 10)
+
+        search_label = QLabel("🔍")
+        search_label.setStyleSheet("color: #2a82da; font-size: 14pt;")
+        search_layout.addWidget(search_label)
+
+        self.search_input = QLineEdit()
+        self.search_input.setPlaceholderText("Search by description or public key...")
+        self.search_input.setMinimumHeight(30)
+        self.search_input.setStyleSheet("""
+            QLineEdit {
+                background-color: #2d2d34;
+                color: #f0f0f0;
+                border: 1px solid #444;
+                border-radius: 4px;
+                padding: 5px;
+            }
+        """)
+        self.search_input.textChanged.connect(self.apply_filter)
+        search_layout.addWidget(self.search_input)
+
+        self.btn_clear_search = QPushButton("Clear")
+        self.btn_clear_search.setMinimumWidth(70)
+        self.btn_clear_search.setMinimumHeight(30)
+        self.btn_clear_search.clicked.connect(self.clear_search)
+        self.btn_clear_search.setStyleSheet("""
+            QPushButton {
+                background-color: #2a82da;
+                color: white;
+                border-radius: 4px;
+                padding: 5px 10px;
+            }
+            QPushButton:hover {
+                background-color: #1a72ca;
+            }
+        """)
+        search_layout.addWidget(self.btn_clear_search)
+
+        self.main_layout.addWidget(self.top_button_panel)
+        self.main_layout.addWidget(self.search_panel)
 
         self.table_widget = QTableWidget()
-        self.table_widget.setColumnCount(6)
-        self.table_widget.setHorizontalHeaderLabels(['Description', 'Length', 'QR', 'Get', 'Edit', 'Delete'])
+        self.table_widget.setColumnCount(3)
+        self.table_widget.setHorizontalHeaderLabels(['Description', 'Length', 'Public Key (short)'])
         self.table_widget.setEditTriggers(QTableWidget.NoEditTriggers)
         self.table_widget.setSelectionMode(QTableWidget.SingleSelection)
         self.table_widget.setAlternatingRowColors(True)
@@ -94,113 +184,171 @@ class MainWindow(QMainWindow):
 
         self.table_widget.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
         self.table_widget.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeToContents)
-        self.table_widget.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeToContents)
-        self.table_widget.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeToContents)
-        self.table_widget.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeToContents)
-        self.table_widget.horizontalHeader().setSectionResizeMode(5, QHeaderView.ResizeToContents)
+        self.table_widget.horizontalHeader().setSectionResizeMode(2, QHeaderView.Stretch)
+
+        self.table_widget.doubleClicked.connect(self.get_password_for_selected_row)
 
         self.main_layout.addWidget(self.table_widget)
 
-        self.setup_table_context_menu()
+        self.bottom_button_panel = QWidget()
+        self.bottom_button_panel.setStyleSheet("background-color: #23232a;")
+        bottom_button_layout = QHBoxLayout(self.bottom_button_panel)
+        bottom_button_layout.setContentsMargins(20, 10, 20, 10)
 
-        button_layout = QHBoxLayout()
-        button_layout.setSpacing(10)
+        self.btn_get = QPushButton("Get")
+        self.btn_get.setMinimumHeight(40)
+        self.btn_get.setMinimumWidth(100)
+        self.btn_get.clicked.connect(self.sound_manager.play_click)
+        self.btn_get.clicked.connect(self.get_password_for_selected_row)
+        self.btn_get.setStyleSheet("""
+            QPushButton {
+                background-color: #28a745;
+                color: white;
+                font-weight: bold;
+                border-radius: 5px;
+                padding: 8px 16px;
+            }
+            QPushButton:hover {
+                background-color: #218838;
+            }
+        """)
+        bottom_button_layout.addWidget(self.btn_get)
 
-        self.btn_new_password = QPushButton("+ Add")
-        self.btn_new_password.setMinimumHeight(40)
-        self.btn_new_password.clicked.connect(self.sound_manager.play_click)
-        self.btn_new_password.clicked.connect(self.add_password)
-        self.btn_new_password.setStyleSheet(self.styles.btn_new_password_style)
-        button_layout.addWidget(self.btn_new_password)
+        self.btn_edit = QPushButton("Edit")
+        self.btn_edit.setMinimumHeight(40)
+        self.btn_edit.setMinimumWidth(100)
+        self.btn_edit.clicked.connect(self.sound_manager.play_click)
+        self.btn_edit.clicked.connect(self.edit_password_for_selected_row)
+        self.btn_edit.setStyleSheet("""
+            QPushButton {
+                background-color: #ffc107;
+                color: #282828;
+                font-weight: bold;
+                border-radius: 5px;
+                padding: 8px 16px;
+            }
+            QPushButton:hover {
+                background-color: #e0a800;
+            }
+        """)
+        bottom_button_layout.addWidget(self.btn_edit)
 
-        button_layout.addStretch()
+        self.btn_delete = QPushButton("Delete")
+        self.btn_delete.setMinimumHeight(40)
+        self.btn_delete.setMinimumWidth(100)
+        self.btn_delete.clicked.connect(self.sound_manager.play_click)
+        self.btn_delete.clicked.connect(self.delete_selected_row)
+        self.btn_delete.setStyleSheet("""
+            QPushButton {
+                background-color: #dc3545;
+                color: white;
+                font-weight: bold;
+                border-radius: 5px;
+                padding: 8px 16px;
+            }
+            QPushButton:hover {
+                background-color: #c82333;
+            }
+        """)
+        bottom_button_layout.addWidget(self.btn_delete)
 
-        self.btn_help = QPushButton('? ' + "Help")
-        self.btn_help.setMinimumHeight(40)
-        self.btn_help.clicked.connect(self.sound_manager.play_click)
-        self.btn_help.clicked.connect(self.show_help)
-        button_layout.addWidget(self.btn_help)
+        self.btn_qr = QPushButton("QR")
+        self.btn_qr.setMinimumHeight(40)
+        self.btn_qr.setMinimumWidth(100)
+        self.btn_qr.clicked.connect(self.sound_manager.play_click)
+        self.btn_qr.clicked.connect(self.show_qr_for_selected)
+        self.btn_qr.setStyleSheet("""
+            QPushButton {
+                background-color: #17a2b8;
+                color: white;
+                font-weight: bold;
+                border-radius: 5px;
+                padding: 8px 16px;
+            }
+            QPushButton:hover {
+                background-color: #138496;
+            }
+        """)
+        bottom_button_layout.addWidget(self.btn_qr)
 
-        self.btn_about = QPushButton("About")
-        self.btn_about.setMinimumHeight(40)
-        self.btn_about.clicked.connect(self.sound_manager.play_click)
-        self.btn_about.clicked.connect(self.show_about)
-        button_layout.addWidget(self.btn_about)
+        self.btn_export = QPushButton("Export")
+        self.btn_export.setMinimumHeight(40)
+        self.btn_export.setMinimumWidth(100)
+        self.btn_export.clicked.connect(self.sound_manager.play_click)
+        self.btn_export.clicked.connect(self.export_passwords)
+        self.btn_export.setStyleSheet("""
+            QPushButton {
+                background-color: #6c757d;
+                color: white;
+                font-weight: bold;
+                border-radius: 5px;
+                padding: 8px 16px;
+            }
+            QPushButton:hover {
+                background-color: #5a6268;
+            }
+        """)
+        bottom_button_layout.addWidget(self.btn_export)
+
+        bottom_button_layout.addStretch()
 
         self.btn_exit = QPushButton("Exit")
         self.btn_exit.setMinimumHeight(40)
+        self.btn_exit.setMinimumWidth(100)
         self.btn_exit.clicked.connect(self.close)
-        self.btn_exit.setStyleSheet(self.styles.btn_exit_style)
-        button_layout.addWidget(self.btn_exit)
+        self.btn_exit.setStyleSheet("""
+            QPushButton {
+                background-color: #dc3545;
+                color: white;
+                font-weight: bold;
+                border-radius: 5px;
+                padding: 8px 16px;
+            }
+            QPushButton:hover {
+                background-color: #c82333;
+            }
+        """)
+        bottom_button_layout.addWidget(self.btn_exit)
 
-        self.main_layout.addLayout(button_layout)
-
-        self.line = QFrame()
-        self.line.setFrameShape(QFrame.HLine)
-        self.line.setFrameShadow(QFrame.Sunken)
-        self.line.setStyleSheet(self.styles.line_style)
-        self.main_layout.addWidget(self.line)
-
-        footer_layout = QVBoxLayout()
-        footer_layout.setSpacing(5)
+        self.main_layout.addWidget(self.bottom_button_panel)
 
         self.setup_status_bar()
 
-        copyright_text = self.config.copyright_text
-        self.copyright_label = QLabel(copyright_text)
-        self.copyright_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.copyright_label.setStyleSheet(self.styles.copyright_label_style)
-        self.copyright_label.setOpenExternalLinks(True)
-        footer_layout.addWidget(self.copyright_label)
+        self.setup_table_context_menu()
 
-        self.main_layout.addLayout(footer_layout)
-
+        self.all_passwords = []
         self._init()
         self.center_window()
 
     def setup_application_icon(self):
         icon_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "icons", "icon.png")
-
         if not os.path.exists(icon_path):
             icon_path = os.path.join(os.path.dirname(__file__), "icon.png")
-
         if os.path.exists(icon_path):
             icon = QIcon(icon_path)
             self.setWindowIcon(icon)
 
     def create_desktop_entry(self):
         from core.dialogs.desktop_entry_dialog import DesktopEntryDialog
-
         dialog = DesktopEntryDialog(self, self.sound_manager)
         dialog.exec_()
 
     def setup_menu_bar(self):
         file_menu = self.menu_bar.addMenu('File')
 
-        if sys.platform.startswith('linux'):
-            desktop_entry_action = QAction('Create Desktop Entry...', self)
-            desktop_entry_action.triggered.connect(self.sound_manager.play_click)
-            desktop_entry_action.triggered.connect(self.create_desktop_entry)
-            file_menu.addAction(desktop_entry_action)
-            file_menu.addSeparator()
-
-        export_menu = file_menu.addMenu('Export')
-
         export_action = QAction('Export passwords...', self)
         export_action.setShortcut('Ctrl+E')
         export_action.triggered.connect(self.sound_manager.play_click)
         export_action.triggered.connect(self.export_passwords)
-        export_menu.addAction(export_action)
-
-        import_menu = file_menu.addMenu('Import')
+        file_menu.addAction(export_action)
 
         import_action = QAction('Import passwords...', self)
         import_action.setShortcut('Ctrl+I')
         import_action.triggered.connect(self.sound_manager.play_click)
         import_action.triggered.connect(self.import_passwords)
-        import_menu.addAction(import_action)
+        file_menu.addAction(import_action)
 
-        import_menu.addSeparator()
+        file_menu.addSeparator()
 
         exit_action = QAction('Exit', self)
         exit_action.setShortcut('Ctrl+Q')
@@ -209,45 +357,61 @@ class MainWindow(QMainWindow):
 
         passwords_menu = self.menu_bar.addMenu('Passwords')
 
-        qr_action = QAction('📱 Show QR Code for selected', self)
-        qr_action.setShortcut('Ctrl+Alt+R')
-        qr_action.triggered.connect(self.sound_manager.play_click)
-        qr_action.triggered.connect(self.show_qr_for_selected)
-        passwords_menu.addAction(qr_action)
-        passwords_menu.addSeparator()
-
         create_pass_action = QAction('Create new password', self)
-        create_pass_action.setShortcut('Ctrl+P')
+        create_pass_action.setShortcut('Ctrl+N')
         create_pass_action.triggered.connect(self.sound_manager.play_click)
         create_pass_action.triggered.connect(self.add_password)
         passwords_menu.addAction(create_pass_action)
 
-        sounds_menu = self.menu_bar.addMenu('Sounds')
+        passwords_menu.addSeparator()
 
+        get_action = QAction('Get Password', self)
+        get_action.setShortcut('Ctrl+G')
+        get_action.triggered.connect(self.sound_manager.play_click)
+        get_action.triggered.connect(self.get_password_for_selected_row)
+        passwords_menu.addAction(get_action)
+
+        edit_action = QAction('Edit', self)
+        edit_action.setShortcut('Ctrl+Shift+E')
+        edit_action.triggered.connect(self.sound_manager.play_click)
+        edit_action.triggered.connect(self.edit_password_for_selected_row)
+        passwords_menu.addAction(edit_action)
+
+        qr_action = QAction('Show QR Code', self)
+        qr_action.setShortcut('Ctrl+R')
+        qr_action.triggered.connect(self.sound_manager.play_click)
+        qr_action.triggered.connect(self.show_qr_for_selected)
+        passwords_menu.addAction(qr_action)
+
+        passwords_menu.addSeparator()
+
+        delete_action = QAction('Delete', self)
+        delete_action.setShortcut('Del')
+        delete_action.triggered.connect(self.sound_manager.play_click)
+        delete_action.triggered.connect(self.delete_selected_row)
+        passwords_menu.addAction(delete_action)
+
+        refresh_action = QAction('Refresh', self)
+        refresh_action.setShortcut('F5')
+        refresh_action.triggered.connect(self.load_passwords)
+        passwords_menu.addAction(refresh_action)
+
+        sounds_menu = self.menu_bar.addMenu('Sounds')
         sound_action = QAction('Enable Sounds', self)
         sound_action.setCheckable(True)
         sound_action.setChecked(False)
         sound_action.setShortcut('Ctrl+Shift+S')
         sound_action.triggered.connect(self.toggle_sounds)
         sounds_menu.addAction(sound_action)
+        self.sound_manager.sound_enabled_changed.connect(sound_action.setChecked)
 
-        self.sound_manager.sound_enabled_changed.connect(
-            sound_action.setChecked
-        )
+        tools_menu = self.menu_bar.addMenu('Tools')
+        create_shortcut_action = QAction('Create Desktop Shortcut', self)
+        create_shortcut_action.setShortcut('Ctrl+Alt+S')
+        create_shortcut_action.triggered.connect(self.create_desktop_entry)
+        tools_menu.addAction(create_shortcut_action)
 
         help_menu = self.menu_bar.addMenu('Help')
-
-        about_action = QAction('About', self)
-        about_action.setShortcut('Ctrl+Shift+A')
-        about_action.triggered.connect(self.sound_manager.play_click)
-        about_action.triggered.connect(self.show_about)
-        help_menu.addAction(about_action)
-
-        shortcuts_action = QAction('Keyboard shortcuts', self)
-        shortcuts_action.setShortcut('Ctrl+/')
-        shortcuts_action.triggered.connect(self.sound_manager.play_click)
-        shortcuts_action.triggered.connect(self._show_keyboard_shortcuts)
-        help_menu.addAction(shortcuts_action)
 
         help_action = QAction('Help', self)
         help_action.setShortcut('F1')
@@ -255,63 +419,35 @@ class MainWindow(QMainWindow):
         help_action.triggered.connect(self.show_help)
         help_menu.addAction(help_action)
 
+        shortcuts_action = QAction('Keyboard shortcuts', self)
+        shortcuts_action.setShortcut('Ctrl+/')
+        shortcuts_action.triggered.connect(self.sound_manager.play_click)
+        shortcuts_action.triggered.connect(self._show_keyboard_shortcuts)
+        help_menu.addAction(shortcuts_action)
+
+        help_menu.addSeparator()
+
+        disclaimer_action = QAction('Disclaimer', self)
+        disclaimer_action.setShortcut('Ctrl+D')
+        disclaimer_action.triggered.connect(self.show_disclaimer)
+        help_menu.addAction(disclaimer_action)
+
+        license_action = QAction('License', self)
+        license_action.setShortcut('Ctrl+L')
+        license_action.triggered.connect(self.show_license)
+        help_menu.addAction(license_action)
+
+        help_menu.addSeparator()
+
+        about_action = QAction('About', self)
+        about_action.setShortcut('Ctrl+A')
+        about_action.triggered.connect(self.sound_manager.play_click)
+        about_action.triggered.connect(self.show_about)
+        help_menu.addAction(about_action)
+
     def setup_table_context_menu(self):
         self.table_widget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.table_widget.customContextMenuRequested.connect(self.show_table_context_menu)
-
-        shortcuts = [
-            ('Ctrl+R', 'Show QR Code', self.show_qr_for_selected),
-            ('Ctrl+G', 'Get Password', self.get_password_for_selected_row),
-            ('Ctrl+Shift+E', 'Edit Password', self.edit_password_for_selected_row),
-            ('Del', 'Delete Password', self.delete_selected_row)
-        ]
-
-        for shortcut, name, callback in shortcuts:
-            action = QAction(name, self)
-            action.setShortcut(shortcut)
-            action.triggered.connect(callback)
-            self.addAction(action)
-
-    def _get_public_key_for_row(self, row):
-        if row < 0:
-            return None
-
-        for col in [2, 3, 4, 5]:
-            widget = self.table_widget.cellWidget(row, col)
-            if widget and hasattr(widget, 'public_key'):
-                return widget.public_key
-        return None
-
-    def _execute_action_for_selected_row(self, action_name):
-        current_row = self.table_widget.currentRow()
-        public_key = self._get_public_key_for_row(current_row)
-
-        if not public_key:
-            self.show_status_message('No row selected', 2000)
-            return
-
-        method_map = {
-            'qr': 'show_qr',
-            'get': 'get_password',
-            'edit': 'edit_password',
-            'delete': 'remove_password'
-        }
-
-        method_name = method_map.get(action_name)
-        if method_name:
-            getattr(self, method_name)(public_key)
-
-    def get_password_for_selected_row(self):
-        self._execute_action_for_selected_row('get')
-
-    def edit_password_for_selected_row(self):
-        self._execute_action_for_selected_row('edit')
-
-    def delete_selected_row(self):
-        self._execute_action_for_selected_row('delete')
-
-    def show_qr_for_selected_row(self):
-        self._execute_action_for_selected_row('qr')
 
     def show_table_context_menu(self, position):
         item = self.table_widget.itemAt(position)
@@ -319,39 +455,70 @@ class MainWindow(QMainWindow):
             return
 
         row = item.row()
-        public_key = None
-
-        for col in [2, 3, 4, 5]:
-            widget = self.table_widget.cellWidget(row, col)
-            if widget and hasattr(widget, 'public_key'):
-                public_key = widget.public_key
-                break
-
-        if not public_key:
+        if row < 0 or row >= len(self.all_passwords):
             return
 
+        public_key = self.all_passwords[row].public_key
+
         context_menu = QMenu(self)
+
+        get_action = context_menu.addAction("🔓 Get Password")
+        get_action.triggered.connect(lambda checked, pk=public_key: self.get_password(pk))
+
+        edit_action = context_menu.addAction("✎ Edit")
+        edit_action.triggered.connect(lambda checked, pk=public_key: self.edit_password(pk))
 
         qr_action = context_menu.addAction("📱 Show QR Code")
         qr_action.triggered.connect(lambda checked, pk=public_key: self.show_qr(pk))
 
         context_menu.addSeparator()
 
-        get_action = context_menu.addAction("🔑 Get Password")
-        get_action.setShortcut("Ctrl+G")
-        get_action.triggered.connect(lambda checked, pk=public_key: self.get_password(pk))
-
-        edit_action = context_menu.addAction("✏️ Edit Metadata")
-        edit_action.setShortcut("Ctrl+Shift+E")
-        edit_action.triggered.connect(lambda checked, pk=public_key: self.edit_password(pk))
-
-        context_menu.addSeparator()
-
-        delete_action = context_menu.addAction("🗑️ Delete Entry")
-        delete_action.setShortcut("Del")
+        delete_action = context_menu.addAction("🗑 Delete")
         delete_action.triggered.connect(lambda checked, pk=public_key: self.remove_password(pk))
 
         context_menu.exec_(self.table_widget.viewport().mapToGlobal(position))
+
+    def _get_public_key_for_row(self, row):
+        if row < 0 or row >= len(self.all_passwords):
+            return None
+        return self.all_passwords[row].public_key
+
+    def get_password_for_selected_row(self):
+        current_row = self.table_widget.currentRow()
+        if current_row < 0:
+            self.show_status_message('No row selected', 2000)
+            return
+        public_key = self._get_public_key_for_row(current_row)
+        if public_key:
+            self.get_password(public_key)
+
+    def edit_password_for_selected_row(self):
+        current_row = self.table_widget.currentRow()
+        if current_row < 0:
+            self.show_status_message('No row selected', 2000)
+            return
+        public_key = self._get_public_key_for_row(current_row)
+        if public_key:
+            self.edit_password(public_key)
+
+    def delete_selected_row(self):
+        current_row = self.table_widget.currentRow()
+        if current_row < 0:
+            self.show_status_message('No row selected', 2000)
+            return
+        public_key = self._get_public_key_for_row(current_row)
+        if public_key:
+            self.remove_password(public_key)
+
+    def show_qr_for_selected(self):
+        current_row = self.table_widget.currentRow()
+        if current_row < 0:
+            self.show_status_message('No password selected. Please select a row first.', 2000)
+            QMessageBox.information(self, 'No Selection', 'Please select a password row first.')
+            return
+        public_key = self._get_public_key_for_row(current_row)
+        if public_key:
+            self.show_qr(public_key)
 
     def center_window(self):
         frame = self.frameGeometry()
@@ -359,23 +526,64 @@ class MainWindow(QMainWindow):
         frame.moveCenter(center_point)
         self.move(frame.topLeft())
 
-    def _init(self):
-        self.table_widget.setRowCount(0)
-        self.update_password_count()
+    def load_passwords(self):
+        self.all_passwords = []
         for password in self.smart_pass_man.passwords.values():
-            self.add_item(password)
-        self.show_status_message(f'Loaded {self.smart_pass_man.password_count} passwords', 3000)
+            self.all_passwords.append(password)
+        self.apply_filter()
+
+    def apply_filter(self):
+        search_text = self.search_input.text().strip().lower()
+
+        self.table_widget.setRowCount(0)
+
+        filtered = self.all_passwords
+        if search_text:
+            filtered = [p for p in self.all_passwords
+                        if search_text in p.description.lower()
+                        or search_text in p.public_key.lower()]
+
+        self.table_widget.setRowCount(len(filtered))
+
+        for row, pwd in enumerate(filtered):
+            desc_item = QTableWidgetItem(pwd.description)
+            desc_item.setToolTip(pwd.description)
+            self.table_widget.setItem(row, 0, desc_item)
+
+            length_item = QTableWidgetItem(f"{pwd.length} chars")
+            length_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+            self.table_widget.setItem(row, 1, length_item)
+
+            short_key = pwd.public_key[:30] + "..." if len(pwd.public_key) > 30 else pwd.public_key
+            key_item = QTableWidgetItem(short_key)
+            key_item.setToolTip(pwd.public_key)
+            self.table_widget.setItem(row, 2, key_item)
+
+        count = len(filtered)
+        total = len(self.all_passwords)
+        if search_text:
+            self.count_label.setText(f"{count} / {total} passwords")
+        else:
+            self.count_label.setText(f"{total} passwords")
+
+        storage_label = self.status_bar.findChild(QLabel, "storage_label")
+        if storage_label:
+            storage_label.setText(f"Storage: {self.smart_pass_man.file_path}")
+
+    def clear_search(self):
+        self.search_input.clear()
+        self.search_input.setFocus()
+
+    def _init(self):
+        self.load_passwords()
 
     def show_help(self):
         self.sound_manager.play_notify()
-
         dialog = QDialog(self)
         dialog.setWindowTitle('Smart Password Manager Help')
         dialog.setMinimumWidth(650)
         dialog.setMinimumHeight(500)
-
         layout = QVBoxLayout(dialog)
-        layout.setSpacing(10)
 
         title_label = QLabel(f"<h2 style='color: #2a82da;'>Smart Password Manager Help</h2>")
         title_label.setTextFormat(Qt.TextFormat.RichText)
@@ -385,25 +593,21 @@ class MainWindow(QMainWindow):
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_area.setFrameShape(QFrame.NoFrame)
-
         content_widget = QWidget()
         content_layout = QVBoxLayout(content_widget)
-
         help_label = QLabel(self.config.help_text)
         help_label.setTextFormat(Qt.TextFormat.RichText)
         help_label.setWordWrap(True)
         help_label.setOpenExternalLinks(True)
         help_label.setTextInteractionFlags(Qt.TextInteractionFlag.TextBrowserInteraction)
         help_label.setStyleSheet(self.styles.help_label_style)
-
         content_layout.addWidget(help_label)
         scroll_area.setWidget(content_widget)
         layout.addWidget(scroll_area)
 
         button_layout = QHBoxLayout()
         button_layout.addStretch()
-
-        ok_button = QPushButton("OK")
+        ok_button = QPushButton("Agree")
         ok_button.setMinimumWidth(100)
         ok_button.setMinimumHeight(35)
         ok_button.setStyleSheet(self.styles.ok_button_style)
@@ -416,97 +620,285 @@ class MainWindow(QMainWindow):
         x = self.x() + (self.width() - dialog.width()) // 2
         y = self.y() + (self.height() - dialog.height()) // 2
         dialog.move(x, y)
-
         dialog.exec_()
 
     def show_about(self):
         self.sound_manager.play_about()
 
-        msg_box = QMessageBox(self)
-        msg_box.setWindowTitle("About Smart Password Manager")
-        msg_box.setTextFormat(Qt.TextFormat.RichText)
-        msg_box.setText(self.config.about_text)
+        dialog = QDialog(self)
+        dialog.setWindowTitle("About Smart Password Manager")
+        dialog.setMinimumWidth(650)
+        dialog.setMinimumHeight(500)
+        dialog.setModal(True)
 
-        msg_box.setIcon(QMessageBox.NoIcon)
+        layout = QVBoxLayout(dialog)
+        layout.setSpacing(10)
 
-        msg_box.setStandardButtons(QMessageBox.Ok)
+        title_label = QLabel(f"<h2 style='color: #2a82da;'>{self.config.app_name} {self.config.version}</h2>")
+        title_label.setTextFormat(Qt.TextFormat.RichText)
+        title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(title_label)
 
-        msg_box.exec_()
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setFrameShape(QFrame.NoFrame)
+
+        content_widget = QWidget()
+        content_layout = QVBoxLayout(content_widget)
+
+        about_label = QLabel(self.config.about_text)
+        about_label.setTextFormat(Qt.TextFormat.PlainText)
+        about_label.setWordWrap(True)
+        about_label.setStyleSheet("""
+            QLabel {
+                background-color: #2a2a2a;
+                color: #e0e0e0;
+                padding: 15px;
+                font-family: monospace;
+                font-size: 10pt;
+                line-height: 1.4;
+            }
+        """)
+        content_layout.addWidget(about_label)
+
+        scroll_area.setWidget(content_widget)
+        layout.addWidget(scroll_area)
+
+        button_layout = QHBoxLayout()
+        button_layout.addStretch()
+        ok_button = QPushButton("OK")
+        ok_button.setMinimumWidth(100)
+        ok_button.setMinimumHeight(35)
+        ok_button.setStyleSheet("""
+            QPushButton {
+                background-color: #2a82da;
+                color: white;
+                font-weight: bold;
+                border-radius: 5px;
+                padding: 8px 16px;
+            }
+            QPushButton:hover {
+                background-color: #1a72ca;
+            }
+        """)
+        ok_button.clicked.connect(dialog.accept)
+        button_layout.addWidget(ok_button)
+        button_layout.addStretch()
+        layout.addLayout(button_layout)
+
+        x = self.x() + (self.width() - dialog.width()) // 2
+        y = self.y() + (self.height() - dialog.height()) // 2
+        dialog.move(x, y)
+
+        dialog.exec_()
+
+    def show_disclaimer(self):
+        self.sound_manager.play_notify()
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Disclaimer")
+        dialog.setMinimumWidth(700)
+        dialog.setMinimumHeight(500)
+        dialog.setMaximumWidth(800)
+        dialog.setMaximumHeight(600)
+
+        layout = QVBoxLayout(dialog)
+
+        title_label = QLabel("<h2 style='color: #2a82da;'>⚠️ LEGAL DISCLAIMER</h2>")
+        title_label.setTextFormat(Qt.TextFormat.RichText)
+        title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(title_label)
+
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setFrameShape(QFrame.NoFrame)
+
+        content_widget = QWidget()
+        content_layout = QVBoxLayout(content_widget)
+
+        text_label = QLabel(self.config.disclaimer_text)
+        text_label.setTextFormat(Qt.TextFormat.PlainText)
+        text_label.setWordWrap(True)
+        text_label.setStyleSheet("""
+            QLabel {
+                background-color: #2a2a2a;
+                color: #e0e0e0;
+                padding: 15px;
+                font-family: monospace;
+                font-size: 10pt;
+                line-height: 1.4;
+            }
+        """)
+        content_layout.addWidget(text_label)
+
+        scroll_area.setWidget(content_widget)
+        layout.addWidget(scroll_area)
+
+        button_layout = QHBoxLayout()
+        button_layout.addStretch()
+        ok_button = QPushButton("Agree")
+        ok_button.setMinimumWidth(100)
+        ok_button.setMinimumHeight(35)
+        ok_button.setStyleSheet("""
+            QPushButton {
+                background-color: #2a82da;
+                color: white;
+                font-weight: bold;
+                border-radius: 5px;
+                padding: 8px 16px;
+            }
+            QPushButton:hover {
+                background-color: #1a72ca;
+            }
+        """)
+        ok_button.clicked.connect(dialog.accept)
+        button_layout.addWidget(ok_button)
+        button_layout.addStretch()
+        layout.addLayout(button_layout)
+
+        dialog.setModal(True)
+        x = self.x() + (self.width() - dialog.width()) // 2
+        y = self.y() + (self.height() - dialog.height()) // 2
+        dialog.move(x, y)
+        dialog.exec_()
+
+    def show_license(self):
+        self.sound_manager.play_notify()
+        dialog = QDialog(self)
+        dialog.setWindowTitle("License - BSD 3-Clause")
+        dialog.setMinimumWidth(700)
+        dialog.setMinimumHeight(500)
+        dialog.setMaximumWidth(800)
+        dialog.setMaximumHeight(600)
+
+        layout = QVBoxLayout(dialog)
+
+        title_label = QLabel("<h2 style='color: #2a82da;'>📄 BSD 3-CLAUSE LICENSE</h2>")
+        title_label.setTextFormat(Qt.TextFormat.RichText)
+        title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(title_label)
+
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setFrameShape(QFrame.NoFrame)
+
+        content_widget = QWidget()
+        content_layout = QVBoxLayout(content_widget)
+
+        text_label = QLabel(self.config.license_text)
+        text_label.setTextFormat(Qt.TextFormat.PlainText)
+        text_label.setWordWrap(True)
+        text_label.setStyleSheet("""
+            QLabel {
+                background-color: #2a2a2a;
+                color: #e0e0e0;
+                padding: 15px;
+                font-family: monospace;
+                font-size: 10pt;
+                line-height: 1.4;
+            }
+        """)
+        content_layout.addWidget(text_label)
+
+        scroll_area.setWidget(content_widget)
+        layout.addWidget(scroll_area)
+
+        button_layout = QHBoxLayout()
+        button_layout.addStretch()
+        ok_button = QPushButton("OK")
+        ok_button.setMinimumWidth(100)
+        ok_button.setMinimumHeight(35)
+        ok_button.setStyleSheet("""
+            QPushButton {
+                background-color: #2a82da;
+                color: white;
+                font-weight: bold;
+                border-radius: 5px;
+                padding: 8px 16px;
+            }
+            QPushButton:hover {
+                background-color: #1a72ca;
+            }
+        """)
+        ok_button.clicked.connect(dialog.accept)
+        button_layout.addWidget(ok_button)
+        button_layout.addStretch()
+        layout.addLayout(button_layout)
+
+        dialog.setModal(True)
+        x = self.x() + (self.width() - dialog.width()) // 2
+        y = self.y() + (self.height() - dialog.height()) // 2
+        dialog.move(x, y)
+        dialog.exec_()
 
     def _show_keyboard_shortcuts(self):
         self.sound_manager.play_notify()
 
-        msg_box = QMessageBox(self)
-        msg_box.setWindowTitle("Keyboard Shortcuts")
-        msg_box.setTextFormat(Qt.TextFormat.RichText)
-        msg_box.setText(self.config.short_cuts_text)
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Keyboard Shortcuts")
+        dialog.setMinimumWidth(600)
+        dialog.setMinimumHeight(450)
+        dialog.setModal(True)
 
-        msg_box.setIcon(QMessageBox.NoIcon)
+        layout = QVBoxLayout(dialog)
+        layout.setSpacing(10)
 
-        msg_box.setStandardButtons(QMessageBox.Ok)
+        title_label = QLabel("<h2 style='color: #2a82da;'>Keyboard Shortcuts</h2>")
+        title_label.setTextFormat(Qt.TextFormat.RichText)
+        title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(title_label)
 
-        msg_box.exec_()
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setFrameShape(QFrame.NoFrame)
 
-    def update_password_count(self):
-        count = len(self.smart_pass_man.passwords)
-        self.count_label.setText(f"{count} password{'s' if count != 1 else ''}")
+        content_widget = QWidget()
+        content_layout = QVBoxLayout(content_widget)
 
-    def add_item(self, smart_password):
-        row_position = self.table_widget.rowCount()
-        self.table_widget.insertRow(row_position)
-
-        desc_item = QTableWidgetItem(smart_password.description)
-        desc_item.setToolTip(smart_password.description)
-        self.table_widget.setItem(row_position, 0, desc_item)
-
-        length_item = QTableWidgetItem(f"{smart_password.length} chars")
-        length_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.table_widget.setItem(row_position, 1, length_item)
-
-        qr_button = QPushButton("QR")
-        qr_button.setToolTip("Show QR code for mobile import")
-        qr_button.setStyleSheet("""
-            QPushButton {
-                background-color: #17a2b8;
-                color: white;
-                border-radius: 3px;
-                padding: 5px 10px;
-                min-width: 60px;
-            }
-            QPushButton:hover {
-                background-color: #138496;
+        shortcuts_label = QLabel(self.config.short_cuts_text)
+        shortcuts_label.setTextFormat(Qt.TextFormat.PlainText)
+        shortcuts_label.setWordWrap(True)
+        shortcuts_label.setStyleSheet("""
+            QLabel {
+                background-color: #2a2a2a;
+                color: #e0e0e0;
+                padding: 15px;
+                font-family: monospace;
+                font-size: 10pt;
+                line-height: 1.4;
             }
         """)
-        qr_button.clicked.connect(self.sound_manager.play_click)
-        qr_button.clicked.connect(lambda checked, pk=smart_password.public_key: self.show_qr(pk))
-        qr_button.public_key = smart_password.public_key
-        self.table_widget.setCellWidget(row_position, 2, qr_button)
+        content_layout.addWidget(shortcuts_label)
 
-        get_button = QPushButton("Get")
-        get_button.setToolTip("Get Smart Password")
-        get_button.setStyleSheet(self.styles.get_button_style)
-        get_button.clicked.connect(self.sound_manager.play_click)
-        get_button.clicked.connect(lambda checked, pk=smart_password.public_key: self.get_password(pk))
-        get_button.public_key = smart_password.public_key
-        self.table_widget.setCellWidget(row_position, 3, get_button)
+        scroll_area.setWidget(content_widget)
+        layout.addWidget(scroll_area)
 
-        edit_button = QPushButton("Edit")
-        edit_button.setToolTip("Edit password description and length")
-        edit_button.setStyleSheet(self.styles.edit_button_style)
-        edit_button.clicked.connect(self.sound_manager.play_click)
-        edit_button.clicked.connect(lambda checked, pk=smart_password.public_key: self.edit_password(pk))
-        edit_button.public_key = smart_password.public_key
-        self.table_widget.setCellWidget(row_position, 4, edit_button)
+        button_layout = QHBoxLayout()
+        button_layout.addStretch()
+        ok_button = QPushButton("OK")
+        ok_button.setMinimumWidth(100)
+        ok_button.setMinimumHeight(35)
+        ok_button.setStyleSheet("""
+            QPushButton {
+                background-color: #2a82da;
+                color: white;
+                font-weight: bold;
+                border-radius: 5px;
+                padding: 8px 16px;
+            }
+            QPushButton:hover {
+                background-color: #1a72ca;
+            }
+        """)
+        ok_button.clicked.connect(dialog.accept)
+        button_layout.addWidget(ok_button)
+        button_layout.addStretch()
+        layout.addLayout(button_layout)
 
-        delete_button = QPushButton("Delete")
-        delete_button.setToolTip("Delete this password entry")
-        delete_button.setStyleSheet(self.styles.delete_button_style)
-        delete_button.clicked.connect(self.sound_manager.play_click)
-        delete_button.clicked.connect(lambda checked, pk=smart_password.public_key: self.remove_password(pk))
-        delete_button.public_key = smart_password.public_key
-        self.table_widget.setCellWidget(row_position, 5, delete_button)
+        x = self.x() + (self.width() - dialog.width()) // 2
+        y = self.y() + (self.height() - dialog.height()) // 2
+        dialog.move(x, y)
 
-        self.update_password_count()
+        dialog.exec_()
 
     def show_qr(self, public_key):
         self.sound_manager.play_notify()
@@ -515,7 +907,6 @@ class MainWindow(QMainWindow):
             self.show_status_message('Password metadata not found', 2000)
             QMessageBox.warning(self, 'Error', 'Password metadata not found.')
             return
-
         dialog = QRDialog(
             self,
             description=smart_password.description,
@@ -525,101 +916,64 @@ class MainWindow(QMainWindow):
         )
         dialog.exec_()
 
-    def show_qr_for_selected(self):
-        current_row = self.table_widget.currentRow()
-        if current_row < 0:
-            self.show_status_message('No password selected. Please select a row first.', 2000)
-            QMessageBox.information(self, 'No Selection', 'Please select a password row first.')
-            return
-
-        public_key = self._get_public_key_for_row(current_row)
-        if public_key:
-            self.show_qr(public_key)
-        else:
-            self.show_status_message('Could not find selected password', 2000)
-
     def edit_password(self, public_key):
         self.sound_manager.play_notify()
         smart_password = self.smart_pass_man.get_smart_password(public_key)
         if not smart_password:
             QMessageBox.warning(self, 'Error', 'Password metadata not found.')
             return
-
         dialog = EditPasswordDialog(self, smart_password.description, smart_password.length, self.sound_manager)
         if dialog.exec_() == QDialog.Accepted:
             new_description, new_length = dialog.get_values()
-
             if not new_description:
                 QMessageBox.warning(self, 'Missing Information', 'Please enter a password description.')
                 return
-
             if new_description == smart_password.description and new_length == smart_password.length:
                 QMessageBox.information(self, 'No Changes', 'No changes were made.')
                 return
-
             if new_length != smart_password.length:
-                msg_box = QMessageBox(self)
-                msg_box.setWindowTitle('⚠️ Password Length Change Warning')
-                msg_box.setTextFormat(Qt.TextFormat.RichText)
-                msg_box.setText(
-                    f'Changing password length from {smart_password.length} to {new_length} characters:<br><br>'
-                    f'• First {min(smart_password.length, new_length)} characters will remain the same<br>'
-                    f'• You will get a {"longer" if new_length > smart_password.length else "shorter"} password<br>'
-                    f'• Accounts using the old password may need to be updated<br><br>'
-                    f'Are you sure you want to change the password length?'
+                reply = QMessageBox.question(
+                    self, '⚠️ Password Length Change Warning',
+                    f'Changing password length from {smart_password.length} to {new_length} characters.\n\n'
+                    f'First {min(smart_password.length, new_length)} characters will remain the same.\n'
+                    f'Are you sure?',
+                    QMessageBox.Yes | QMessageBox.No, QMessageBox.No
                 )
-                msg_box.setIcon(QMessageBox.Warning)
-                msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-                msg_box.setDefaultButton(QMessageBox.No)
-
-                reply = msg_box.exec_()
-
                 if reply == QMessageBox.No:
                     return
-
             try:
                 success = self.smart_pass_man.update_smart_password(
                     public_key=public_key,
                     description=new_description,
                     length=new_length
                 )
-
                 if success:
-                    row = self.find_row_by_public_key(public_key)
-                    if row != -1:
-                        desc_item = self.table_widget.item(row, 0)
-                        if desc_item:
-                            desc_item.setText(new_description)
-                            desc_item.setToolTip(new_description)
-
-                        length_item = self.table_widget.item(row, 1)
-                        if length_item:
-                            length_item.setText(f"{new_length} chars")
+                    self.load_passwords()
                     self.show_status_message('Password metadata updated', 3000)
-
-                    msg_box = QMessageBox(self)
-                    msg_box.setWindowTitle('Updated')
-                    msg_box.setTextFormat(Qt.TextFormat.RichText)
-
-                    msg = f'✅ Successfully updated!'
-                    if new_length != smart_password.length:
-                        msg += (f'<br><br>Password length changed from {smart_password.length} '
-                                f'to {new_length} characters.')
-                        msg += (f'<br><br><i>Note: New password will have '
-                                f'{"extended" if new_length > smart_password.length else "truncated"} characters.</i>')
-
-                    msg_box.setText(msg)
-                    msg_box.setIcon(QMessageBox.Information)
-                    msg_box.setStandardButtons(QMessageBox.Ok)
-                    msg_box.exec_()
-
+                    QMessageBox.information(self, 'Updated', '✅ Successfully updated!')
             except Exception as e:
                 QMessageBox.critical(self, 'Error', f'Failed to update:\n{str(e)}')
 
     def setup_status_bar(self):
         self.status_bar = QStatusBar()
         self.setStatusBar(self.status_bar)
+
+        self.count_label = QLabel("0 passwords")
+        self.count_label.setStyleSheet("color: #a0a0a0; padding: 0 10px;")
+        self.status_bar.addPermanentWidget(self.count_label)
+
+        storage_label = QLabel("")
+        storage_label.setObjectName("storage_label")
+        storage_label.setStyleSheet("color: #a0a0a0; padding: 0 10px;")
+        self.status_bar.addPermanentWidget(storage_label)
+
         self.status_bar.showMessage('Ready')
+
+    def find_row_by_public_key(self, public_key):
+        for row in range(len(self.all_passwords)):
+            if self.all_passwords[row].public_key == public_key:
+                return row
+        return -1
 
     def remove_password(self, public_key):
         self.sound_manager.play_notify()
@@ -627,168 +981,177 @@ class MainWindow(QMainWindow):
         if row != -1:
             description = self.table_widget.item(row, 0).text()
 
-            msg_box = QMessageBox(self)
-            msg_box.setWindowTitle('Confirm Deletion')
-            msg_box.setTextFormat(Qt.TextFormat.RichText)
-            msg_box.setText(
-                f'Delete password entry for:<br><b>{description}</b>?<br><br>'
-                f'Note: This only deletes the metadata. You can recreate it '
-                f'later using the same secret phrase.'
+            dialog = QDialog(self)
+            dialog.setWindowTitle("Confirm Deletion")
+            dialog.setMinimumWidth(450)
+            dialog.setMaximumWidth(550)
+            dialog.setModal(True)
+
+            layout = QVBoxLayout(dialog)
+            layout.setSpacing(15)
+
+            title_label = QLabel("🗑️ Delete Password Entry")
+            title_font = QFont()
+            title_font.setPointSize(14)
+            title_font.setBold(True)
+            title_label.setFont(title_font)
+            title_label.setStyleSheet("color: #dc3545;")
+            title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            layout.addWidget(title_label)
+
+            info_label = QLabel(
+                "This will delete the password metadata. The actual password can still be "
+                "recreated if you remember your secret phrase."
             )
-            msg_box.setIcon(QMessageBox.Question)
-            msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-            msg_box.setDefaultButton(QMessageBox.No)
+            info_label.setWordWrap(True)
+            info_label.setStyleSheet("color: #a0a0a0;")
+            layout.addWidget(info_label)
 
-            reply = msg_box.exec_()
+            desc_group = QGroupBox("Password Description")
+            desc_layout = QVBoxLayout()
 
-            if reply == QMessageBox.Yes:
-                self.table_widget.removeRow(row)
+            desc_text = QTextEdit()
+            desc_text.setPlainText(description)
+            desc_text.setReadOnly(True)
+            desc_text.setMaximumHeight(80)
+            desc_text.setMinimumHeight(60)
+            desc_text.setStyleSheet("""
+                QTextEdit {
+                    background-color: #2a2a2a;
+                    color: #f0f0f0;
+                    border: 1px solid #dc3545;
+                    border-radius: 4px;
+                    font-family: monospace;
+                    font-size: 11px;
+                }
+            """)
+            desc_layout.addWidget(desc_text)
+            desc_group.setLayout(desc_layout)
+            layout.addWidget(desc_group)
+
+            question_label = QLabel("<b>Are you sure you want to delete this entry?</b>")
+            question_label.setWordWrap(True)
+            question_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            question_label.setStyleSheet("color: #ffc107; padding: 10px;")
+            layout.addWidget(question_label)
+
+            button_layout = QHBoxLayout()
+            button_layout.setSpacing(10)
+
+            cancel_btn = QPushButton("Cancel")
+            cancel_btn.setMinimumHeight(35)
+            cancel_btn.setMinimumWidth(100)
+            cancel_btn.setStyleSheet("""
+                QPushButton {
+                    background-color: #6c757d;
+                    color: white;
+                    font-weight: bold;
+                    border-radius: 5px;
+                    padding: 8px 16px;
+                }
+                QPushButton:hover {
+                    background-color: #5a6268;
+                }
+            """)
+            cancel_btn.clicked.connect(dialog.reject)
+            button_layout.addWidget(cancel_btn)
+
+            delete_btn = QPushButton("🗑 Delete")
+            delete_btn.setMinimumHeight(35)
+            delete_btn.setMinimumWidth(100)
+            delete_btn.setStyleSheet("""
+                QPushButton {
+                    background-color: #dc3545;
+                    color: white;
+                    font-weight: bold;
+                    border-radius: 5px;
+                    padding: 8px 16px;
+                }
+                QPushButton:hover {
+                    background-color: #c82333;
+                }
+            """)
+            delete_btn.clicked.connect(dialog.accept)
+            button_layout.addWidget(delete_btn)
+
+            layout.addLayout(button_layout)
+
+            x = self.x() + (self.width() - dialog.width()) // 2
+            y = self.y() + (self.height() - dialog.height()) // 2
+            dialog.move(x, y)
+
+            if dialog.exec_() == QDialog.Accepted:
                 self.smart_pass_man.delete_smart_password(public_key)
-                self.update_password_count()
-
-                msg_box = QMessageBox(self)
-                msg_box.setWindowTitle('Deleted')
-                msg_box.setTextFormat(Qt.TextFormat.RichText)
-                msg_box.setText(f'Password metadata for <b>{description}</b> has been deleted.')
+                self.load_passwords()
                 self.show_status_message(f'Password entry for "{description}" deleted', 3000)
-                msg_box.setIcon(QMessageBox.Information)
-                msg_box.setStandardButtons(QMessageBox.Ok)
-                msg_box.exec_()
 
-    def find_row_by_public_key(self, public_key):
-        for row in range(self.table_widget.rowCount()):
-            for col in [2, 3, 4, 5]:
-                widget = self.table_widget.cellWidget(row, col)
-                if widget and hasattr(widget, 'public_key') and widget.public_key == public_key:
-                    return row
-        return -1
+                QMessageBox.information(
+                    self,
+                    "Deleted",
+                    f'✅ Password metadata for "{description}" has been deleted.',
+                    QMessageBox.Ok
+                )
 
     def add_password(self):
         self.sound_manager.play_notify()
         dialog = AddPasswordDialog(self, self.sound_manager)
         if dialog.exec_() == QDialog.Accepted:
             description, secret, length = dialog.get_inputs()
-
             if not description or not secret:
-                QMessageBox.warning(
-                    self,
-                    'Missing Information',
-                    'Please provide both password description and secret phrase.'
-                )
+                QMessageBox.warning(self, 'Missing Information',
+                                    'Please provide both password description and secret phrase.')
                 return
-
             try:
                 public_key = SmartPasswordMaster.generate_public_key(secret=secret)
-
                 if public_key in self.smart_pass_man.passwords:
                     existing_password = self.smart_pass_man.passwords[public_key]
-                    msg_box = QMessageBox(self)
-                    msg_box.setWindowTitle('Duplicate Secret Phrase')
-                    msg_box.setTextFormat(Qt.TextFormat.RichText)
-                    msg_box.setText(
-                        f'A password entry with this secret phrase already exists:<br><br>'
-                        f'<b>"{existing_password.description}"</b><br>'
-                        f'Length: {existing_password.length} characters<br><br>'
-                        f'Each unique secret phrase generates a unique public key.<br>'
+                    QMessageBox.warning(
+                        self, 'Duplicate Secret Phrase',
+                        f'A password entry with this secret phrase already exists:\n\n'
+                        f'"{existing_password.description}"\n'
+                        f'Length: {existing_password.length} characters\n\n'
                         f'You cannot have multiple entries with the same secret.'
                     )
-                    msg_box.setIcon(QMessageBox.Warning)
-                    msg_box.setStandardButtons(QMessageBox.Ok)
-                    msg_box.exec_()
-                    self.show_status_message('Duplicate secret phrase detected', 3000)
                     return
-
-                smart_password = SmartPassword(
-                    public_key=public_key,
-                    description=description,
-                    length=length
-                )
-
-                password = SmartPasswordMaster.generate_smart_password(
-                    secret=secret,
-                    length=length
-                )
-
+                smart_password = SmartPassword(public_key=public_key, description=description, length=length)
+                password = SmartPasswordMaster.generate_smart_password(secret=secret, length=length)
                 self.smart_pass_man.add_smart_password(smart_password)
-
-                self.add_item(smart_password)
+                self.load_passwords()
                 self.show_status_message(f'Password created for "{description}"', 3000)
-
                 display_dialog = PasswordDisplayDialog(self, description, password, self.sound_manager)
                 display_dialog.exec_()
-
             except Exception as e:
                 self.show_status_message('Failed to create password', 3000)
-                QMessageBox.critical(
-                    self,
-                    'Error',
-                    f'Failed to create password:\n{str(e)}'
-                )
+                QMessageBox.critical(self, 'Error', f'Failed to create password:\n{str(e)}')
 
     def get_password(self, public_key):
         self.sound_manager.play_notify()
         smart_password = self.smart_pass_man.get_smart_password(public_key)
         if not smart_password:
             self.show_status_message('Password metadata not found', 3000)
-            QMessageBox.critical(
-                self,
-                'Error',
-                'Password metadata not found. It may have been deleted.'
-            )
+            QMessageBox.critical(self, 'Error', 'Password metadata not found.')
             return
-
         description = smart_password.description
         dialog = GetPasswordDialog(self, description, self.sound_manager)
         if dialog.exec_() == QDialog.Accepted:
             secret = dialog.get_secret()
-
             if not secret:
                 self.show_status_message('Missing secret phrase', 3000)
-                QMessageBox.warning(
-                    self,
-                    'Missing Secret',
-                    'Please enter your secret phrase.'
-                )
+                QMessageBox.warning(self, 'Missing Secret', 'Please enter your secret phrase.')
                 return
-
             try:
-                is_valid = SmartPasswordMaster.check_public_key(
-                    secret=secret,
-                    public_key=public_key
-                )
-
+                is_valid = SmartPasswordMaster.check_public_key(secret=secret, public_key=public_key)
                 if is_valid:
-                    password = SmartPasswordMaster.generate_smart_password(
-                        secret=secret,
-                        length=smart_password.length
-                    )
+                    password = SmartPasswordMaster.generate_smart_password(secret=secret, length=smart_password.length)
                     self.show_status_message(f'Password retrieved for "{description}"', 3000)
                     display_dialog = PasswordDisplayDialog(self, description, password, self.sound_manager)
                     display_dialog.exec_()
-
                 else:
                     self.show_status_message('Invalid secret phrase', 3000)
-                    msg_box = QMessageBox(self)
-                    msg_box.setWindowTitle('Invalid Secret')
-                    msg_box.setTextFormat(Qt.TextFormat.RichText)
-                    msg_box.setText(
-                        'The secret phrase is incorrect. Please check:<br>'
-                        '• Caps Lock<br>'
-                        '• Keyboard layout<br>'
-                        '• Spelling<br><br>'
-                        f'Note: In {self.config.version}, secret phrases are case-sensitive.'
-                    )
-                    msg_box.setIcon(QMessageBox.Warning)
-                    msg_box.setStandardButtons(QMessageBox.Ok)
-                    msg_box.exec_()
-
+                    QMessageBox.warning(self, 'Invalid Secret', 'The secret phrase is incorrect.')
             except Exception as e:
                 self.show_status_message('Failed to generate password', 3000)
-                QMessageBox.critical(
-                    self,
-                    'Error',
-                    f'Failed to generate password:\n{str(e)}'
-                )
+                QMessageBox.critical(self, 'Error', f'Failed to generate password:\n{str(e)}')
 
     def toggle_sounds(self, enabled: bool):
         self.sound_manager.set_enabled(enabled)
@@ -797,69 +1160,37 @@ class MainWindow(QMainWindow):
 
     def export_passwords(self):
         from core.dialogs.export_import_dialog import ExportImportDialog
-
-        dialog = ExportImportDialog(
-            self,
-            mode="export",
-            smart_pass_man=self.smart_pass_man,
-            sound_manager=self.sound_manager
-        )
-
+        dialog = ExportImportDialog(self, mode="export", smart_pass_man=self.smart_pass_man,
+                                    sound_manager=self.sound_manager)
         if dialog.exec_() == QDialog.Accepted:
             self.show_status_message('Passwords exported successfully', 3000)
 
     def import_passwords(self):
         from core.dialogs.export_import_dialog import ExportImportDialog
-
-        dialog = ExportImportDialog(
-            self,
-            mode="import",
-            smart_pass_man=self.smart_pass_man,
-            sound_manager=self.sound_manager
-        )
-
+        dialog = ExportImportDialog(self, mode="import", smart_pass_man=self.smart_pass_man,
+                                    sound_manager=self.sound_manager)
         if dialog.exec_() == QDialog.Accepted:
-            self.refresh_table()
-            self.update_password_count()
-            self.show_status_message(f'Passwords imported successfully. '
-                                     f'Total: {self.smart_pass_man.password_count}', 3000)
-
-    def refresh_table(self):
-        self.table_widget.setRowCount(0)
-
-        for password in self.smart_pass_man.passwords.values():
-            self.add_item(password)
+            self.load_passwords()
+            self.show_status_message(f'Passwords imported successfully. Total: {self.smart_pass_man.password_count}',
+                                     3000)
 
     def show_status_message(self, message, duration=3000):
         self.status_bar.showMessage(message, duration)
 
-    def update_status_on_action(self, action_name):
-        messages = {
-            'add': 'Password created successfully',
-            'get': 'Password retrieved successfully',
-            'edit': 'Password metadata updated',
-            'delete': 'Password entry deleted',
-            'export': 'Passwords exported successfully',
-            'import': 'Passwords imported successfully',
-            'copy': 'Password copied to clipboard',
-            'sound_on': 'Sounds enabled',
-            'sound_off': 'Sounds disabled',
-            'ready': 'Ready',
-            'duplicate': 'Duplicate secret phrase detected',
-            'invalid_secret': 'Invalid secret phrase'
-        }
-        self.status_bar.showMessage(messages.get(action_name, 'Action completed'), 3000)
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key.Key_Return or event.key() == Qt.Key.Key_Enter:
+            current_row = self.table_widget.currentRow()
+            if current_row >= 0:
+                self.get_password_for_selected_row()
+            event.accept()
+        else:
+            super().keyPressEvent(event)
 
     def closeEvent(self, event):
         self.sound_manager.play_error()
         if len(self.smart_pass_man.passwords) > 0:
-            reply = QMessageBox.question(
-                self,
-                'Exit',
-                f'Are you sure you want to exit?',
-                QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.No
-            )
+            reply = QMessageBox.question(self, 'Exit', 'Are you sure you want to exit?',
+                                         QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
             if reply == QMessageBox.Yes:
                 event.accept()
             else:

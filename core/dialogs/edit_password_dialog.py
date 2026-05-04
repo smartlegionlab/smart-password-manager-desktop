@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import (
     QHBoxLayout,
     QGroupBox
 )
+from PyQt5.QtCore import Qt
 
 from core.models.styles.edit_password_dialog_styles import EditPasswordDialogStyles
 
@@ -17,6 +18,7 @@ class EditPasswordDialog(QDialog):
     def __init__(self, parent=None, current_description="", current_length=16, sound_manager=None):
         super().__init__(parent)
         self.current_length = current_length
+        self.max_length = 255
         self.setWindowTitle('Edit Password Metadata')
         self.setMinimumWidth(400)
         self.styles = EditPasswordDialogStyles()
@@ -32,9 +34,14 @@ class EditPasswordDialog(QDialog):
         description_layout = QVBoxLayout()
         self.description_input = QLineEdit(self)
         self.description_input.setText(current_description)
-        self.description_input.setPlaceholderText("Enter new password description (max 255 chars)")
-        self.description_input.textChanged.connect(self.check_inputs)
+        self.description_input.setPlaceholderText(f"Enter new password description (max {self.max_length} chars)")
+        self.description_input.textChanged.connect(self.on_description_changed)
         description_layout.addWidget(self.description_input)
+
+        self.counter_label = QLabel("")
+        self.counter_label.setStyleSheet("font-size: 10px; padding: 2px;")
+        self.counter_label.setAlignment(Qt.AlignmentFlag.AlignRight)
+        description_layout.addWidget(self.counter_label)
 
         self.description_warning = QLabel("")
         self.description_warning.setStyleSheet("color: #ff9800; font-size: 11px;")
@@ -86,8 +93,37 @@ class EditPasswordDialog(QDialog):
         button_layout.addWidget(self.submit_button)
         self.layout.addLayout(button_layout)
 
-        self.submit_button.setEnabled(True)
+        self.update_counter()
         self.on_length_changed(current_length)
+
+    def on_description_changed(self):
+        text = self.description_input.text()
+
+        if len(text) > self.max_length:
+            self.description_input.setText(text[:self.max_length])
+            cursor_pos = self.description_input.cursorPosition()
+            self.description_input.setCursorPosition(cursor_pos - 1 if cursor_pos > 0 else 0)
+            return
+
+        self.update_counter()
+        self.check_inputs()
+
+    def update_counter(self):
+        current = len(self.description_input.text())
+        remaining = self.max_length - current
+
+        if remaining < 0:
+            self.counter_label.setText(f"🔴 {current}/{self.max_length} EXCEEDED!")
+            self.counter_label.setStyleSheet("color: #dc3545; font-size: 10px; font-weight: bold;")
+        elif remaining <= 10:
+            self.counter_label.setText(f"⚠️ {current}/{self.max_length} - {remaining} chars left")
+            self.counter_label.setStyleSheet("color: #ff9800; font-size: 10px; font-weight: bold;")
+        elif remaining <= 30:
+            self.counter_label.setText(f"📝 {current}/{self.max_length} - {remaining} chars left")
+            self.counter_label.setStyleSheet("color: #ffc107; font-size: 10px;")
+        else:
+            self.counter_label.setText(f"📝 {current}/{self.max_length}")
+            self.counter_label.setStyleSheet("color: #6c757d; font-size: 10px;")
 
     def validate_description(self, text):
         forbidden_chars = ['"', '\\']
@@ -97,8 +133,8 @@ class EditPasswordDialog(QDialog):
                 self.description_warning.setText(f"⚠️ Symbol '{char}' is not allowed in description")
                 return False
 
-        if len(text) > 255:
-            self.description_warning.setText("⚠️ Description must be 255 characters or less")
+        if len(text) > self.max_length:
+            self.description_warning.setText(f"⚠️ Description must be {self.max_length} characters or less")
             return False
 
         if not text.strip():
