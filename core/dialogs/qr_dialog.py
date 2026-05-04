@@ -3,7 +3,7 @@ import json
 import qrcode
 from PyQt5.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QLabel,
-    QPushButton, QApplication
+    QPushButton, QApplication, QTextEdit
 )
 from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtCore import Qt
@@ -14,7 +14,8 @@ class QRDialog(QDialog):
     def __init__(self, parent=None, description="", public_key="", length=16, sound_manager=None):
         super().__init__(parent)
         self.setWindowTitle("QR Code Export")
-        self.setMinimumWidth(400)
+        self.setMinimumWidth(500)
+        self.setMaximumWidth(550)
         self.setModal(True)
         self.sound_manager = sound_manager
 
@@ -42,14 +43,32 @@ class QRDialog(QDialog):
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title_label)
 
-        info_label = QLabel(
-            f"<b>Description:</b> {self.description}<br>"
-            f"<b>Length:</b> {self.length} characters"
-        )
-        info_label.setWordWrap(True)
-        info_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        info_label.setTextFormat(Qt.TextFormat.RichText)
-        layout.addWidget(info_label)
+        desc_label = QLabel("<b>Description:</b>")
+        desc_label.setWordWrap(True)
+        desc_label.setTextFormat(Qt.TextFormat.RichText)
+        layout.addWidget(desc_label)
+
+        self.desc_text = QTextEdit()
+        self.desc_text.setPlainText(self.description)
+        self.desc_text.setReadOnly(True)
+        self.desc_text.setMaximumHeight(60)
+        self.desc_text.setMinimumHeight(20)
+        self.desc_text.setStyleSheet("""
+            QTextEdit {
+                background-color: #2a2a2a;
+                color: #f0f0f0;
+                border: 1px solid #444;
+                border-radius: 4px;
+                font-family: monospace;
+                font-size: 11px;
+            }
+        """)
+        layout.addWidget(self.desc_text)
+
+        length_label = QLabel(f"<b>Length:</b> {self.length} characters")
+        length_label.setWordWrap(True)
+        length_label.setTextFormat(Qt.TextFormat.RichText)
+        layout.addWidget(length_label)
 
         self.qr_label = QLabel()
         self.qr_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -57,12 +76,27 @@ class QRDialog(QDialog):
         self.generate_qr()
         layout.addWidget(self.qr_label)
 
-        key_short = self.public_key[:20] + "..." if len(self.public_key) > 24 else self.public_key
-        key_label = QLabel(f"<b>Public Key:</b> <code>{key_short}</code>")
+        key_label = QLabel("<b>Public Key:</b>")
         key_label.setWordWrap(True)
-        key_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         key_label.setTextFormat(Qt.TextFormat.RichText)
         layout.addWidget(key_label)
+
+        self.key_text = QTextEdit()
+        self.key_text.setPlainText(self.public_key)
+        self.key_text.setReadOnly(True)
+        self.key_text.setMaximumHeight(60)
+        self.key_text.setMinimumHeight(20)
+        self.key_text.setStyleSheet("""
+            QTextEdit {
+                background-color: #2a2a2a;
+                color: #f0f0f0;
+                border: 1px solid #444;
+                border-radius: 4px;
+                font-family: monospace;
+                font-size: 10px;
+            }
+        """)
+        layout.addWidget(self.key_text)
 
         note_label = QLabel(
             '📲 Scan with <a href="https://github.com/smartlegionlab/smart-password-manager-android/releases" '
@@ -77,6 +111,14 @@ class QRDialog(QDialog):
         self.copy_btn = QPushButton("📋 Copy JSON")
         self.copy_btn.clicked.connect(self.copy_json)
         button_layout.addWidget(self.copy_btn)
+
+        copy_desc_btn = QPushButton("📝 Copy Description")
+        copy_desc_btn.clicked.connect(self.copy_description)
+        button_layout.addWidget(copy_desc_btn)
+
+        copy_key_btn = QPushButton("🔑 Copy Key")
+        copy_key_btn.clicked.connect(self.copy_public_key)
+        button_layout.addWidget(copy_key_btn)
 
         close_btn = QPushButton("Close")
         close_btn.clicked.connect(self.accept)
@@ -130,6 +172,26 @@ class QRDialog(QDialog):
 
         if self.parent() and hasattr(self.parent(), 'show_status_message'):
             self.parent().show_status_message("QR data copied to clipboard", 2000)
+
+    def copy_description(self):
+        if self.sound_manager:
+            self.sound_manager.play_click()
+
+        clipboard = QApplication.clipboard()
+        clipboard.setText(self.description)
+
+        if self.parent() and hasattr(self.parent(), 'show_status_message'):
+            self.parent().show_status_message("Description copied to clipboard", 2000)
+
+    def copy_public_key(self):
+        if self.sound_manager:
+            self.sound_manager.play_click()
+
+        clipboard = QApplication.clipboard()
+        clipboard.setText(self.public_key)
+
+        if self.parent() and hasattr(self.parent(), 'show_status_message'):
+            self.parent().show_status_message("Public key copied to clipboard", 2000)
 
     def center_dialog(self):
         if self.parent():
