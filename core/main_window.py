@@ -610,8 +610,8 @@ class MainWindow(QMainWindow):
 
         tech_text = QLabel(
             "Powered by smartpasslib — deterministic password generation library\n"
-            "Key derivation: 30 iterations (private key) / 60 iterations (public key)\n"
-            "Character set: a-z A-Z 0-9 ! @ # $ & * - _"
+            "Key derivation: 15-30 iterations (private key) / 45-60 iterations (public key)\n"
+            "Character set: !@#$%^&*()_+-=[]{};:,.<>?/A-Za-z0-9"
         )
         tech_text.setWordWrap(True)
         tech_text.setStyleSheet("color: #c0c0c0; padding-left: 15px;")

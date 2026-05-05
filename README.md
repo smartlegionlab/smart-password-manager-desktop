@@ -1,4 +1,4 @@
-# Smart Password Manager Desktop <sup>v3.2.1</sup>
+# Smart Password Manager Desktop <sup>v4.0.0</sup>
 
 ---
 
@@ -74,11 +74,11 @@ Smart Password Manager stores nothing. Your secrets never leave your device. Pas
 
 ---
 
-## 🔄 Breaking Change (v3.x.x+)
+## 🔄 Breaking Change (v4.0.0)
 
-> **⚠️ This release uses [smartpasslib](https://github.com/smartlegionlab/smartpasslib) v3.x.x+, which is NOT backward compatible with v2.x.x**
+> **⚠️ This release uses [smartpasslib](https://github.com/smartlegionlab/smartpasslib) v4.0.0, which is NOT backward compatible with v2.x.x or v3.x.x**
 
-Passwords created with v2.x.x or earlier **cannot be regenerated** using v3.x.x+.
+Smart passwords created with older versions **cannot be regenerated** using v4.0.0.
 
 📖 **Full migration instructions** → see [MIGRATION.md](https://github.com/smartlegionlab/smart-password-manager-desktop/blob/master/MIGRATION.md)
 
@@ -95,14 +95,21 @@ Passwords created with v2.x.x or earlier **cannot be regenerated** using v3.x.x+
 
 Powered by [**smartpasslib**](https://github.com/smartlegionlab/smartpasslib) — The core library for deterministic password generation.
 
-**Key derivation (same as Python/JS/Kotlin/Go/C# versions):**
+**Key derivation (same as Python/JS/Kotlin/Go/C# versions v4.0.0):**
 
-| Key Type    | Iterations | Purpose                                               |
-|-------------|------------|-------------------------------------------------------|
-| Private Key | 30         | Password generation (never stored, never transmitted) |
-| Public Key  | 60         | Verification (stored locally)                         |
+| Key Type    | Iterations              | Purpose                                               |
+|-------------|-------------------------|-------------------------------------------------------|
+| Private Key | 15-30 (dynamic)         | Password generation (never stored, never transmitted) |
+| Public Key  | 45-60 (dynamic)         | Verification (stored locally)                         |
 
-**Character Set:** `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$&*-_`
+**Character Set (Google-compatible):**
+```
+!@#$%^&*()_+-=[]{};:,.<>?/ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz
+```
+
+**Validation Rules:**
+- Secret phrase: minimum 12 characters
+- Password length: 12-100 characters
 
 **Decentralized Architecture**:
 - No central authority required
@@ -120,8 +127,6 @@ Powered by [**smartpasslib**](https://github.com/smartlegionlab/smartpasslib) �
 - Service description
 - Password length parameter
 
-**Export format**: Same JSON structure, but v3.x.x exports are **incompatible** with older versions. Always note which version created the export.
-
 ---
 
 ## File Locations
@@ -132,11 +137,13 @@ Configuration files are stored in:
 |----------|:------------------------------------------------------------------|
 | Linux    | `~/.config/smart_password_manager/passwords.json`                 |
 
-**Automatic Migration**:
-- Old `~/.cases.json` files are automatically migrated on first run
-- Original file is backed up as `~/.cases.json.bak`
-- Migration is one-time and non-destructive
-- All your existing passwords are preserved
+**Legacy Migration**:
+- Old `~/.cases.json` files from v1.x.x/v2.x.x/v3.x.x are **NOT compatible** with v4.0.0
+- Public keys in old files use different derivation (fixed iterations, no salt)
+- These files will **not** be migrated automatically
+- If you have existing metadata, you need to recreate entries manually
+- Keep old file as backup: `~/.cases.json.v3.bak`
+- See [MIGRATION.md](MIGRATION.md) for detailed instructions
 
 ---
 
@@ -174,7 +181,7 @@ python app.py
 2. Enter service description (e.g., "GitHub Account")
 3. Enter your secret phrase (minimum 12 characters, never stored)
    - Good examples: `"MyStrongSecretPhrase2026!"` or `"P@ssw0rd!LongSecret"`
-4. Set password length (16-24 recommended)
+4. Set password length (12-100 characters, 16-24 recommended)
 5. Click **Create Password** - password appears for copying
 
 ### Retrieving a Password
@@ -201,7 +208,7 @@ python app.py
 4. You can rename the file if needed
 5. Click **Export**
 
-+ **Note**: Auto-generated timestamps prevent accidental file overwrites when exporting multiple times to the same folder.
+**Note**: Auto-generated timestamps prevent accidental file overwrites when exporting multiple times to the same folder.
 
 ### Importing Passwords
 1. Go to **File → Import → Import passwords...**
@@ -275,11 +282,11 @@ The application allows you to export password metadata to the **Smart Password M
 5. The password entry will be automatically added to your mobile device
 
 **What's included in QR:**
-- Password description
 - Password length
 - Public verification key
 
 **What's NOT included:**
+- Password description
 - Your secret phrase (never leaves your device)
 - The actual password
 - Any sensitive information
@@ -330,7 +337,7 @@ This provides an alternative to the table buttons for users who prefer context m
 **Password Creation Dialog:**
 - Service description input
 - Secret phrase entry (hidden/shown)
-- Password length selector (4-100 characters)
+- Password length selector (12-100 characters)
 - Grouped sections for clear organization
 
 **Secret Entry Dialog:**
@@ -412,7 +419,7 @@ Length Strategy:
 #### Best Practices:
 1. **Unique per service** - Different secret for each account type
 2. **Memorable but complex** - Phrases you can remember
-3. **Case-sensitive** - v3.x.x+ enforces exact case matching
+3. **Case-sensitive** - v4.0.0 enforces exact case matching
 4. **No digital storage** - Keep only in memory
 5. **Backup plan** - Physical written backup in secure location
 6. **Export regularly** - Backup metadata after adding new passwords
@@ -500,10 +507,11 @@ Smart Password Manager Desktop (Python) produces **identical passwords** to:
 
 ## Version History
 
-| Version          | smartpasslib | Status                   | Migration Required      |
-|------------------|--------------|--------------------------|-------------------------|
-| v2.x.x and below | v2.x.x       | ❌ Deprecated/Unsupported | Must migrate to v3.x.x+ |
-| v3.x.x+          | v3.x.x+      | ✅ Current                | N/A                     |
+| Version          | smartpasslib | Status                   | Migration Required        |
+|------------------|--------------|--------------------------|---------------------------|
+| v2.x.x and below | v2.x.x       | ❌ Deprecated/Unsupported | Must migrate to v4.x.x    |
+| v3.x.x           | v3.x.x       | ❌ Deprecated/Unsupported | Must migrate to v4.x.x    |
+| **v4.0.0+**      | **v4.0.0+**  | ✅ Current                | N/A                       |
 
 ---
 
@@ -528,7 +536,7 @@ Smart Password Manager Desktop (Python) produces **identical passwords** to:
 - **Minimum 12 characters** is enforced by the application
 - Short secrets (under 12 chars) are **automatically rejected**
 - Weak secrets like "password123" or "qwerty" will be rejected
-- Use a mix of: uppercase, lowercase, numbers, symbols, emoji, or Cyrillic
+- Use a mix of: uppercase, lowercase, numbers, symbols
 - A 12-character secret with diverse character types provides **practical brute-force immunity**
 
 **Remember:** The app cannot recover your secret phrase. If you lose it, all passwords are permanently lost.
@@ -569,4 +577,6 @@ Copyright (©) 2026, [Alexander Suvorov](https://github.com/smartlegionlab)
 - **Documentation**: Inline help and this README
 
 **Note**: Always test password generation with non-essential accounts first. Implementation security depends on proper usage.
+
+---
 

@@ -1,3 +1,4 @@
+# Copyright (©) 2026, Alexander Suvorov. All rights reserved.
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPalette, QColor
 from PyQt5.QtWidgets import QApplication

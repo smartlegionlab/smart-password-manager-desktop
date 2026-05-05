@@ -1,3 +1,4 @@
+# Copyright (©) 2026, Alexander Suvorov. All rights reserved.
 from datetime import date
 from smartpasslib import __version__ as lib_version
 
@@ -8,7 +9,7 @@ class BaseConfig:
         self.app_name = 'Smart Password Manager'
         self.app_long_name = "Smart Password Manager Desktop (Python)"
         self.author = 'Alexander Suvorov'
-        self.version = '3.2.1'
+        self.version = '4.0.0'
         self.description = ("Cross-platform desktop manager for deterministic smart passwords. "
                        "Generate, manage, and retrieve passwords without storing them. "
                        "Your secret phrase is the only key you need.")

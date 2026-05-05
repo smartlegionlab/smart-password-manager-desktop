@@ -2,8 +2,13 @@
 import json
 import qrcode
 from PyQt5.QtWidgets import (
-    QDialog, QVBoxLayout, QHBoxLayout, QLabel,
-    QPushButton, QApplication, QTextEdit
+    QDialog,
+    QVBoxLayout,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QApplication,
+    QTextEdit
 )
 from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtCore import Qt

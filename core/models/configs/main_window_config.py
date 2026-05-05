@@ -1,3 +1,4 @@
+# Copyright (©) 2026, Alexander Suvorov. All rights reserved.
 from core.models.configs.base_config import BaseConfig
 
 
@@ -21,7 +22,7 @@ class MainWindowConfig(BaseConfig):
 <li>Enter password description (e.g., "GitHub")</li>
 <li>Enter and remember your secret phrase (minimum 12 characters); Example: 
 <b>"MyCat🐱Hippo2026"</b> or <b>"P@ssw0rd!LongSecret"</b></li>
-<li>Select password length (recommended: 16-24 characters)</li>
+<li>Password length range: 12-100 characters (recommended: 16-24)</li>
 <li>Click <b>Get</b> to generate password</li>
 <li>Click <b>Edit</b> to change description or length</li>
 <li>Click <b>Delete</b> to remove entry (doesn't delete password)</li>
@@ -96,7 +97,8 @@ Your secret phrase is the only key you need.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 • Smart Password Generation from secret phrase
-• Public/Private Key System (30/60 iterations)
+• Private Key: 15-30 iterations (dynamic per secret)
+• Dynamic key derivation: 15-30 iterations for private key, 45-60 for public key
 • Export/Import: Backup and restore metadata
 • QR Code Export: Transfer to Android app
 • Copy to Clipboard: One-click password copying
@@ -122,9 +124,8 @@ Your secret phrase is the only key you need.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Powered by smartpasslib — deterministic password generation library
-Key derivation: 30 iterations (private key) / 60 iterations (public key)
-Character set: a-z A-Z 0-9 ! @ # $ & * - _
-
+Key derivation: 15-30 iterations (private key) / 45-60 iterations (public key)\n
+Character set: !@#$%^&*()_+-=[]{{}};:,.<>?/A-Za-z0-9
 ═════════════════════════════════════════════════════════════════════════
   Copyright © {self.year}, <a href="{self.github_url}/">{self.author}</a>. 
   All rights reserved. Licensed under BSD 3-Clause License

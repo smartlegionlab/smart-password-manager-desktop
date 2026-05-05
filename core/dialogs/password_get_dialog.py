@@ -17,7 +17,7 @@ from core.models.styles.secret_input_dialog_styles import SecretInputDialogStyle
 class GetPasswordDialog(QDialog):
     def __init__(self, parent=None, description="", sound_manager=None):
         super().__init__(parent)
-        self.setWindowTitle(f'Enter Secret Phrase')
+        self.setWindowTitle(f'Get Smart Password')
         self.setMinimumWidth(450)
         self.setMaximumWidth(550)
 
