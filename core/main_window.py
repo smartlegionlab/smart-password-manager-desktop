@@ -223,12 +223,12 @@ class MainWindow(QMainWindow):
         self.center_window()
 
     def setup_application_icon(self):
-        icon_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "icons", "icon.png")
-        if not os.path.exists(icon_path):
-            icon_path = os.path.join(os.path.dirname(__file__), "icon.png")
-        if os.path.exists(icon_path):
-            icon = QIcon(icon_path)
-            self.setWindowIcon(icon)
+        from pathlib import Path
+        project_root = Path(__file__).parent.parent
+        icon_path = project_root / "data" / "icons" / "icon.png"
+
+        if icon_path.exists():
+            self.setWindowIcon(QIcon(str(icon_path)))
 
     def create_desktop_entry(self):
         from core.dialogs.desktop_entry_dialog import DesktopEntryDialog

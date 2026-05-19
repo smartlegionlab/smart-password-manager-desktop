@@ -191,18 +191,12 @@ class DesktopEntryDialog(QDialog):
         except Exception as e:
             return False, str(e)
 
-    def find_icon_path(self):
-        possible_paths = [
-            os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data", "icons", "icon.png"),
-            os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "icons", "icon.png"),
-            os.path.join(os.path.dirname(__file__), "..", "..", "data", "icons", "icon.png"),
-            os.path.join(os.path.dirname(sys.argv[0]), "data", "icons", "icon.png"),
-        ]
-
-        for path in possible_paths:
-            if os.path.exists(path):
-                return path
-        return ""
+    @staticmethod
+    def find_icon_path():
+        from pathlib import Path
+        project_root = Path(__file__).parent.parent.parent
+        icon_path = project_root / "data" / "icons" / "icon.png"
+        return str(icon_path) if icon_path.exists() else ""
 
     def generate_desktop_content(self):
         python_exec = sys.executable
