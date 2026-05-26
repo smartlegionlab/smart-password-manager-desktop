@@ -1,4 +1,4 @@
-# Smart Password Manager Desktop <sup>v4.0.1</sup>
+# Smart Password Manager Desktop <sup>v4.0.2</sup>
 
 ---
 
@@ -74,11 +74,11 @@ Smart Password Manager stores nothing. Your secrets never leave your device. Pas
 
 ---
 
-## 🔄 Breaking Change (v4.0.1)
+## 🔄 Breaking Change (v4.0.2)
 
-> **⚠️ This release uses [smartpasslib](https://github.com/smartlegionlab/smartpasslib) v4.0.1, which is NOT backward compatible with v2.x.x or v3.x.x**
+> **⚠️ This release uses [smartpasslib](https://github.com/smartlegionlab/smartpasslib) v4.0.2, which is NOT backward compatible with v2.x.x or v3.x.x**
 
-Smart passwords created with older versions **cannot be regenerated** using v4.0.1.
+Smart passwords created with older versions **cannot be regenerated** using v4.0.2.
 
 📖 **Full migration instructions** → see [MIGRATION.md](https://github.com/smartlegionlab/smart-password-manager-desktop/blob/master/MIGRATION.md)
 
@@ -95,7 +95,7 @@ Smart passwords created with older versions **cannot be regenerated** using v4.0
 
 Powered by [**smartpasslib**](https://github.com/smartlegionlab/smartpasslib) — The core library for deterministic password generation.
 
-**Key derivation (same as Python/JS/Kotlin/Go/C# versions v4.0.1):**
+**Key derivation (same as Python/JS/Kotlin/Go/C# versions v4.0.2):**
 
 | Key Type    | Iterations              | Purpose                                               |
 |-------------|-------------------------|-------------------------------------------------------|
@@ -138,7 +138,7 @@ Configuration files are stored in:
 | Linux    | `~/.config/smart_password_manager/passwords.json`                 |
 
 **Legacy Migration**:
-- Old `~/.cases.json` files from v1.x.x/v2.x.x/v3.x.x are **NOT compatible** with v4.0.1
+- Old `~/.cases.json` files from v1.x.x/v2.x.x/v3.x.x are **NOT compatible** with v4.0.2
 - Public keys in old files use different derivation (fixed iterations, no salt)
 - These files will **not** be migrated automatically
 - If you have existing metadata, you need to recreate entries manually
@@ -419,7 +419,7 @@ Length Strategy:
 #### Best Practices:
 1. **Unique per service** - Different secret for each account type
 2. **Memorable but complex** - Phrases you can remember
-3. **Case-sensitive** - v4.0.1 enforces exact case matching
+3. **Case-sensitive** - v4.0.2 enforces exact case matching
 4. **No digital storage** - Keep only in memory
 5. **Backup plan** - Physical written backup in secure location
 6. **Export regularly** - Backup metadata after adding new passwords
@@ -511,7 +511,7 @@ Smart Password Manager Desktop (Python) produces **identical passwords** to:
 |------------------|--------------|--------------------------|---------------------------|
 | v2.x.x and below | v2.x.x       | ❌ Deprecated/Unsupported | Must migrate to v4.x.x    |
 | v3.x.x           | v3.x.x       | ❌ Deprecated/Unsupported | Must migrate to v4.x.x    |
-| **v4.0.1+**      | **v4.0.0+**  | ✅ Current                | N/A                       |
+| **v4.0.2+**      | **v4.0.0+**  | ✅ Current                | N/A                       |
 
 ---
 

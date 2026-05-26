@@ -1,24 +1,24 @@
-# Migration Guide: v2.x.x / v3.x.x to v4.0.1
+# Migration Guide: v2.x.x / v3.x.x to v4.0.2
 
-> **📌 Version Note:** Smart Password Manager Desktop v4.0.1 uses smartpasslib v4.0.0, which introduces breaking changes from all previous versions. All smartpasslib implementations (Python, C#, JS, Go, Kotlin) now share the same algorithm.
+> **📌 Version Note:** Smart Password Manager Desktop v4.0.2 uses smartpasslib v4.0.0, which introduces breaking changes from all previous versions. All smartpasslib implementations (Python, C#, JS, Go, Kotlin) now share the same algorithm.
 
 ## ⚠️ Breaking Change Notice
 
-**Smart Password Manager Desktop v4.0.1 is NOT backward compatible with v2.x.x or v3.x.x**
+**Smart Password Manager Desktop v4.0.2 is NOT backward compatible with v2.x.x or v3.x.x**
 
 | Version    | smartpasslib | Status       | Why                                                         |
 |------------|--------------|--------------|-------------------------------------------------------------|
 | v2.x.x     | v2.x.x       | ❌ Deprecated | Used `random.seed()` - Python-only deterministic            |
 | v3.x.x     | v3.x.x       | ❌ Deprecated | Fixed steps (30/60), limited character set                  |
-| **v4.0.1** | **v4.0.0**   | ✅ Current    | Dynamic steps (15-30/45-60), expanded charset, max security |
+| **v4.0.2** | **v4.0.0**   | ✅ Current    | Dynamic steps (15-30/45-60), expanded charset, max security |
 
-Smart passwords generated with older versions will be different when generated with v4.0.1 due to fundamental changes in the deterministic generation algorithm.
+Smart passwords generated with older versions will be different when generated with v4.0.2 due to fundamental changes in the deterministic generation algorithm.
 
 ---
 
 ## Why the change?
 
-**Desktop Manager v4.0.1 (smartpasslib v4.0.0) introduces fundamental improvements:**
+**Desktop Manager v4.0.2 (smartpasslib v4.0.0) introduces fundamental improvements:**
 
 - **Dynamic iteration counts** — deterministic steps vary per secret (15-30 for private, 45-60 for public)
 - **Expanded character set** — Google-compatible symbols (26 special chars + A-Z + a-z + 0-9)
@@ -32,7 +32,7 @@ Smart passwords generated with older versions will be different when generated w
 
 ## What changed:
 
-| Aspect                 | v2.x.x / v3.x.x  | v4.0.1                                |
+| Aspect                 | v2.x.x / v3.x.x  | v4.0.2                                |
 |------------------------|------------------|---------------------------------------|
 | Private key iterations | Fixed 30         | Dynamic 15-30                         |
 | Public key iterations  | Fixed 60         | Dynamic 45-60                         |
@@ -46,9 +46,9 @@ Smart passwords generated with older versions will be different when generated w
 
 ## Metadata File Compatibility
 
-**The old `passwords.json` file is NOT compatible with v4.0.1**
+**The old `passwords.json` file is NOT compatible with v4.0.2**
 
-Public keys stored in v2.x.x/v3.x.x files cannot be used with v4.0.1 because:
+Public keys stored in v2.x.x/v3.x.x files cannot be used with v4.0.2 because:
 - Iteration counts changed from fixed 60 to dynamic 45-60
 - Salt "public" was added to key derivation
 
@@ -73,13 +73,13 @@ The old metadata file is located at `~/.config/smart_password_manager/passwords.
 
 Copy this file to a safe location (e.g., `passwords.json.v3.bak`).
 
-### Step 3: Upgrade to v4.0.1
+### Step 3: Upgrade to v4.0.2
 
 Update the application to the latest version.
 
 ### Step 4: Remove old metadata file
 
-The old metadata file must be removed or moved away from the default location. v4.0.1 will create a new empty file on first run.
+The old metadata file must be removed or moved away from the default location. v4.0.2 will create a new empty file on first run.
 
 ### Step 5: Re-add entries
 
@@ -114,7 +114,7 @@ Log in using new passwords. Confirm regeneration works (same secret → same pas
 
 ## Migration from v2.x.x
 
-First migrate to v3.x.x following the old migration guide, then to v4.0.1.
+First migrate to v3.x.x following the old migration guide, then to v4.0.2.
 
 ---
 
