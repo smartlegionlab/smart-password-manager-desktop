@@ -195,6 +195,8 @@ class MainWindow(QMainWindow):
 
         self.setup_status_bar()
 
+        self.setup_info_panel()
+
         self.setup_table_context_menu()
 
         self.all_passwords = []
@@ -445,9 +447,7 @@ class MainWindow(QMainWindow):
         else:
             self.count_label.setText(f"{total} passwords")
 
-        storage_label = self.status_bar.findChild(QLabel, "storage_label")
-        if storage_label:
-            storage_label.setText(f"Storage: {self.smart_pass_man.file_path}")
+        self.storage_label.setText(f"Storage: {self.smart_pass_man.file_path}")
 
     def clear_search(self):
         self.search_input.clear()
@@ -932,17 +932,39 @@ class MainWindow(QMainWindow):
     def setup_status_bar(self):
         self.status_bar = QStatusBar()
         self.setStatusBar(self.status_bar)
+        self.status_bar.showMessage('Ready')
+
+    def setup_info_panel(self):
+        self.info_panel = QWidget()
+        self.info_panel.setStyleSheet(f"""
+            background-color: {ThemeManager.COLORS['bg_panel']};
+        """)
+
+        info_layout = QHBoxLayout(self.info_panel)
+        info_layout.setContentsMargins(20, 8, 20, 8)
+
+        storage_icon = QLabel("📁")
+        storage_icon.setStyleSheet(f"color: {ThemeManager.COLORS['primary']}; font-size: 13px;")
+        info_layout.addWidget(storage_icon)
+
+        self.storage_label = QLabel("")
+        self.storage_label.setStyleSheet(f"""
+            color: {ThemeManager.COLORS['text_muted']}; 
+            font-size: 12px;
+        """)
+        self.storage_label.setWordWrap(True)
+        info_layout.addWidget(self.storage_label, 1)
 
         self.count_label = QLabel("0 passwords")
-        self.count_label.setStyleSheet(f"color: {ThemeManager.COLORS['text_muted']}; padding: 0 10px;")
-        self.status_bar.addPermanentWidget(self.count_label)
+        self.count_label.setStyleSheet(f"""
+            color: {ThemeManager.COLORS['primary']}; 
+            font-size: 12px;
+            font-weight: bold;
+            padding: 0 10px;
+        """)
+        info_layout.addWidget(self.count_label)
 
-        storage_label = QLabel("")
-        storage_label.setObjectName("storage_label")
-        storage_label.setStyleSheet(f"color: {ThemeManager.COLORS['text_muted']}; padding: 0 10px;")
-        self.status_bar.addPermanentWidget(storage_label)
-
-        self.status_bar.showMessage('Ready')
+        self.main_layout.addWidget(self.info_panel)
 
     def find_row_by_public_key(self, public_key):
         for row in range(len(self.all_passwords)):
