@@ -16,6 +16,7 @@ from PyQt5.QtGui import QFont
 
 from core.models.configs.desktop_entry_dialog_config import DesktopEntryDialogConfig
 from core.models.styles.desktop_entry_dialog_styles import DesktopEntryDialogStyles
+from core.styles.theme_manager import ThemeManager
 
 
 class DesktopEntryDialog(QDialog):
@@ -28,6 +29,8 @@ class DesktopEntryDialog(QDialog):
         self.setWindowTitle("Create Desktop Entry")
         self.setMinimumWidth(550)
         self.setModal(True)
+
+        self.setStyleSheet(ThemeManager.get_input_style())
 
         self.app_name = "Smart Password Manager"
         self.app_executable = sys.executable
@@ -90,12 +93,12 @@ class DesktopEntryDialog(QDialog):
 
         self.create_btn = QPushButton("Create Entry")
         self.create_btn.setMinimumHeight(40)
-        self.create_btn.setStyleSheet(self.styles.create_btn_style)
+        self.create_btn.setStyleSheet(ThemeManager.get_button_style('primary'))
         self.create_btn.clicked.connect(self.create_desktop_entry)
 
         self.cancel_btn = QPushButton("Cancel")
         self.cancel_btn.setMinimumHeight(40)
-        self.cancel_btn.setStyleSheet(self.styles.cancel_btn_style)
+        self.cancel_btn.setStyleSheet(ThemeManager.get_button_style('secondary'))
         self.cancel_btn.clicked.connect(self.reject)
 
         button_layout.addWidget(self.create_btn)

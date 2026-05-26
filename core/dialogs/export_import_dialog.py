@@ -17,6 +17,7 @@ from PyQt5.QtWidgets import (
 
 from core.models.configs.export_import_dialog_config import ExportImportDialogConfig
 from core.models.styles.export_import_dialog_styles import ExportImportDialogStyles
+from core.styles.theme_manager import ThemeManager
 
 
 class ExportImportDialog(QDialog):
@@ -32,6 +33,8 @@ class ExportImportDialog(QDialog):
         title = "Export Passwords" if mode == "export" else "Import Passwords"
         self.setWindowTitle(title)
         self.setMinimumWidth(450)
+
+        self.setStyleSheet(ThemeManager.get_input_style())
 
         self.layout = QVBoxLayout(self)
         self.layout.setSpacing(15)
@@ -56,6 +59,7 @@ class ExportImportDialog(QDialog):
         self.browse_button = QPushButton("Browse...")
         self.browse_button.clicked.connect(self.sound_manager.play_click)
         self.browse_button.clicked.connect(self.browse_file)
+        self.browse_button.setStyleSheet(ThemeManager.get_button_style('secondary'))
         file_select_layout.addWidget(self.browse_button)
 
         file_layout.addLayout(file_select_layout)
@@ -76,6 +80,7 @@ class ExportImportDialog(QDialog):
         self.cancel_button = QPushButton("Cancel")
         self.cancel_button.clicked.connect(self.sound_manager.play_click)
         self.cancel_button.clicked.connect(self.reject)
+        self.cancel_button.setStyleSheet(ThemeManager.get_button_style('secondary'))
         button_layout.addWidget(self.cancel_button)
 
         self.action_button = QPushButton(self._get_action_text())
@@ -85,9 +90,9 @@ class ExportImportDialog(QDialog):
         self.action_button.setEnabled(False)
 
         if mode == "export":
-            self.action_button.setStyleSheet(self.styles.action_button_export_style)
+            self.action_button.setStyleSheet(ThemeManager.get_button_style('primary'))
         else:
-            self.action_button.setStyleSheet(self.styles.action_button_import_style)
+            self.action_button.setStyleSheet(ThemeManager.get_button_style('warning'))
 
         button_layout.addWidget(self.action_button)
         self.layout.addLayout(button_layout)

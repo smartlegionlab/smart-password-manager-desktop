@@ -12,6 +12,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt
 
 from core.models.styles.secret_input_dialog_styles import SecretInputDialogStyles
+from core.styles.theme_manager import ThemeManager
 
 
 class GetPasswordDialog(QDialog):
@@ -24,6 +25,12 @@ class GetPasswordDialog(QDialog):
         self.styles = SecretInputDialogStyles()
         self.sound_manager = sound_manager
         self.description = description
+
+        # Apply base styles
+        self.setStyleSheet(
+            ThemeManager.get_input_style() +
+            ThemeManager.get_groupbox_style()
+        )
 
         self.layout = QVBoxLayout(self)
         self.layout.setSpacing(10)
@@ -42,15 +49,15 @@ class GetPasswordDialog(QDialog):
         self.description_text.setReadOnly(True)
         self.description_text.setMaximumHeight(40)
         self.description_text.setMinimumHeight(40)
-        self.description_text.setStyleSheet("""
-            QTextEdit {
-                background-color: #2a2a2a;
-                color: #f0f0f0;
-                border: 1px solid #444;
+        self.description_text.setStyleSheet(f"""
+            QTextEdit {{
+                background-color: {ThemeManager.COLORS['bg_medium']};
+                color: {ThemeManager.COLORS['text_normal']};
+                border: 1px solid {ThemeManager.COLORS['border']};
                 border-radius: 4px;
                 font-family: monospace;
                 font-size: 11px;
-            }
+            }}
         """)
         desc_layout.addWidget(self.description_text)
         desc_group.setLayout(desc_layout)
@@ -64,9 +71,10 @@ class GetPasswordDialog(QDialog):
         self.secret_input.setEchoMode(QLineEdit.Password)
         secret_layout.addWidget(self.secret_input)
 
-        self.show_secret_checkbox = QPushButton("👁 Show")
+        self.show_secret_checkbox = QPushButton("Show")
         self.show_secret_checkbox.setCheckable(True)
         self.show_secret_checkbox.setMaximumWidth(100)
+        self.show_secret_checkbox.setStyleSheet(ThemeManager.get_button_style('secondary'))
         self.show_secret_checkbox.clicked.connect(self.sound_manager.play_click)
         self.show_secret_checkbox.clicked.connect(self.toggle_secret_visibility)
         secret_layout.addWidget(self.show_secret_checkbox, alignment=Qt.AlignmentFlag.AlignCenter)
@@ -87,13 +95,14 @@ class GetPasswordDialog(QDialog):
         self.cancel_button = QPushButton('Cancel', self)
         self.cancel_button.clicked.connect(self.sound_manager.play_click)
         self.cancel_button.clicked.connect(self.reject)
+        self.cancel_button.setStyleSheet(ThemeManager.get_button_style('secondary'))
         button_layout.addWidget(self.cancel_button)
 
         self.submit_button = QPushButton('Generate Password', self)
         self.submit_button.setDefault(True)
         self.submit_button.clicked.connect(self.sound_manager.play_click)
         self.submit_button.clicked.connect(self.accept)
-        self.submit_button.setStyleSheet(self.styles.submit_button_style)
+        self.submit_button.setStyleSheet(ThemeManager.get_button_style('primary'))
         button_layout.addWidget(self.submit_button)
 
         self.layout.addLayout(button_layout)
@@ -101,10 +110,10 @@ class GetPasswordDialog(QDialog):
     def toggle_secret_visibility(self):
         if self.show_secret_checkbox.isChecked():
             self.secret_input.setEchoMode(QLineEdit.Normal)
-            self.show_secret_checkbox.setText("🙈 Hide")
+            self.show_secret_checkbox.setText("Hide")
         else:
             self.secret_input.setEchoMode(QLineEdit.Password)
-            self.show_secret_checkbox.setText("👁 Show")
+            self.show_secret_checkbox.setText("Show")
 
     def get_secret(self):
         return self.secret_input.text()

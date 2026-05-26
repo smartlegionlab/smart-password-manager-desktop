@@ -12,6 +12,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt
 
 from core.models.styles.edit_password_dialog_styles import EditPasswordDialogStyles
+from core.styles.theme_manager import ThemeManager
 
 
 class EditPasswordDialog(QDialog):
@@ -23,6 +24,11 @@ class EditPasswordDialog(QDialog):
         self.setMinimumWidth(400)
         self.styles = EditPasswordDialogStyles()
         self.sound_manager = sound_manager
+
+        self.setStyleSheet(
+            ThemeManager.get_input_style() +
+            ThemeManager.get_groupbox_style()
+        )
 
         self.layout = QVBoxLayout(self)
         self.layout.setSpacing(10)
@@ -83,13 +89,14 @@ class EditPasswordDialog(QDialog):
         self.cancel_button = QPushButton('Cancel', self)
         self.cancel_button.clicked.connect(self.sound_manager.play_click)
         self.cancel_button.clicked.connect(self.reject)
+        self.cancel_button.setStyleSheet(ThemeManager.get_button_style('secondary'))
         button_layout.addWidget(self.cancel_button)
 
         self.submit_button = QPushButton('Update', self)
         self.submit_button.setDefault(True)
         self.submit_button.clicked.connect(self.sound_manager.play_click)
         self.submit_button.clicked.connect(self.accept)
-        self.submit_button.setStyleSheet(self.styles.submit_button_style)
+        self.submit_button.setStyleSheet(ThemeManager.get_button_style('warning'))
         button_layout.addWidget(self.submit_button)
         self.layout.addLayout(button_layout)
 

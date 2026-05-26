@@ -12,6 +12,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt
 
 from core.models.styles.password_input_dialog_styles import PasswordInputDialogStyles
+from core.styles.theme_manager import ThemeManager
 
 
 class AddPasswordDialog(QDialog):
@@ -23,6 +24,11 @@ class AddPasswordDialog(QDialog):
         self.styles = PasswordInputDialogStyles()
         self.sound_manager = sound_manager
         self.max_length = 255
+
+        self.setStyleSheet(
+            ThemeManager.get_input_style() +
+            ThemeManager.get_groupbox_style()
+        )
 
         self.layout = QVBoxLayout(self)
         self.layout.setSpacing(10)
@@ -54,7 +60,7 @@ class AddPasswordDialog(QDialog):
         self.secret_label = QLabel('Your Secret Phrase (minimum 12 characters):')
         secret_layout.addWidget(self.secret_label)
 
-        self.secret_example_label = QLabel('Example: "MyCat🐱Hippo2026" or "P@ssw0rd!LongSecret"')
+        self.secret_example_label = QLabel('Example: "MyCatHippo2026" or "P@ssw0rd!LongSecret"')
         self.secret_example_label.setStyleSheet(self.styles.secret_example_label_style)
         secret_layout.addWidget(self.secret_example_label)
 
@@ -64,14 +70,15 @@ class AddPasswordDialog(QDialog):
         self.secret_input.textChanged.connect(self.check_inputs)
         secret_layout.addWidget(self.secret_input)
 
-        self.show_secret_checkbox = QPushButton("👁 Show")
+        self.show_secret_checkbox = QPushButton("Show")
         self.show_secret_checkbox.setCheckable(True)
         self.show_secret_checkbox.setMaximumWidth(100)
+        self.show_secret_checkbox.setStyleSheet(ThemeManager.get_button_style('secondary'))
         self.show_secret_checkbox.clicked.connect(self.sound_manager.play_click)
         self.show_secret_checkbox.clicked.connect(self.toggle_secret_visibility)
         secret_layout.addWidget(self.show_secret_checkbox, alignment=Qt.AlignmentFlag.AlignCenter)
 
-        self.secret_warning_label = QLabel("⚠️ Secret phrase must be at least 12 characters")
+        self.secret_warning_label = QLabel("Secret phrase must be at least 12 characters")
         self.secret_warning_label.setStyleSheet(self.styles.secret_warning_label_style)
         self.secret_warning_label.setVisible(False)
         secret_layout.addWidget(self.secret_warning_label)
@@ -97,13 +104,14 @@ class AddPasswordDialog(QDialog):
         self.cancel_button = QPushButton('Cancel', self)
         self.cancel_button.clicked.connect(self.sound_manager.play_click)
         self.cancel_button.clicked.connect(self.reject)
+        self.cancel_button.setStyleSheet(ThemeManager.get_button_style('secondary'))
         button_layout.addWidget(self.cancel_button)
 
         self.submit_button = QPushButton('Create Password', self)
         self.submit_button.setDefault(True)
         self.submit_button.clicked.connect(self.sound_manager.play_click)
         self.submit_button.clicked.connect(self.accept)
-        self.submit_button.setStyleSheet(self.styles.submit_button_style)
+        self.submit_button.setStyleSheet(ThemeManager.get_button_style('primary'))
         button_layout.addWidget(self.submit_button)
         self.layout.addLayout(button_layout)
 
@@ -142,10 +150,10 @@ class AddPasswordDialog(QDialog):
     def toggle_secret_visibility(self):
         if self.show_secret_checkbox.isChecked():
             self.secret_input.setEchoMode(QLineEdit.Normal)
-            self.show_secret_checkbox.setText("🙈 Hide")
+            self.show_secret_checkbox.setText("Hide")
         else:
             self.secret_input.setEchoMode(QLineEdit.Password)
-            self.show_secret_checkbox.setText("👁 Show")
+            self.show_secret_checkbox.setText("Show")
 
     def validate_description(self, text):
         forbidden_chars = ['"', '\\']

@@ -33,7 +33,7 @@ from core.dialogs.display_password_dialog import PasswordDisplayDialog
 from core.dialogs.get_password_dialog import GetPasswordDialog
 from core.dialogs.qr_dialog import QRDialog
 from core.models.configs.main_window_config import MainWindowConfig
-from core.models.styles.main_window_styles import MainWindowStyles
+from core.styles.theme_manager import ThemeManager
 from core.utils.sound_manager import SoundManager
 
 
@@ -41,7 +41,6 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.config = MainWindowConfig()
-        self.styles = MainWindowStyles()
         self.smart_pass_man = SmartPasswordManager()
         self.setWindowTitle(f'{self.config.app_name}')
         self.resize(800, 600)
@@ -73,7 +72,7 @@ class MainWindow(QMainWindow):
         self.setup_menu_bar()
 
         self.header_panel = QWidget()
-        self.header_panel.setStyleSheet("background-color: #19191e;")
+        self.header_panel.setStyleSheet(f"background-color: {ThemeManager.COLORS['bg_header']};")
         header_layout = QVBoxLayout(self.header_panel)
         header_layout.setContentsMargins(20, 15, 20, 15)
 
@@ -82,17 +81,17 @@ class MainWindow(QMainWindow):
         title_font.setPointSize(18)
         title_font.setBold(True)
         title_label.setFont(title_font)
-        title_label.setStyleSheet("color: #2a82da;")
+        title_label.setStyleSheet(f"color: {ThemeManager.COLORS['primary']};")
         header_layout.addWidget(title_label)
 
         subtitle_label = QLabel("Deterministic smart password manager - same secret + same length = same password")
-        subtitle_label.setStyleSheet("color: #a0a0a0; font-size: 9pt;")
+        subtitle_label.setStyleSheet(f"color: {ThemeManager.COLORS['text_muted']}; font-size: 9pt;")
         header_layout.addWidget(subtitle_label)
 
         self.main_layout.addWidget(self.header_panel)
 
         self.top_button_panel = QWidget()
-        self.top_button_panel.setStyleSheet("background-color: #23232a;")
+        self.top_button_panel.setStyleSheet(f"background-color: {ThemeManager.COLORS['bg_panel']};")
         top_button_layout = QHBoxLayout(self.top_button_panel)
         top_button_layout.setContentsMargins(20, 10, 20, 10)
 
@@ -101,7 +100,7 @@ class MainWindow(QMainWindow):
         self.btn_add.setMinimumWidth(100)
         self.btn_add.clicked.connect(self.sound_manager.play_click)
         self.btn_add.clicked.connect(self.add_password)
-        self.btn_add.setStyleSheet(self.styles.btn_add)
+        self.btn_add.setStyleSheet(ThemeManager.get_button_style('primary'))
         top_button_layout.addWidget(self.btn_add)
 
         self.btn_import = QPushButton("Import")
@@ -109,24 +108,24 @@ class MainWindow(QMainWindow):
         self.btn_import.setMinimumWidth(100)
         self.btn_import.clicked.connect(self.sound_manager.play_click)
         self.btn_import.clicked.connect(self.import_passwords)
-        self.btn_import.setStyleSheet(self.styles.btn_import)
+        self.btn_import.setStyleSheet(ThemeManager.get_button_style('secondary'))
         top_button_layout.addWidget(self.btn_import)
 
         top_button_layout.addStretch()
 
         self.search_panel = QWidget()
-        self.search_panel.setStyleSheet(self.styles.search_panel)
+        self.search_panel.setStyleSheet(f"background-color: {ThemeManager.COLORS['bg_panel']};")
         search_layout = QHBoxLayout(self.search_panel)
         search_layout.setContentsMargins(20, 5, 20, 10)
 
         search_label = QLabel("🔍")
-        search_label.setStyleSheet("color: #2a82da; font-size: 14pt;")
+        search_label.setStyleSheet(f"color: {ThemeManager.COLORS['primary']}; font-size: 14pt;")
         search_layout.addWidget(search_label)
 
         self.search_input = QLineEdit()
         self.search_input.setPlaceholderText("Search by description or public key...")
         self.search_input.setMinimumHeight(30)
-        self.search_input.setStyleSheet(self.styles.search_input)
+        self.search_input.setStyleSheet(ThemeManager.get_input_style())
         self.search_input.textChanged.connect(self.apply_filter)
         search_layout.addWidget(self.search_input)
 
@@ -134,7 +133,7 @@ class MainWindow(QMainWindow):
         self.btn_clear_search.setMinimumWidth(70)
         self.btn_clear_search.setMinimumHeight(30)
         self.btn_clear_search.clicked.connect(self.clear_search)
-        self.btn_clear_search.setStyleSheet(self.styles.btn_clear_search)
+        self.btn_clear_search.setStyleSheet(ThemeManager.get_button_style('secondary'))
         search_layout.addWidget(self.btn_clear_search)
 
         self.main_layout.addWidget(self.top_button_panel)
@@ -145,8 +144,8 @@ class MainWindow(QMainWindow):
         self.table_widget.setHorizontalHeaderLabels(['Description', 'Length', 'Public Key (short)'])
         self.table_widget.setEditTriggers(QTableWidget.NoEditTriggers)
         self.table_widget.setSelectionMode(QTableWidget.SingleSelection)
-        self.table_widget.setAlternatingRowColors(True)
-        self.table_widget.setStyleSheet(self.styles.table_widget_style)
+        self.table_widget.setAlternatingRowColors(False)
+        self.table_widget.setStyleSheet(ThemeManager.get_table_style())
 
         self.table_widget.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
         self.table_widget.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeToContents)
@@ -157,7 +156,7 @@ class MainWindow(QMainWindow):
         self.main_layout.addWidget(self.table_widget)
 
         self.bottom_button_panel = QWidget()
-        self.bottom_button_panel.setStyleSheet(self.styles.bottom_button_panel)
+        self.bottom_button_panel.setStyleSheet(f"background-color: {ThemeManager.COLORS['bg_panel']};")
         bottom_button_layout = QHBoxLayout(self.bottom_button_panel)
         bottom_button_layout.setContentsMargins(20, 10, 20, 10)
 
@@ -166,7 +165,7 @@ class MainWindow(QMainWindow):
         self.btn_get.setMinimumWidth(100)
         self.btn_get.clicked.connect(self.sound_manager.play_click)
         self.btn_get.clicked.connect(self.get_password_for_selected_row)
-        self.btn_get.setStyleSheet(self.styles.btn_get)
+        self.btn_get.setStyleSheet(ThemeManager.get_button_style('success'))
         bottom_button_layout.addWidget(self.btn_get)
 
         self.btn_edit = QPushButton("Edit")
@@ -174,7 +173,7 @@ class MainWindow(QMainWindow):
         self.btn_edit.setMinimumWidth(100)
         self.btn_edit.clicked.connect(self.sound_manager.play_click)
         self.btn_edit.clicked.connect(self.edit_password_for_selected_row)
-        self.btn_edit.setStyleSheet(self.styles.btn_edit)
+        self.btn_edit.setStyleSheet(ThemeManager.get_button_style('warning'))
         bottom_button_layout.addWidget(self.btn_edit)
 
         self.btn_delete = QPushButton("Delete")
@@ -182,7 +181,7 @@ class MainWindow(QMainWindow):
         self.btn_delete.setMinimumWidth(100)
         self.btn_delete.clicked.connect(self.sound_manager.play_click)
         self.btn_delete.clicked.connect(self.delete_selected_row)
-        self.btn_delete.setStyleSheet(self.styles.btn_delete)
+        self.btn_delete.setStyleSheet(ThemeManager.get_button_style('danger'))
         bottom_button_layout.addWidget(self.btn_delete)
 
         self.btn_qr = QPushButton("QR")
@@ -190,7 +189,7 @@ class MainWindow(QMainWindow):
         self.btn_qr.setMinimumWidth(100)
         self.btn_qr.clicked.connect(self.sound_manager.play_click)
         self.btn_qr.clicked.connect(self.show_qr_for_selected)
-        self.btn_qr.setStyleSheet(self.styles.btn_qr)
+        self.btn_qr.setStyleSheet(ThemeManager.get_button_style('info'))
         bottom_button_layout.addWidget(self.btn_qr)
 
         self.btn_export = QPushButton("Export")
@@ -198,7 +197,7 @@ class MainWindow(QMainWindow):
         self.btn_export.setMinimumWidth(100)
         self.btn_export.clicked.connect(self.sound_manager.play_click)
         self.btn_export.clicked.connect(self.export_passwords)
-        self.btn_export.setStyleSheet(self.styles.btn_export)
+        self.btn_export.setStyleSheet(ThemeManager.get_button_style('secondary'))
         bottom_button_layout.addWidget(self.btn_export)
 
         bottom_button_layout.addStretch()
@@ -207,7 +206,7 @@ class MainWindow(QMainWindow):
         self.btn_exit.setMinimumHeight(40)
         self.btn_exit.setMinimumWidth(100)
         self.btn_exit.clicked.connect(self.close)
-        self.btn_exit.setStyleSheet(self.styles.btn_exit)
+        self.btn_exit.setStyleSheet(ThemeManager.get_button_style('danger'))
         bottom_button_layout.addWidget(self.btn_exit)
 
         self.main_layout.addWidget(self.bottom_button_panel)
@@ -362,18 +361,18 @@ class MainWindow(QMainWindow):
 
         context_menu = QMenu(self)
 
-        get_action = context_menu.addAction("🔓 Get Password")
+        get_action = context_menu.addAction("Get Password")
         get_action.triggered.connect(lambda checked, pk=public_key: self.get_password(pk))
 
-        edit_action = context_menu.addAction("✎ Edit")
+        edit_action = context_menu.addAction("Edit")
         edit_action.triggered.connect(lambda checked, pk=public_key: self.edit_password(pk))
 
-        qr_action = context_menu.addAction("📱 Show QR Code")
+        qr_action = context_menu.addAction("Show QR Code")
         qr_action.triggered.connect(lambda checked, pk=public_key: self.show_qr(pk))
 
         context_menu.addSeparator()
 
-        delete_action = context_menu.addAction("🗑 Delete")
+        delete_action = context_menu.addAction("Delete")
         delete_action.triggered.connect(lambda checked, pk=public_key: self.remove_password(pk))
 
         context_menu.exec_(self.table_widget.viewport().mapToGlobal(position))
@@ -481,9 +480,19 @@ class MainWindow(QMainWindow):
         dialog.setWindowTitle('Smart Password Manager Help')
         dialog.setMinimumWidth(650)
         dialog.setMinimumHeight(500)
+
+        dialog.setStyleSheet(f"""
+            QDialog {{
+                background-color: {ThemeManager.COLORS['bg_dark']};
+            }}
+            QLabel {{
+                color: {ThemeManager.COLORS['text_normal']};
+            }}
+        """)
+
         layout = QVBoxLayout(dialog)
 
-        title_label = QLabel(f"<h2 style='color: #2a82da;'>Smart Password Manager Help</h2>")
+        title_label = QLabel(f"<h2 style='color: {ThemeManager.COLORS['primary']};'>Smart Password Manager Help</h2>")
         title_label.setTextFormat(Qt.TextFormat.RichText)
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title_label)
@@ -491,6 +500,8 @@ class MainWindow(QMainWindow):
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_area.setFrameShape(QFrame.NoFrame)
+        scroll_area.setStyleSheet(ThemeManager.get_scroll_area_style())
+
         content_widget = QWidget()
         content_layout = QVBoxLayout(content_widget)
         help_label = QLabel(self.config.help_text)
@@ -498,7 +509,11 @@ class MainWindow(QMainWindow):
         help_label.setWordWrap(True)
         help_label.setOpenExternalLinks(True)
         help_label.setTextInteractionFlags(Qt.TextInteractionFlag.TextBrowserInteraction)
-        help_label.setStyleSheet(self.styles.help_label_style)
+        help_label.setStyleSheet(f"""
+            background-color: {ThemeManager.COLORS['bg_medium']};
+            padding: 15px;
+            border-radius: 5px;
+        """)
         content_layout.addWidget(help_label)
         scroll_area.setWidget(content_widget)
         layout.addWidget(scroll_area)
@@ -508,7 +523,7 @@ class MainWindow(QMainWindow):
         ok_button = QPushButton("Ok")
         ok_button.setMinimumWidth(100)
         ok_button.setMinimumHeight(35)
-        ok_button.setStyleSheet(self.styles.ok_button_style)
+        ok_button.setStyleSheet(ThemeManager.get_button_style('primary'))
         ok_button.clicked.connect(dialog.accept)
         button_layout.addWidget(ok_button)
         button_layout.addStretch()
@@ -529,6 +544,12 @@ class MainWindow(QMainWindow):
         dialog.setMinimumHeight(550)
         dialog.setModal(True)
 
+        dialog.setStyleSheet(f"""
+            QDialog {{
+                background-color: {ThemeManager.COLORS['bg_dark']};
+            }}
+        """)
+
         layout = QVBoxLayout(dialog)
         layout.setSpacing(10)
 
@@ -537,7 +558,8 @@ class MainWindow(QMainWindow):
         icon_label.setStyleSheet("font-size: 32px;")
         title_layout.addWidget(icon_label)
 
-        title_label = QLabel(f"<h1 style='color: #2a82da; margin: 0;'>{self.config.app_name}</h1>")
+        title_label = QLabel(
+            f"<h1 style='color: {ThemeManager.COLORS['primary']}; margin: 0;'>{self.config.app_name}</h1>")
         title_label.setTextFormat(Qt.TextFormat.RichText)
         title_layout.addWidget(title_label)
         title_layout.addStretch()
@@ -552,6 +574,7 @@ class MainWindow(QMainWindow):
         scroll_area.setWidgetResizable(True)
         scroll_area.setFrameShape(QFrame.NoFrame)
         scroll_area.setMinimumHeight(300)
+        scroll_area.setStyleSheet(ThemeManager.get_scroll_area_style())
 
         content_widget = QWidget()
         content_layout = QVBoxLayout(content_widget)
@@ -564,15 +587,21 @@ class MainWindow(QMainWindow):
         )
         desc_label.setWordWrap(True)
         desc_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        desc_label.setStyleSheet(self.styles.desc_label)
+        desc_label.setStyleSheet(f"color: {ThemeManager.COLORS['text_muted']}; padding: 10px;")
         content_layout.addWidget(desc_label)
 
         info_frame = QFrame()
-        info_frame.setStyleSheet(self.styles.info_frame)
+        info_frame.setStyleSheet(f"""
+            QFrame {{
+                background-color: {ThemeManager.COLORS['bg_medium']};
+                border-radius: 8px;
+                padding: 10px;
+            }}
+        """)
         info_layout = QVBoxLayout(info_frame)
 
-        dec_label = QLabel("<b>🔗 DECENTRALIZED BY DESIGN</b>")
-        dec_label.setStyleSheet(self.styles.dec_label)
+        dec_label = QLabel("<b>DECENTRALIZED BY DESIGN</b>")
+        dec_label.setStyleSheet(f"color: {ThemeManager.COLORS['primary']};")
         info_layout.addWidget(dec_label)
 
         dec_text = QLabel(
@@ -581,13 +610,13 @@ class MainWindow(QMainWindow):
             "• There is no \"forgot password\" button — you are in complete control"
         )
         dec_text.setWordWrap(True)
-        dec_text.setStyleSheet("color: #c0c0c0; padding-left: 15px;")
+        dec_text.setStyleSheet(f"color: {ThemeManager.COLORS['text_muted']}; padding-left: 15px;")
         info_layout.addWidget(dec_text)
 
         info_layout.addSpacing(10)
 
-        sec_label = QLabel("<b>🛡️ SECURITY MODEL</b>")
-        sec_label.setStyleSheet(self.styles.sec_label)
+        sec_label = QLabel("<b>SECURITY MODEL</b>")
+        sec_label.setStyleSheet(f"color: {ThemeManager.COLORS['primary']};")
         info_layout.addWidget(sec_label)
 
         sec_text = QLabel(
@@ -597,13 +626,13 @@ class MainWindow(QMainWindow):
             "• Local Processing: Secrets never leave your device"
         )
         sec_text.setWordWrap(True)
-        sec_text.setStyleSheet("color: #c0c0c0; padding-left: 15px;")
+        sec_text.setStyleSheet(f"color: {ThemeManager.COLORS['text_muted']}; padding-left: 15px;")
         info_layout.addWidget(sec_text)
 
         info_layout.addSpacing(10)
 
-        tech_label = QLabel("<b>⚙️ TECHNICAL FOUNDATION</b>")
-        tech_label.setStyleSheet("color: #2a82da;")
+        tech_label = QLabel("<b>TECHNICAL FOUNDATION</b>")
+        tech_label.setStyleSheet(f"color: {ThemeManager.COLORS['primary']};")
         info_layout.addWidget(tech_label)
 
         tech_text = QLabel(
@@ -612,32 +641,38 @@ class MainWindow(QMainWindow):
             "Character set: !@#$%^&*()_+-=[]{};:,.<>?/A-Za-z0-9"
         )
         tech_text.setWordWrap(True)
-        tech_text.setStyleSheet("color: #c0c0c0; padding-left: 15px;")
+        tech_text.setStyleSheet(f"color: {ThemeManager.COLORS['text_muted']}; padding-left: 15px;")
         info_layout.addWidget(tech_text)
 
         content_layout.addWidget(info_frame)
 
         links_frame = QFrame()
-        links_frame.setStyleSheet(self.styles.links_frame)
+        links_frame.setStyleSheet(f"""
+            QFrame {{
+                background-color: {ThemeManager.COLORS['bg_panel']};
+                border-radius: 8px;
+                padding: 10px;
+            }}
+        """)
         links_layout = QHBoxLayout(links_frame)
 
-        github_btn = QPushButton("📂 GitHub")
-        github_btn.setStyleSheet(self.styles.github_btn)
+        github_btn = QPushButton("GitHub")
+        github_btn.setStyleSheet(ThemeManager.get_button_style('primary'))
         github_btn.clicked.connect(lambda: QDesktopServices.openUrl(QUrl(self.config.project_url)))
         links_layout.addWidget(github_btn)
 
-        issues_btn = QPushButton("🐛 Report Issue")
-        issues_btn.setStyleSheet(self.styles.issues_btn)
+        issues_btn = QPushButton("Report Issue")
+        issues_btn.setStyleSheet(ThemeManager.get_button_style('secondary'))
         issues_btn.clicked.connect(lambda: QDesktopServices.openUrl(QUrl(f"{self.config.project_url}/issues")))
         links_layout.addWidget(issues_btn)
 
-        license_btn = QPushButton("📄 License")
-        license_btn.setStyleSheet(self.styles.license_btn)
+        license_btn = QPushButton("License")
+        license_btn.setStyleSheet(ThemeManager.get_button_style('success'))
         license_btn.clicked.connect(self.show_license)
         links_layout.addWidget(license_btn)
 
-        disclaimer_btn = QPushButton("⚠️ Disclaimer")
-        disclaimer_btn.setStyleSheet(self.styles.disclaimer_btn)
+        disclaimer_btn = QPushButton("Disclaimer")
+        disclaimer_btn.setStyleSheet(ThemeManager.get_button_style('warning'))
         disclaimer_btn.clicked.connect(self.show_disclaimer)
         links_layout.addWidget(disclaimer_btn)
 
@@ -645,7 +680,7 @@ class MainWindow(QMainWindow):
 
         copyright_label = QLabel(f"Copyright © {self.config.year}, {self.config.author}")
         copyright_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        copyright_label.setStyleSheet(self.styles.copyright_label)
+        copyright_label.setStyleSheet(f"color: {ThemeManager.COLORS['text_disabled']}; padding: 10px;")
         content_layout.addWidget(copyright_label)
 
         scroll_area.setWidget(content_widget)
@@ -656,7 +691,7 @@ class MainWindow(QMainWindow):
         close_btn = QPushButton("Close")
         close_btn.setMinimumWidth(100)
         close_btn.setMinimumHeight(35)
-        close_btn.setStyleSheet(self.styles.close_btn)
+        close_btn.setStyleSheet(ThemeManager.get_button_style('primary'))
         close_btn.clicked.connect(dialog.accept)
         button_layout.addWidget(close_btn)
         button_layout.addStretch()
@@ -677,9 +712,15 @@ class MainWindow(QMainWindow):
         dialog.setMaximumWidth(800)
         dialog.setMaximumHeight(600)
 
+        dialog.setStyleSheet(f"""
+            QDialog {{
+                background-color: {ThemeManager.COLORS['bg_dark']};
+            }}
+        """)
+
         layout = QVBoxLayout(dialog)
 
-        title_label = QLabel("<h2 style='color: #2a82da;'>⚠️ LEGAL DISCLAIMER</h2>")
+        title_label = QLabel(f"<h2 style='color: {ThemeManager.COLORS['primary']};'>LEGAL DISCLAIMER</h2>")
         title_label.setTextFormat(Qt.TextFormat.RichText)
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title_label)
@@ -687,6 +728,7 @@ class MainWindow(QMainWindow):
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_area.setFrameShape(QFrame.NoFrame)
+        scroll_area.setStyleSheet(ThemeManager.get_scroll_area_style())
 
         content_widget = QWidget()
         content_layout = QVBoxLayout(content_widget)
@@ -694,7 +736,14 @@ class MainWindow(QMainWindow):
         text_label = QLabel(self.config.disclaimer_text)
         text_label.setTextFormat(Qt.TextFormat.PlainText)
         text_label.setWordWrap(True)
-        text_label.setStyleSheet(self.styles.text_label)
+        text_label.setStyleSheet(f"""
+            background-color: {ThemeManager.COLORS['bg_medium']};
+            color: {ThemeManager.COLORS['text_normal']};
+            padding: 15px;
+            font-family: monospace;
+            font-size: 10pt;
+            line-height: 1.4;
+        """)
         content_layout.addWidget(text_label)
 
         scroll_area.setWidget(content_widget)
@@ -705,7 +754,7 @@ class MainWindow(QMainWindow):
         ok_button = QPushButton("Agree")
         ok_button.setMinimumWidth(100)
         ok_button.setMinimumHeight(35)
-        ok_button.setStyleSheet(self.styles.ok_button)
+        ok_button.setStyleSheet(ThemeManager.get_button_style('primary'))
         ok_button.clicked.connect(dialog.accept)
         button_layout.addWidget(ok_button)
         button_layout.addStretch()
@@ -726,9 +775,15 @@ class MainWindow(QMainWindow):
         dialog.setMaximumWidth(800)
         dialog.setMaximumHeight(600)
 
+        dialog.setStyleSheet(f"""
+            QDialog {{
+                background-color: {ThemeManager.COLORS['bg_dark']};
+            }}
+        """)
+
         layout = QVBoxLayout(dialog)
 
-        title_label = QLabel("<h2 style='color: #2a82da;'>📄 BSD 3-CLAUSE LICENSE</h2>")
+        title_label = QLabel(f"<h2 style='color: {ThemeManager.COLORS['primary']};'>BSD 3-CLAUSE LICENSE</h2>")
         title_label.setTextFormat(Qt.TextFormat.RichText)
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title_label)
@@ -736,6 +791,7 @@ class MainWindow(QMainWindow):
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_area.setFrameShape(QFrame.NoFrame)
+        scroll_area.setStyleSheet(ThemeManager.get_scroll_area_style())
 
         content_widget = QWidget()
         content_layout = QVBoxLayout(content_widget)
@@ -743,7 +799,14 @@ class MainWindow(QMainWindow):
         text_label = QLabel(self.config.license_text)
         text_label.setTextFormat(Qt.TextFormat.PlainText)
         text_label.setWordWrap(True)
-        text_label.setStyleSheet(self.styles.text_label_2)
+        text_label.setStyleSheet(f"""
+            background-color: {ThemeManager.COLORS['bg_medium']};
+            color: {ThemeManager.COLORS['text_normal']};
+            padding: 15px;
+            font-family: monospace;
+            font-size: 10pt;
+            line-height: 1.4;
+        """)
         content_layout.addWidget(text_label)
 
         scroll_area.setWidget(content_widget)
@@ -754,7 +817,7 @@ class MainWindow(QMainWindow):
         ok_button = QPushButton("Agree")
         ok_button.setMinimumWidth(100)
         ok_button.setMinimumHeight(35)
-        ok_button.setStyleSheet(self.styles.ok_button_2)
+        ok_button.setStyleSheet(ThemeManager.get_button_style('primary'))
         ok_button.clicked.connect(dialog.accept)
         button_layout.addWidget(ok_button)
         button_layout.addStretch()
@@ -775,10 +838,16 @@ class MainWindow(QMainWindow):
         dialog.setMinimumHeight(450)
         dialog.setModal(True)
 
+        dialog.setStyleSheet(f"""
+            QDialog {{
+                background-color: {ThemeManager.COLORS['bg_dark']};
+            }}
+        """)
+
         layout = QVBoxLayout(dialog)
         layout.setSpacing(10)
 
-        title_label = QLabel("<h2 style='color: #2a82da;'>Keyboard Shortcuts</h2>")
+        title_label = QLabel(f"<h2 style='color: {ThemeManager.COLORS['primary']};'>Keyboard Shortcuts</h2>")
         title_label.setTextFormat(Qt.TextFormat.RichText)
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title_label)
@@ -786,6 +855,7 @@ class MainWindow(QMainWindow):
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_area.setFrameShape(QFrame.NoFrame)
+        scroll_area.setStyleSheet(ThemeManager.get_scroll_area_style())
 
         content_widget = QWidget()
         content_layout = QVBoxLayout(content_widget)
@@ -793,7 +863,14 @@ class MainWindow(QMainWindow):
         shortcuts_label = QLabel(self.config.short_cuts_text)
         shortcuts_label.setTextFormat(Qt.TextFormat.PlainText)
         shortcuts_label.setWordWrap(True)
-        shortcuts_label.setStyleSheet(self.styles.shortcuts_label)
+        shortcuts_label.setStyleSheet(f"""
+            background-color: {ThemeManager.COLORS['bg_medium']};
+            color: {ThemeManager.COLORS['text_normal']};
+            padding: 15px;
+            font-family: monospace;
+            font-size: 10pt;
+            line-height: 1.4;
+        """)
         content_layout.addWidget(shortcuts_label)
 
         scroll_area.setWidget(content_widget)
@@ -804,7 +881,7 @@ class MainWindow(QMainWindow):
         ok_button = QPushButton("OK")
         ok_button.setMinimumWidth(100)
         ok_button.setMinimumHeight(35)
-        ok_button.setStyleSheet(self.styles.ok_button_3)
+        ok_button.setStyleSheet(ThemeManager.get_button_style('primary'))
         ok_button.clicked.connect(dialog.accept)
         button_layout.addWidget(ok_button)
         button_layout.addStretch()
@@ -849,7 +926,7 @@ class MainWindow(QMainWindow):
                 return
             if new_length != smart_password.length:
                 reply = QMessageBox.question(
-                    self, '⚠️ Password Length Change Warning',
+                    self, 'Password Length Change Warning',
                     f'Changing password length from {smart_password.length} to {new_length} characters.\n\n'
                     f'First {min(smart_password.length, new_length)} characters will remain the same.\n'
                     f'Are you sure?',
@@ -866,7 +943,7 @@ class MainWindow(QMainWindow):
                 if success:
                     self.load_passwords()
                     self.show_status_message('Password metadata updated', 3000)
-                    QMessageBox.information(self, 'Updated', '✅ Successfully updated!')
+                    QMessageBox.information(self, 'Updated', 'Successfully updated!')
             except Exception as e:
                 QMessageBox.critical(self, 'Error', f'Failed to update:\n{str(e)}')
 
@@ -875,12 +952,12 @@ class MainWindow(QMainWindow):
         self.setStatusBar(self.status_bar)
 
         self.count_label = QLabel("0 passwords")
-        self.count_label.setStyleSheet("color: #a0a0a0; padding: 0 10px;")
+        self.count_label.setStyleSheet(f"color: {ThemeManager.COLORS['text_muted']}; padding: 0 10px;")
         self.status_bar.addPermanentWidget(self.count_label)
 
         storage_label = QLabel("")
         storage_label.setObjectName("storage_label")
-        storage_label.setStyleSheet("color: #a0a0a0; padding: 0 10px;")
+        storage_label.setStyleSheet(f"color: {ThemeManager.COLORS['text_muted']}; padding: 0 10px;")
         self.status_bar.addPermanentWidget(storage_label)
 
         self.status_bar.showMessage('Ready')
@@ -903,15 +980,21 @@ class MainWindow(QMainWindow):
             dialog.setMaximumWidth(550)
             dialog.setModal(True)
 
+            dialog.setStyleSheet(f"""
+                QDialog {{
+                    background-color: {ThemeManager.COLORS['bg_dark']};
+                }}
+            """)
+
             layout = QVBoxLayout(dialog)
             layout.setSpacing(15)
 
-            title_label = QLabel("🗑️ Delete Password Entry")
+            title_label = QLabel("Delete Password Entry")
             title_font = QFont()
             title_font.setPointSize(14)
             title_font.setBold(True)
             title_label.setFont(title_font)
-            title_label.setStyleSheet("color: #dc3545;")
+            title_label.setStyleSheet(f"color: {ThemeManager.COLORS['danger']};")
             title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             layout.addWidget(title_label)
 
@@ -920,7 +1003,7 @@ class MainWindow(QMainWindow):
                 "recreated if you remember your secret phrase."
             )
             info_label.setWordWrap(True)
-            info_label.setStyleSheet("color: #a0a0a0;")
+            info_label.setStyleSheet(f"color: {ThemeManager.COLORS['text_muted']};")
             layout.addWidget(info_label)
 
             desc_group = QGroupBox("Password Description")
@@ -929,9 +1012,18 @@ class MainWindow(QMainWindow):
             desc_text = QTextEdit()
             desc_text.setPlainText(description)
             desc_text.setReadOnly(True)
-            desc_text.setMaximumHeight(80)
-            desc_text.setMinimumHeight(60)
-            desc_text.setStyleSheet(self.styles.desc_text)
+            desc_text.setMaximumHeight(40)
+            desc_text.setMinimumHeight(20)
+            desc_text.setStyleSheet(f"""
+                QTextEdit {{
+                    background-color: {ThemeManager.COLORS['bg_medium']};
+                    color: {ThemeManager.COLORS['text_normal']};
+                    border: 1px solid {ThemeManager.COLORS['danger']};
+                    border-radius: 4px;
+                    font-family: monospace;
+                    font-size: 11px;
+                }}
+            """)
             desc_layout.addWidget(desc_text)
             desc_group.setLayout(desc_layout)
             layout.addWidget(desc_group)
@@ -939,7 +1031,7 @@ class MainWindow(QMainWindow):
             question_label = QLabel("<b>Are you sure you want to delete this entry?</b>")
             question_label.setWordWrap(True)
             question_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            question_label.setStyleSheet("color: #ffc107; padding: 10px;")
+            question_label.setStyleSheet(f"color: {ThemeManager.COLORS['warning']}; padding: 10px;")
             layout.addWidget(question_label)
 
             button_layout = QHBoxLayout()
@@ -948,14 +1040,14 @@ class MainWindow(QMainWindow):
             cancel_btn = QPushButton("Cancel")
             cancel_btn.setMinimumHeight(35)
             cancel_btn.setMinimumWidth(100)
-            cancel_btn.setStyleSheet(self.styles.cancel_btn)
+            cancel_btn.setStyleSheet(ThemeManager.get_button_style('secondary'))
             cancel_btn.clicked.connect(dialog.reject)
             button_layout.addWidget(cancel_btn)
 
-            delete_btn = QPushButton("🗑 Delete")
+            delete_btn = QPushButton("Delete")
             delete_btn.setMinimumHeight(35)
             delete_btn.setMinimumWidth(100)
-            delete_btn.setStyleSheet(self.styles.delete_btn)
+            delete_btn.setStyleSheet(ThemeManager.get_button_style('danger'))
             delete_btn.clicked.connect(dialog.accept)
             button_layout.addWidget(delete_btn)
 
@@ -973,7 +1065,7 @@ class MainWindow(QMainWindow):
                 QMessageBox.information(
                     self,
                     "Deleted",
-                    f'✅ Password metadata for "{description}" has been deleted.',
+                    f'Password metadata for "{description}" has been deleted.',
                     QMessageBox.Ok
                 )
 

@@ -1,36 +1,61 @@
 # Copyright (©) 2026, Alexander Suvorov. All rights reserved.
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPalette, QColor
 from PyQt5.QtWidgets import QApplication
+from PyQt5.QtGui import QFont
 
 from core.main_window import MainWindow
+from core.styles.theme_manager import ThemeManager
 
 
 def main():
     import sys
 
     app = QApplication(sys.argv)
-
     app.setStyle('Fusion')
 
-    dark_palette = QPalette()
-    dark_palette.setColor(QPalette.Window, QColor(30, 30, 30))
-    dark_palette.setColor(QPalette.WindowText, Qt.GlobalColor.white)
-    dark_palette.setColor(QPalette.Base, QColor(20, 20, 20))
-    dark_palette.setColor(QPalette.AlternateBase, QColor(40, 40, 40))
-    dark_palette.setColor(QPalette.ToolTipBase, QColor(50, 50, 50))
-    dark_palette.setColor(QPalette.ToolTipText, Qt.GlobalColor.white)
-    dark_palette.setColor(QPalette.Text, Qt.GlobalColor.white)
-    dark_palette.setColor(QPalette.Button, QColor(50, 50, 50))
-    dark_palette.setColor(QPalette.ButtonText, Qt.GlobalColor.white)
-    dark_palette.setColor(QPalette.BrightText, Qt.GlobalColor.red)
-    dark_palette.setColor(QPalette.Link, QColor(42, 130, 218))
-    dark_palette.setColor(QPalette.Highlight, QColor(42, 130, 218))
-    dark_palette.setColor(QPalette.HighlightedText, Qt.GlobalColor.black)
-    dark_palette.setColor(QPalette.Disabled, QPalette.Text, QColor(100, 100, 100))
-    dark_palette.setColor(QPalette.Disabled, QPalette.ButtonText, QColor(100, 100, 100))
+    ThemeManager.apply_global_palette(app)
 
-    app.setPalette(dark_palette)
+    font = QFont("Segoe UI", 9)
+    app.setFont(font)
+
+    app.setStyleSheet(f"""
+        QDialog {{
+            background-color: {ThemeManager.COLORS['bg_dark']};
+        }}
+        QStatusBar {{
+            color: {ThemeManager.COLORS['text_muted']};
+        }}
+        QMenuBar {{
+            background-color: {ThemeManager.COLORS['bg_panel']};
+            color: {ThemeManager.COLORS['text_normal']};
+        }}
+        QMenuBar::item:selected {{
+            background-color: {ThemeManager.COLORS['primary']};
+        }}
+        QMenu {{
+            background-color: {ThemeManager.COLORS['bg_light']};
+            color: {ThemeManager.COLORS['text_normal']};
+        }}
+        QMenu::item:selected {{
+            background-color: {ThemeManager.COLORS['primary']};
+        }}
+        QToolTip {{
+            background-color: {ThemeManager.COLORS['bg_light']};
+            color: {ThemeManager.COLORS['text_normal']};
+            border: 1px solid {ThemeManager.COLORS['border']};
+        }}
+
+        QWidget:disabled {{
+            color: {ThemeManager.COLORS['text_disabled']};
+        }}
+
+        QPushButton:disabled {{
+            color: {ThemeManager.COLORS['text_disabled']};
+        }}
+
+        QLabel:disabled {{
+            color: {ThemeManager.COLORS['text_disabled']};
+        }}
+    """)
 
     window = MainWindow()
     window.show()

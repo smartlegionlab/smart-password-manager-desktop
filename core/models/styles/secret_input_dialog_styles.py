@@ -1,5 +1,6 @@
 # Copyright (©) 2026, Alexander Suvorov. All rights reserved.
+from core.models.styles.base_dialog_styles import BaseDialogStyle
 
 
-class SecretInputDialogStyles:
-    submit_button_style = "background-color: #2a82da; color: white;"
+class SecretInputDialogStyles(BaseDialogStyle):
+    pass

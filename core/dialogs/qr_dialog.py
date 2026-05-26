@@ -14,6 +14,8 @@ from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QImage
 
+from core.styles.theme_manager import ThemeManager
+
 
 class QRDialog(QDialog):
     def __init__(self, parent=None, description="", public_key="", length=16, sound_manager=None):
@@ -33,6 +35,8 @@ class QRDialog(QDialog):
             "k": public_key
         }
 
+        self.setStyleSheet(ThemeManager.get_input_style())
+
         self.setup_ui()
         self.center_dialog()
 
@@ -46,6 +50,7 @@ class QRDialog(QDialog):
         title_font.setBold(True)
         title_label.setFont(title_font)
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        title_label.setStyleSheet(f"color: {ThemeManager.COLORS['primary']};")
         layout.addWidget(title_label)
 
         desc_label = QLabel("<b>Description:</b>")
@@ -58,15 +63,15 @@ class QRDialog(QDialog):
         self.desc_text.setReadOnly(True)
         self.desc_text.setMaximumHeight(40)
         self.desc_text.setMinimumHeight(20)
-        self.desc_text.setStyleSheet("""
-            QTextEdit {
-                background-color: #2a2a2a;
-                color: #f0f0f0;
-                border: 1px solid #444;
+        self.desc_text.setStyleSheet(f"""
+            QTextEdit {{
+                background-color: {ThemeManager.COLORS['bg_medium']};
+                color: {ThemeManager.COLORS['text_normal']};
+                border: 1px solid {ThemeManager.COLORS['border']};
                 border-radius: 4px;
                 font-family: monospace;
                 font-size: 11px;
-            }
+            }}
         """)
         layout.addWidget(self.desc_text)
 
@@ -91,21 +96,21 @@ class QRDialog(QDialog):
         self.key_text.setReadOnly(True)
         self.key_text.setMaximumHeight(40)
         self.key_text.setMinimumHeight(20)
-        self.key_text.setStyleSheet("""
-            QTextEdit {
-                background-color: #2a2a2a;
-                color: #f0f0f0;
-                border: 1px solid #444;
+        self.key_text.setStyleSheet(f"""
+            QTextEdit {{
+                background-color: {ThemeManager.COLORS['bg_medium']};
+                color: {ThemeManager.COLORS['text_normal']};
+                border: 1px solid {ThemeManager.COLORS['border']};
                 border-radius: 4px;
                 font-family: monospace;
                 font-size: 10px;
-            }
+            }}
         """)
         layout.addWidget(self.key_text)
 
         note_label = QLabel(
             '📲 Scan with <a href="https://github.com/smartlegionlab/smart-password-manager-android/releases" '
-            'style="color: #2a82da; text-decoration: none;">Smart Password Manager Android</a>'
+            f'style="color: {ThemeManager.COLORS["primary"]}; text-decoration: none;">Smart Password Manager Android</a>'
         )
         note_label.setOpenExternalLinks(True)
         note_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -115,18 +120,22 @@ class QRDialog(QDialog):
 
         self.copy_btn = QPushButton("📋 Copy JSON")
         self.copy_btn.clicked.connect(self.copy_json)
+        self.copy_btn.setStyleSheet(ThemeManager.get_button_style('info'))
         button_layout.addWidget(self.copy_btn)
 
         copy_desc_btn = QPushButton("📝 Copy Description")
         copy_desc_btn.clicked.connect(self.copy_description)
+        copy_desc_btn.setStyleSheet(ThemeManager.get_button_style('secondary'))
         button_layout.addWidget(copy_desc_btn)
 
         copy_key_btn = QPushButton("🔑 Copy Key")
         copy_key_btn.clicked.connect(self.copy_public_key)
+        copy_key_btn.setStyleSheet(ThemeManager.get_button_style('secondary'))
         button_layout.addWidget(copy_key_btn)
 
         close_btn = QPushButton("Close")
         close_btn.clicked.connect(self.accept)
+        close_btn.setStyleSheet(ThemeManager.get_button_style('primary'))
         button_layout.addWidget(close_btn)
 
         layout.addLayout(button_layout)

@@ -12,6 +12,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt
 
 from core.models.styles.password_display_dialog_styles import PasswordDisplayDialogStyles
+from core.styles.theme_manager import ThemeManager
 
 
 class PasswordDisplayDialog(QDialog):
@@ -23,6 +24,8 @@ class PasswordDisplayDialog(QDialog):
 
         self.styles = PasswordDisplayDialogStyles()
         self.sound_manager = sound_manager
+
+        self.setStyleSheet(ThemeManager.get_input_style())
 
         self.layout = QVBoxLayout(self)
         self.layout.setSpacing(10)
@@ -43,15 +46,15 @@ class PasswordDisplayDialog(QDialog):
         self.description_text.setReadOnly(True)
         self.description_text.setMaximumHeight(60)
         self.description_text.setMinimumHeight(40)
-        self.description_text.setStyleSheet("""
-            QTextEdit {
-                background-color: #2a2a2a;
-                color: #f0f0f0;
-                border: 1px solid #444;
+        self.description_text.setStyleSheet(f"""
+            QTextEdit {{
+                background-color: {ThemeManager.COLORS['bg_medium']};
+                color: {ThemeManager.COLORS['text_normal']};
+                border: 1px solid {ThemeManager.COLORS['border']};
                 border-radius: 4px;
                 font-family: monospace;
                 font-size: 11px;
-            }
+            }}
         """)
         desc_layout.addWidget(self.description_text)
         desc_group.setLayout(desc_layout)
@@ -65,16 +68,16 @@ class PasswordDisplayDialog(QDialog):
         self.password_display.setReadOnly(True)
         self.password_display.setMaximumHeight(80)
         self.password_display.setMinimumHeight(60)
-        self.password_display.setStyleSheet("""
-            QTextEdit {
-                background-color: #1e1e1e;
+        self.password_display.setStyleSheet(f"""
+            QTextEdit {{
+                background-color: {ThemeManager.COLORS['bg_dark']};
                 color: #4ec9b0;
-                border: 1px solid #444;
+                border: 1px solid {ThemeManager.COLORS['border']};
                 border-radius: 4px;
                 font-family: monospace;
                 font-size: 12px;
                 font-weight: bold;
-            }
+            }}
         """)
         password_layout.addWidget(self.password_display)
 
@@ -84,6 +87,7 @@ class PasswordDisplayDialog(QDialog):
         self.copy_button.clicked.connect(self.sound_manager.play_click)
         self.copy_button.clicked.connect(self.copy_password)
         self.copy_button.setMinimumWidth(150)
+        self.copy_button.setStyleSheet(ThemeManager.get_button_style('success'))
         copy_layout.addWidget(self.copy_button)
         password_layout.addLayout(copy_layout)
 
@@ -103,6 +107,7 @@ class PasswordDisplayDialog(QDialog):
         self.close_button.clicked.connect(self.sound_manager.play_click)
         self.close_button.clicked.connect(self.accept)
         self.close_button.setMinimumWidth(100)
+        self.close_button.setStyleSheet(ThemeManager.get_button_style('primary'))
         self.layout.addWidget(self.close_button, alignment=Qt.AlignmentFlag.AlignCenter)
 
     def copy_password(self):
