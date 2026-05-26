@@ -1,5 +1,5 @@
 # Copyright (©) 2026, Alexander Suvorov. All rights reserved.
-from core.styles.theme_manager import ThemeManager
+from smart_password_manager.ui.styles.theme_manager import ThemeManager
 
 
 class BaseDialogStyle:

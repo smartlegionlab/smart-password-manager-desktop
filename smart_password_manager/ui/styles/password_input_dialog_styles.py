@@ -1,5 +1,5 @@
 # Copyright (©) 2026, Alexander Suvorov. All rights reserved.
-from core.models.styles.base_dialog_styles import BaseDialogStyle
+from smart_password_manager.ui.styles.base_dialog_styles import BaseDialogStyle
 
 
 class PasswordInputDialogStyles(BaseDialogStyle):

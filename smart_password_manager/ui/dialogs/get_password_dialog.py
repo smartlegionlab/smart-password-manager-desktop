@@ -1,18 +1,9 @@
 # Copyright (©) 2026, Alexander Suvorov. All rights reserved.
-from PyQt5.QtWidgets import (
-    QLabel,
-    QPushButton,
-    QVBoxLayout,
-    QLineEdit,
-    QTextEdit,
-    QDialog,
-    QHBoxLayout,
-    QGroupBox
-)
+from PyQt5.QtWidgets import QLabel, QPushButton, QVBoxLayout, QLineEdit, QTextEdit, QDialog, QHBoxLayout, QGroupBox
 from PyQt5.QtCore import Qt
 
-from core.models.styles.secret_input_dialog_styles import SecretInputDialogStyles
-from core.styles.theme_manager import ThemeManager
+from smart_password_manager.ui.styles.secret_input_dialog_styles import SecretInputDialogStyles
+from smart_password_manager.ui.styles.theme_manager import ThemeManager
 
 
 class GetPasswordDialog(QDialog):
@@ -26,7 +17,6 @@ class GetPasswordDialog(QDialog):
         self.sound_manager = sound_manager
         self.description = description
 
-        # Apply base styles
         self.setStyleSheet(
             ThemeManager.get_input_style() +
             ThemeManager.get_groupbox_style()

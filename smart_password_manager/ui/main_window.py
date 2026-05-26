@@ -1,40 +1,22 @@
 # Copyright (©) 2026, Alexander Suvorov. All rights reserved.
 from PyQt5.QtWidgets import (
-    QDesktopWidget,
-    QWidget,
-    QLabel,
-    QPushButton,
-    QVBoxLayout,
-    QMessageBox,
-    QDialog,
-    QTableWidget,
-    QTableWidgetItem,
-    QFrame,
-    QHeaderView,
-    QHBoxLayout,
-    QAction,
-    QMenuBar,
-    QStatusBar,
-    QMainWindow,
-    QMenu,
-    QScrollArea,
-    QLineEdit,
-    QGroupBox,
-    QTextEdit
+    QDesktopWidget, QWidget, QLabel, QPushButton, QVBoxLayout, QMessageBox, QDialog, QTableWidget,
+    QTableWidgetItem, QFrame, QHeaderView, QHBoxLayout, QAction, QMenuBar, QStatusBar, QMainWindow,
+    QMenu, QScrollArea, QLineEdit, QGroupBox, QTextEdit
 )
 from PyQt5.QtGui import QFont, QIcon, QDesktopServices
 from PyQt5.QtCore import Qt, QUrl
 from PyQt5.QtMultimedia import QSound
 from smartpasslib import SmartPasswordManager, SmartPassword, SmartPasswordMaster
 
-from core.dialogs.edit_password_dialog import EditPasswordDialog
-from core.dialogs.add_password_dialog import AddPasswordDialog
-from core.dialogs.display_password_dialog import PasswordDisplayDialog
-from core.dialogs.get_password_dialog import GetPasswordDialog
-from core.dialogs.qr_dialog import QRDialog
-from core.models.configs.main_window_config import MainWindowConfig
-from core.styles.theme_manager import ThemeManager
-from core.utils.sound_manager import SoundManager
+from smart_password_manager.core.configs.main_window_config import MainWindowConfig
+from smart_password_manager.ui.dialogs.edit_password_dialog import EditPasswordDialog
+from smart_password_manager.ui.dialogs.add_password_dialog import AddPasswordDialog
+from smart_password_manager.ui.dialogs.display_password_dialog import PasswordDisplayDialog
+from smart_password_manager.ui.dialogs.get_password_dialog import GetPasswordDialog
+from smart_password_manager.ui.dialogs.qr_dialog import QRDialog
+from smart_password_manager.ui.styles.theme_manager import ThemeManager
+from smart_password_manager.core.utils.sound_manager import SoundManager
 
 
 class MainWindow(QMainWindow):
@@ -221,14 +203,14 @@ class MainWindow(QMainWindow):
 
     def setup_application_icon(self):
         from pathlib import Path
-        project_root = Path(__file__).parent.parent
+        project_root = Path(__file__).parent.parent.parent
         icon_path = project_root / "data" / "icons" / "icon.png"
 
         if icon_path.exists():
             self.setWindowIcon(QIcon(str(icon_path)))
 
     def create_desktop_entry(self):
-        from core.dialogs.desktop_entry_dialog import DesktopEntryDialog
+        from smart_password_manager.ui.dialogs.desktop_entry_dialog import DesktopEntryDialog
         dialog = DesktopEntryDialog(self, self.sound_manager)
         dialog.exec_()
 
@@ -1136,14 +1118,14 @@ class MainWindow(QMainWindow):
         self.show_status_message(f'Sounds {status}', 2000)
 
     def export_passwords(self):
-        from core.dialogs.export_import_dialog import ExportImportDialog
+        from smart_password_manager.ui.dialogs.export_import_dialog import ExportImportDialog
         dialog = ExportImportDialog(self, mode="export", smart_pass_man=self.smart_pass_man,
                                     sound_manager=self.sound_manager)
         if dialog.exec_() == QDialog.Accepted:
             self.show_status_message('Passwords exported successfully', 3000)
 
     def import_passwords(self):
-        from core.dialogs.export_import_dialog import ExportImportDialog
+        from smart_password_manager.ui.dialogs.export_import_dialog import ExportImportDialog
         dialog = ExportImportDialog(self, mode="import", smart_pass_man=self.smart_pass_man,
                                     sound_manager=self.sound_manager)
         if dialog.exec_() == QDialog.Accepted:

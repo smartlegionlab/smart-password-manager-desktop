@@ -1,24 +1,17 @@
 # Copyright (©) 2026, Alexander Suvorov. All rights reserved.
 import json
 import qrcode
-from PyQt5.QtWidgets import (
-    QDialog,
-    QVBoxLayout,
-    QHBoxLayout,
-    QLabel,
-    QPushButton,
-    QApplication,
-    QTextEdit
-)
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QApplication, QTextEdit
 from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QImage
 
-from core.styles.theme_manager import ThemeManager
+from smart_password_manager.ui.styles.theme_manager import ThemeManager
 
 
 class QRDialog(QDialog):
-    def __init__(self, parent=None, description="", public_key="", length=16, sound_manager=None):
+    def __init__(self, parent=None, description="",
+                 public_key="", length=16, sound_manager=None):
         super().__init__(parent)
         self.setWindowTitle("QR Code Export")
         self.setMinimumWidth(500)
@@ -109,7 +102,7 @@ class QRDialog(QDialog):
         layout.addWidget(self.key_text)
 
         note_label = QLabel(
-            '📲 Scan with <a href="https://github.com/smartlegionlab/smart-password-manager-android/releases" '
+            'Scan with <a href="https://github.com/smartlegionlab/smart-password-manager-android/releases" '
             f'style="color: {ThemeManager.COLORS["primary"]}; text-decoration: none;">Smart Password Manager Android</a>'
         )
         note_label.setOpenExternalLinks(True)
@@ -118,17 +111,17 @@ class QRDialog(QDialog):
 
         button_layout = QHBoxLayout()
 
-        self.copy_btn = QPushButton("📋 Copy JSON")
+        self.copy_btn = QPushButton("Copy JSON")
         self.copy_btn.clicked.connect(self.copy_json)
         self.copy_btn.setStyleSheet(ThemeManager.get_button_style('info'))
         button_layout.addWidget(self.copy_btn)
 
-        copy_desc_btn = QPushButton("📝 Copy Description")
+        copy_desc_btn = QPushButton("Copy Description")
         copy_desc_btn.clicked.connect(self.copy_description)
         copy_desc_btn.setStyleSheet(ThemeManager.get_button_style('secondary'))
         button_layout.addWidget(copy_desc_btn)
 
-        copy_key_btn = QPushButton("🔑 Copy Key")
+        copy_key_btn = QPushButton("Copy Key")
         copy_key_btn.clicked.connect(self.copy_public_key)
         copy_key_btn.setStyleSheet(ThemeManager.get_button_style('secondary'))
         button_layout.addWidget(copy_key_btn)

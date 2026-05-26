@@ -1,22 +1,13 @@
 # Copyright (©) 2026, Alexander Suvorov. All rights reserved.
 import os
 import sys
-from PyQt5.QtWidgets import (
-    QDialog,
-    QVBoxLayout,
-    QHBoxLayout,
-    QLabel,
-    QPushButton,
-    QCheckBox,
-    QMessageBox,
-    QGroupBox
-)
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QCheckBox, QMessageBox, QGroupBox
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 
-from core.models.configs.desktop_entry_dialog_config import DesktopEntryDialogConfig
-from core.models.styles.desktop_entry_dialog_styles import DesktopEntryDialogStyles
-from core.styles.theme_manager import ThemeManager
+from smart_password_manager.core.configs.desktop_entry_dialog_config import DesktopEntryDialogConfig
+from smart_password_manager.ui.styles.desktop_entry_dialog_styles import DesktopEntryDialogStyles
+from smart_password_manager.ui.styles.theme_manager import ThemeManager
 
 
 class DesktopEntryDialog(QDialog):
@@ -197,7 +188,7 @@ class DesktopEntryDialog(QDialog):
     @staticmethod
     def find_icon_path():
         from pathlib import Path
-        project_root = Path(__file__).parent.parent.parent
+        project_root = Path(__file__).parent.parent.parent.parent
         icon_path = project_root / "data" / "icons" / "icon.png"
         return str(icon_path) if icon_path.exists() else ""
 

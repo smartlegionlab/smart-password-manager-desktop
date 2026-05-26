@@ -1,5 +1,5 @@
 # Copyright (©) 2026, Alexander Suvorov. All rights reserved.
-from core.models.configs.base_config import BaseConfig
+from smart_password_manager.core.configs.base_config import BaseConfig
 
 
 class MainWindowConfig(BaseConfig):
@@ -133,37 +133,37 @@ Character set: !@#$%^&*()_+-=[]{{}};:,.<>?/A-Za-z0-9
 """
 
         self.short_cuts_text = """
-    ═════════════════════════════════════════════════════════════════════════
-      KEYBOARD SHORTCUTS
-    ═════════════════════════════════════════════════════════════════════════
+══════════════════════════════════════════════════════════════
+  KEYBOARD SHORTCUTS
+══════════════════════════════════════════════════════════════
 
-    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      GLOBAL SHORTCUTS
-    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  GLOBAL SHORTCUTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-      F1               →  Show Help
-      Ctrl + Q         →  Exit Application
-      Ctrl + N         →  Create New Password
-      Ctrl + Shift + S →  Toggle Sounds
-      Ctrl + /         →  Keyboard shortcuts
-      Ctrl + A         →  About
-      Ctrl + I         →  Import Passwords
-      Ctrl + E         →  Export Passwords
-      Ctrl + R         →  Show QR Code for selected password
-      Ctrl + G         →  Get Password
-      Ctrl + Shift + E →  Edit Password
-      Del              →  Delete Password
-      F5               →  Refresh list
-      Enter            →  Get password (when item selected)
+  F1               →  Show Help
+  Ctrl + Q         →  Exit Application
+  Ctrl + N         →  Create New Password
+  Ctrl + Shift + S →  Toggle Sounds
+  Ctrl + /         →  Keyboard shortcuts
+  Ctrl + A         →  About
+  Ctrl + I         →  Import Passwords
+  Ctrl + E         →  Export Passwords
+  Ctrl + R         →  Show QR Code for selected password
+  Ctrl + G         →  Get Password
+  Ctrl + Shift + E →  Edit Password
+  Del              →  Delete Password
+  F5               →  Refresh list
+  Enter            →  Get password (when item selected)
 
-    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      OTHER SHORTCUTS
-    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  OTHER SHORTCUTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-      Ctrl + D         →  Show Disclaimer
-      Ctrl + L         →  Show License
-      Ctrl + Alt + S   →  Create Desktop Shortcut
-        """
+  Ctrl + D         →  Show Disclaimer
+  Ctrl + L         →  Show License
+  Ctrl + Alt + S   →  Create Desktop Shortcut
+"""
 
         self.disclaimer_text = """
 LEGAL DISCLAIMER

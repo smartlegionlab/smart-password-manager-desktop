@@ -2,8 +2,8 @@
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtGui import QFont
 
-from core.main_window import MainWindow
-from core.styles.theme_manager import ThemeManager
+from smart_password_manager.ui.main_window import MainWindow
+from smart_password_manager.ui.styles.theme_manager import ThemeManager
 
 
 def main():

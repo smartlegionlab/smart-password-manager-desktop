@@ -1,29 +1,20 @@
 # Copyright (©) 2026, Alexander Suvorov. All rights reserved.
-from PyQt5.QtWidgets import (
-    QLabel,
-    QPushButton,
-    QVBoxLayout,
-    QLineEdit,
-    QDialog,
-    QSpinBox,
-    QHBoxLayout,
-    QGroupBox
-)
+from PyQt5.QtWidgets import QLabel, QPushButton, QVBoxLayout, QLineEdit, QDialog, QSpinBox, QHBoxLayout, QGroupBox
 from PyQt5.QtCore import Qt
 
-from core.models.styles.edit_password_dialog_styles import EditPasswordDialogStyles
-from core.styles.theme_manager import ThemeManager
+from smart_password_manager.ui.styles.password_input_dialog_styles import PasswordInputDialogStyles
+from smart_password_manager.ui.styles.theme_manager import ThemeManager
 
 
-class EditPasswordDialog(QDialog):
-    def __init__(self, parent=None, current_description="", current_length=16, sound_manager=None):
+class AddPasswordDialog(QDialog):
+    def __init__(self, parent=None, sound_manager=None):
         super().__init__(parent)
-        self.current_length = current_length
-        self.max_length = 255
-        self.setWindowTitle('Edit Password Metadata')
+        self.setWindowTitle('Create Smart Password')
         self.setMinimumWidth(400)
-        self.styles = EditPasswordDialogStyles()
+
+        self.styles = PasswordInputDialogStyles()
         self.sound_manager = sound_manager
+        self.max_length = 255
 
         self.setStyleSheet(
             ThemeManager.get_input_style() +
@@ -33,14 +24,13 @@ class EditPasswordDialog(QDialog):
         self.layout = QVBoxLayout(self)
         self.layout.setSpacing(10)
 
-        instruction = QLabel('Edit password metadata:')
-        self.layout.addWidget(instruction)
-
         description_group = QGroupBox("Password Description")
         description_layout = QVBoxLayout()
+        self.description_label = QLabel('Password Description (e.g., "GitHub Account"):')
+        description_layout.addWidget(self.description_label)
+
         self.description_input = QLineEdit(self)
-        self.description_input.setText(current_description)
-        self.description_input.setPlaceholderText(f"Enter new password description (max {self.max_length} chars)")
+        self.description_input.setPlaceholderText(f"Enter password description (max {self.max_length} chars)")
         self.description_input.textChanged.connect(self.on_description_changed)
         description_layout.addWidget(self.description_input)
 
@@ -56,34 +46,50 @@ class EditPasswordDialog(QDialog):
         description_group.setLayout(description_layout)
         self.layout.addWidget(description_group)
 
-        length_group = QGroupBox("Password Length")
-        length_layout = QHBoxLayout()
-        self.length_label = QLabel('Length:')
-        length_layout.addWidget(self.length_label)
+        secret_group = QGroupBox("Secret Phrase")
+        secret_layout = QVBoxLayout()
+        self.secret_label = QLabel('Your Secret Phrase (minimum 12 characters):')
+        secret_layout.addWidget(self.secret_label)
 
+        self.secret_example_label = QLabel('Example: "MyCatHippo2026" or "P@ssw0rd!LongSecret"')
+        self.secret_example_label.setStyleSheet(self.styles.secret_example_label_style)
+        secret_layout.addWidget(self.secret_example_label)
+
+        self.secret_input = QLineEdit(self)
+        self.secret_input.setPlaceholderText("Enter your secret phrase (min. 12 characters)")
+        self.secret_input.setEchoMode(QLineEdit.Password)
+        self.secret_input.textChanged.connect(self.check_inputs)
+        secret_layout.addWidget(self.secret_input)
+
+        self.show_secret_checkbox = QPushButton("Show")
+        self.show_secret_checkbox.setCheckable(True)
+        self.show_secret_checkbox.setMaximumWidth(100)
+        self.show_secret_checkbox.setStyleSheet(ThemeManager.get_button_style('secondary'))
+        self.show_secret_checkbox.clicked.connect(self.sound_manager.play_click)
+        self.show_secret_checkbox.clicked.connect(self.toggle_secret_visibility)
+        secret_layout.addWidget(self.show_secret_checkbox, alignment=Qt.AlignmentFlag.AlignCenter)
+
+        self.secret_warning_label = QLabel("Secret phrase must be at least 12 characters")
+        self.secret_warning_label.setStyleSheet(self.styles.secret_warning_label_style)
+        self.secret_warning_label.setVisible(False)
+        secret_layout.addWidget(self.secret_warning_label)
+
+        secret_group.setLayout(secret_layout)
+        self.layout.addWidget(secret_group)
+
+        settings_group = QGroupBox("Password Settings")
+        settings_layout = QHBoxLayout()
+        self.length_label = QLabel('Password Length (minimum 12):')
+        settings_layout.addWidget(self.length_label)
         self.length_input = QSpinBox(self)
         self.length_input.setMinimum(12)
         self.length_input.setMaximum(100)
-        self.length_input.setValue(current_length)
+        self.length_input.setValue(16)
         self.length_input.setSuffix(" characters")
-        self.length_input.valueChanged.connect(self.on_length_changed)
-        length_layout.addWidget(self.length_input)
-
-        self.length_warning = QLabel("")
-        self.length_warning.setStyleSheet(self.styles.length_warning_style)
-        length_layout.addWidget(self.length_warning)
-
-        length_layout.addStretch()
-        length_group.setLayout(length_layout)
-        self.layout.addWidget(length_group)
-
-        note = QLabel(
-            "<i>Note: Changing the length will generate a different password "
-            "(first characters remain the same).</i>"
-        )
-        note.setWordWrap(True)
-        note.setStyleSheet(self.styles.note_style)
-        self.layout.addWidget(note)
+        settings_layout.addWidget(self.length_input)
+        settings_layout.addStretch()
+        settings_group.setLayout(settings_layout)
+        self.layout.addWidget(settings_group)
 
         button_layout = QHBoxLayout()
         self.cancel_button = QPushButton('Cancel', self)
@@ -92,16 +98,16 @@ class EditPasswordDialog(QDialog):
         self.cancel_button.setStyleSheet(ThemeManager.get_button_style('secondary'))
         button_layout.addWidget(self.cancel_button)
 
-        self.submit_button = QPushButton('Update', self)
+        self.submit_button = QPushButton('Create Password', self)
         self.submit_button.setDefault(True)
         self.submit_button.clicked.connect(self.sound_manager.play_click)
         self.submit_button.clicked.connect(self.accept)
-        self.submit_button.setStyleSheet(ThemeManager.get_button_style('warning'))
+        self.submit_button.setStyleSheet(ThemeManager.get_button_style('primary'))
         button_layout.addWidget(self.submit_button)
         self.layout.addLayout(button_layout)
 
+        self.submit_button.setEnabled(False)
         self.update_counter()
-        self.on_length_changed(current_length)
 
     def on_description_changed(self):
         text = self.description_input.text()
@@ -132,6 +138,14 @@ class EditPasswordDialog(QDialog):
             self.counter_label.setText(f"📝 {current}/{self.max_length}")
             self.counter_label.setStyleSheet("color: #6c757d; font-size: 10px;")
 
+    def toggle_secret_visibility(self):
+        if self.show_secret_checkbox.isChecked():
+            self.secret_input.setEchoMode(QLineEdit.Normal)
+            self.show_secret_checkbox.setText("Hide")
+        else:
+            self.secret_input.setEchoMode(QLineEdit.Password)
+            self.show_secret_checkbox.setText("Show")
+
     def validate_description(self, text):
         forbidden_chars = ['"', '\\']
 
@@ -153,22 +167,27 @@ class EditPasswordDialog(QDialog):
 
     def check_inputs(self):
         description = self.description_input.text()
-        is_valid = self.validate_description(description)
-        self.submit_button.setEnabled(is_valid)
+        secret = self.secret_input.text()
 
-    def on_length_changed(self, new_length):
-        if new_length != self.current_length:
-            if new_length > self.current_length:
-                self.length_warning.setText(f"⚠️ Password will be extended")
-            else:
-                self.length_warning.setText(f"⚠️ Password will be shortened")
-        else:
-            self.length_warning.setText("")
+        description_valid = self.validate_description(description)
 
-    def get_values(self):
+        secret_valid = len(secret) >= 12
+        self.secret_warning_label.setVisible(not secret_valid and len(secret) > 0)
+
+        self.submit_button.setEnabled(secret_valid and description_valid)
+
+    def get_inputs(self):
         description = self.description_input.text().strip()
+        secret = self.secret_input.text()
+        length = self.length_input.value()
+
+        if not description:
+            return None, None, None
 
         if not self.validate_description(description):
-            return None, None
+            return None, None, None
 
-        return description, self.length_input.value()
+        if len(secret) < 12:
+            return None, None, None
+
+        return description, secret, length

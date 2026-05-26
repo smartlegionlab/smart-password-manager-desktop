@@ -2,22 +2,15 @@
 import json
 from pathlib import Path
 from PyQt5.QtWidgets import (
-    QDialog,
-    QVBoxLayout,
-    QHBoxLayout,
-    QLabel,
-    QPushButton,
-    QFileDialog,
-    QMessageBox,
-    QCheckBox,
-    QGroupBox,
-    QRadioButton,
-    QButtonGroup
+    QDialog, QVBoxLayout, QHBoxLayout,
+    QLabel, QPushButton, QFileDialog,
+    QMessageBox, QCheckBox, QGroupBox,
+    QRadioButton, QButtonGroup
 )
 
-from core.models.configs.export_import_dialog_config import ExportImportDialogConfig
-from core.models.styles.export_import_dialog_styles import ExportImportDialogStyles
-from core.styles.theme_manager import ThemeManager
+from smart_password_manager.core.configs.export_import_dialog_config import ExportImportDialogConfig
+from smart_password_manager.ui.styles.export_import_dialog_styles import ExportImportDialogStyles
+from smart_password_manager.ui.styles.theme_manager import ThemeManager
 
 
 class ExportImportDialog(QDialog):

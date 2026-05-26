@@ -1,5 +1,5 @@
 # Copyright (©) 2026, Alexander Suvorov. All rights reserved.
-from core.models.configs.base_config import BaseConfig
+from smart_password_manager.core.configs.base_config import BaseConfig
 
 
 class ExportImportDialogConfig(BaseConfig):

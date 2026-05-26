@@ -1,18 +1,9 @@
 # Copyright (©) 2026, Alexander Suvorov. All rights reserved.
-from PyQt5.QtWidgets import (
-    QApplication,
-    QLabel,
-    QPushButton,
-    QVBoxLayout,
-    QTextEdit,
-    QDialog,
-    QHBoxLayout,
-    QGroupBox
-)
+from PyQt5.QtWidgets import QApplication, QLabel, QPushButton, QVBoxLayout, QTextEdit, QDialog, QHBoxLayout, QGroupBox
 from PyQt5.QtCore import Qt
 
-from core.models.styles.password_display_dialog_styles import PasswordDisplayDialogStyles
-from core.styles.theme_manager import ThemeManager
+from smart_password_manager.ui.styles.password_display_dialog_styles import PasswordDisplayDialogStyles
+from smart_password_manager.ui.styles.theme_manager import ThemeManager
 
 
 class PasswordDisplayDialog(QDialog):
@@ -83,7 +74,7 @@ class PasswordDisplayDialog(QDialog):
 
         copy_layout = QHBoxLayout()
         copy_layout.addStretch()
-        self.copy_button = QPushButton("📋 Copy to Clipboard")
+        self.copy_button = QPushButton("Copy to Clipboard")
         self.copy_button.clicked.connect(self.sound_manager.play_click)
         self.copy_button.clicked.connect(self.copy_password)
         self.copy_button.setMinimumWidth(150)
@@ -123,4 +114,4 @@ class PasswordDisplayDialog(QDialog):
             main_window.show_status_message('Password copied to clipboard', 2000)
 
         from threading import Timer
-        Timer(1.5, lambda: self.copy_button.setText("📋 Copy to Clipboard")).start()
+        Timer(1.5, lambda: self.copy_button.setText("Copy to Clipboard")).start()
