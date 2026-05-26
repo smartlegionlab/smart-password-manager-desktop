@@ -111,7 +111,7 @@ class ThemeManager:
             'warning': f"""
                 QPushButton {{
                     background-color: {cls.COLORS['warning']};
-                    color: {cls.COLORS['text_dark']};
+                    color: white;
                 }}
                 QPushButton:hover {{ background-color: {cls.COLORS['warning_hover']}; }}
                 QPushButton:pressed {{ background-color: {cls.COLORS['warning']}; }}
