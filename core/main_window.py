@@ -1,6 +1,4 @@
 # Copyright (©) 2026, Alexander Suvorov. All rights reserved.
-import os
-
 from PyQt5.QtWidgets import (
     QDesktopWidget,
     QWidget,
@@ -30,9 +28,9 @@ from PyQt5.QtMultimedia import QSound
 from smartpasslib import SmartPasswordManager, SmartPassword, SmartPasswordMaster
 
 from core.dialogs.edit_password_dialog import EditPasswordDialog
-from core.dialogs.password_add_dialog import AddPasswordDialog
-from core.dialogs.password_display_dialog import PasswordDisplayDialog
-from core.dialogs.password_get_dialog import GetPasswordDialog
+from core.dialogs.add_password_dialog import AddPasswordDialog
+from core.dialogs.display_password_dialog import PasswordDisplayDialog
+from core.dialogs.get_password_dialog import GetPasswordDialog
 from core.dialogs.qr_dialog import QRDialog
 from core.models.configs.main_window_config import MainWindowConfig
 from core.models.styles.main_window_styles import MainWindowStyles

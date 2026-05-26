@@ -40,7 +40,7 @@ class GetPasswordDialog(QDialog):
         self.description_text = QTextEdit()
         self.description_text.setPlainText(description)
         self.description_text.setReadOnly(True)
-        self.description_text.setMaximumHeight(60)
+        self.description_text.setMaximumHeight(40)
         self.description_text.setMinimumHeight(40)
         self.description_text.setStyleSheet("""
             QTextEdit {
@@ -108,3 +108,7 @@ class GetPasswordDialog(QDialog):
 
     def get_secret(self):
         return self.secret_input.text()
+
+    def showEvent(self, event):
+        self.secret_input.setFocus()
+        super().showEvent(event)

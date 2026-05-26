@@ -56,7 +56,7 @@ class QRDialog(QDialog):
         self.desc_text = QTextEdit()
         self.desc_text.setPlainText(self.description)
         self.desc_text.setReadOnly(True)
-        self.desc_text.setMaximumHeight(60)
+        self.desc_text.setMaximumHeight(40)
         self.desc_text.setMinimumHeight(20)
         self.desc_text.setStyleSheet("""
             QTextEdit {
@@ -89,7 +89,7 @@ class QRDialog(QDialog):
         self.key_text = QTextEdit()
         self.key_text.setPlainText(self.public_key)
         self.key_text.setReadOnly(True)
-        self.key_text.setMaximumHeight(60)
+        self.key_text.setMaximumHeight(40)
         self.key_text.setMinimumHeight(20)
         self.key_text.setStyleSheet("""
             QTextEdit {
