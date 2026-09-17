@@ -17,6 +17,7 @@ from smart_password_manager.ui.dialogs.get_password_dialog import GetPasswordDia
 from smart_password_manager.ui.dialogs.qr_dialog import QRDialog
 from smart_password_manager.ui.styles.theme_manager import ThemeManager
 from smart_password_manager.core.utils.sound_manager import SoundManager
+from smart_password_manager import __version__ as ver
 
 
 class MainWindow(QMainWindow):
@@ -24,7 +25,7 @@ class MainWindow(QMainWindow):
         super().__init__(parent)
         self.config = MainWindowConfig()
         self.smart_pass_man = SmartPasswordManager()
-        self.setWindowTitle(f'{self.config.app_name}')
+        self.setWindowTitle(f'{self.config.app_name}  v{ver}')
         self.resize(800, 600)
 
         self.setup_application_icon()
@@ -58,17 +59,13 @@ class MainWindow(QMainWindow):
         header_layout = QVBoxLayout(self.header_panel)
         header_layout.setContentsMargins(20, 15, 20, 15)
 
-        title_label = QLabel("Smart Password Manager")
+        title_label = QLabel(f"Smart Password Manager")
         title_font = QFont()
         title_font.setPointSize(18)
         title_font.setBold(True)
         title_label.setFont(title_font)
         title_label.setStyleSheet(f"color: {ThemeManager.COLORS['primary']};")
         header_layout.addWidget(title_label)
-
-        subtitle_label = QLabel("Deterministic smart password manager - same secret + same length = same password")
-        subtitle_label.setStyleSheet(f"color: {ThemeManager.COLORS['text_muted']}; font-size: 9pt;")
-        header_layout.addWidget(subtitle_label)
 
         self.main_layout.addWidget(self.header_panel)
 
