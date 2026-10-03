@@ -74,16 +74,6 @@ Smart Password Manager stores nothing. Your secrets never leave your device. Pas
 
 ---
 
-## 🔄 Breaking Change (v4.0.4)
-
-> **⚠️ This release uses [smartpasslib](https://github.com/smartlegionlab/smartpasslib) v4.0.4, which is NOT backward compatible with v2.x.x or v3.x.x**
-
-Smart passwords created with older versions **cannot be regenerated** using v4.0.4.
-
-📖 **Full migration instructions** → see [MIGRATION.md](https://github.com/smartlegionlab/smart-password-manager-desktop/blob/master/MIGRATION.md)
-
----
-
 ## Research Paradigms & Publications
 
 - **[Pointer-Based Security Paradigm](https://doi.org/10.5281/zenodo.17204738)** - Architectural Shift from Data Protection to Data Non-Existence
@@ -136,14 +126,6 @@ Configuration files are stored in:
 | Platform | Configuration Path                                                |
 |----------|:------------------------------------------------------------------|
 | Linux    | `~/.config/smart_password_manager/passwords.json`                 |
-
-**Legacy Migration**:
-- Old `~/.cases.json` files from v1.x.x/v2.x.x/v3.x.x are **NOT compatible** with v4.0.4
-- Public keys in old files use different derivation (fixed iterations, no salt)
-- These files will **not** be migrated automatically
-- If you have existing metadata, you need to recreate entries manually
-- Keep old file as backup: `~/.cases.json.v3.bak`
-- See [MIGRATION.md](MIGRATION.md) for detailed instructions
 
 ---
 
@@ -302,7 +284,6 @@ The application allows you to export password metadata to the **Smart Password M
 | `F1`           | Show help                             |
 | `Ctrl+Q`       | Exit application                      |
 | `Ctrl+N`       | Create new password                   |
-| `Ctrl+Shift+S` | Toggle sounds                         |
 | `Ctrl+/`       | Keyboard shortcuts                    |
 | `Ctrl+A`       | About                                 |
 | `Ctrl+I`       | Import passwords                      |
@@ -502,16 +483,6 @@ Smart Password Manager Desktop (Python) produces **identical passwords** to:
 - Uses same `~/.config/smart_password_manager/passwords.json` format as CLI tools
 - Export files compatible across all ecosystem tools
 - Consistent cryptographic operations across platforms
-
----
-
-## Version History
-
-| Version          | smartpasslib | Status                   | Migration Required        |
-|------------------|--------------|--------------------------|---------------------------|
-| v2.x.x and below | v2.x.x       | ❌ Deprecated/Unsupported | Must migrate to v4.x.x    |
-| v3.x.x           | v3.x.x       | ❌ Deprecated/Unsupported | Must migrate to v4.x.x    |
-| **v4.0.4+**      | **v4.0.0+**  | ✅ Current                | N/A                       |
 
 ---
 
