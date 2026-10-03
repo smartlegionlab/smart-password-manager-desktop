@@ -14,13 +14,12 @@ from smart_password_manager.ui.styles.theme_manager import ThemeManager
 
 
 class ExportImportDialog(QDialog):
-    def __init__(self, parent=None, mode="export", smart_pass_man=None, sound_manager=None):
+    def __init__(self, parent=None, mode="export", smart_pass_man=None):
         super().__init__(parent)
         self.mode = mode
         self.smart_pass_man = smart_pass_man
         self.styles = ExportImportDialogStyles()
         self.config = ExportImportDialogConfig()
-        self.sound_manager = sound_manager
         self.selected_file = None
 
         title = "Export Passwords" if mode == "export" else "Import Passwords"
@@ -50,7 +49,6 @@ class ExportImportDialog(QDialog):
         file_select_layout.addWidget(self.file_path_label)
 
         self.browse_button = QPushButton("Browse...")
-        self.browse_button.clicked.connect(self.sound_manager.play_click)
         self.browse_button.clicked.connect(self.browse_file)
         self.browse_button.setStyleSheet(ThemeManager.get_button_style('secondary'))
         file_select_layout.addWidget(self.browse_button)
@@ -61,7 +59,7 @@ class ExportImportDialog(QDialog):
 
         if mode == "import":
             warning = QLabel(
-                "⚠️ <b>Warning:</b> Importing will merge with existing passwords. "
+                "<b>Warning:</b> Importing will merge with existing passwords. "
                 "If public keys conflict, existing entries will be preserved."
             )
             warning.setWordWrap(True)
@@ -71,14 +69,12 @@ class ExportImportDialog(QDialog):
         button_layout = QHBoxLayout()
 
         self.cancel_button = QPushButton("Cancel")
-        self.cancel_button.clicked.connect(self.sound_manager.play_click)
         self.cancel_button.clicked.connect(self.reject)
         self.cancel_button.setStyleSheet(ThemeManager.get_button_style('secondary'))
         button_layout.addWidget(self.cancel_button)
 
         self.action_button = QPushButton(self._get_action_text())
         self.action_button.setDefault(True)
-        self.action_button.clicked.connect(self.sound_manager.play_click)
         self.action_button.clicked.connect(self.execute)
         self.action_button.setEnabled(False)
 
@@ -124,8 +120,6 @@ class ExportImportDialog(QDialog):
         self.layout.addWidget(options_group)
 
     def browse_file(self):
-        self.sound_manager.play_click()
-
         if self.mode == "export":
             from datetime import datetime
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -187,7 +181,6 @@ class ExportImportDialog(QDialog):
             with open(self.selected_file, 'w') as f:
                 json.dump(export_data, f, indent=indent, separators=separators)
 
-            self.sound_manager.play_notify()
             QMessageBox.information(
                 self,
                 "Export Successful",
@@ -196,7 +189,6 @@ class ExportImportDialog(QDialog):
             self.accept()
 
         except Exception as e:
-            self.sound_manager.play_error()
             QMessageBox.critical(
                 self,
                 "Export Failed",
@@ -231,8 +223,6 @@ class ExportImportDialog(QDialog):
                 except:
                     skipped += 1
 
-            self.sound_manager.play_notify()
-
             msg = f"Import completed:\n• Added: {added} new passwords\n• Skipped: {skipped} entries"
             if added > 0:
                 msg += "\n\nRefresh the main window to see new passwords."
@@ -241,14 +231,12 @@ class ExportImportDialog(QDialog):
             self.accept()
 
         except json.JSONDecodeError:
-            self.sound_manager.play_error()
             QMessageBox.critical(
                 self,
                 "Import Failed",
                 "Invalid JSON file format."
             )
         except Exception as e:
-            self.sound_manager.play_error()
             QMessageBox.critical(
                 self,
                 "Import Failed",

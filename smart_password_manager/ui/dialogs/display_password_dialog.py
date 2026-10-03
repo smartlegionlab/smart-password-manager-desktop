@@ -7,21 +7,18 @@ from smart_password_manager.ui.styles.theme_manager import ThemeManager
 
 
 class PasswordDisplayDialog(QDialog):
-    def __init__(self, parent=None, description="", password="", sound_manager=None):
+    def __init__(self, parent=None, description="", password=""):
         super().__init__(parent)
         self.setWindowTitle(f'Password for "{description}"')
         self.setMinimumWidth(450)
         self.setMaximumWidth(550)
 
         self.styles = PasswordDisplayDialogStyles()
-        self.sound_manager = sound_manager
 
         self.setStyleSheet(ThemeManager.get_input_style())
 
         self.layout = QVBoxLayout(self)
         self.layout.setSpacing(10)
-
-        self.sound_manager.play_notify()
 
         header = QLabel(f'<h3>Password Generated</h3>')
         header.setWordWrap(True)
@@ -75,7 +72,6 @@ class PasswordDisplayDialog(QDialog):
         copy_layout = QHBoxLayout()
         copy_layout.addStretch()
         self.copy_button = QPushButton("Copy to Clipboard")
-        self.copy_button.clicked.connect(self.sound_manager.play_click)
         self.copy_button.clicked.connect(self.copy_password)
         self.copy_button.setMinimumWidth(150)
         self.copy_button.setStyleSheet(ThemeManager.get_button_style('success'))
@@ -95,7 +91,6 @@ class PasswordDisplayDialog(QDialog):
 
         self.close_button = QPushButton('Close', self)
         self.close_button.setDefault(True)
-        self.close_button.clicked.connect(self.sound_manager.play_click)
         self.close_button.clicked.connect(self.accept)
         self.close_button.setMinimumWidth(100)
         self.close_button.setStyleSheet(ThemeManager.get_button_style('primary'))

@@ -59,9 +59,9 @@ class MainWindowConfig(BaseConfig):
 <hr>
 <p><b>Links:</b></p>
 <p>
-📂 <a href="{self.project_url}" style="color: #2a82da;">GitHub Repository</a><br>
-📂 <a href="{self.project_url}/blob/master/DISCLAIMER.md" style="color: #2a82da;">DISCLAIMER</a><br>
-🐛 <a href="{self.project_url}/issues" style="color: #2a82da;">Report Issues</a>
+<a href="{self.project_url}" style="color: #2a82da;">GitHub Repository</a><br>
+<a href="{self.project_url}/blob/master/DISCLAIMER.md" style="color: #2a82da;">DISCLAIMER</a><br>
+<a href="{self.project_url}/issues" style="color: #2a82da;">Report Issues</a>
 </p>
 """
 
@@ -117,7 +117,7 @@ Your secret phrase is the only key you need.
   STORAGE LOCATION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-🐧 Linux: ~/.config/smart_password_manager/passwords.json
+Linux: ~/.config/smart_password_manager/passwords.json
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   TECHNICAL FOUNDATION

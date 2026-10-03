@@ -6,7 +6,6 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtGui import QFont, QIcon, QDesktopServices
 from PyQt5.QtCore import Qt, QUrl
-from PyQt5.QtMultimedia import QSound
 from smartpasslib import SmartPasswordManager, SmartPassword, SmartPasswordMaster
 
 from smart_password_manager.core.configs.main_window_config import MainWindowConfig
@@ -16,8 +15,6 @@ from smart_password_manager.ui.dialogs.display_password_dialog import PasswordDi
 from smart_password_manager.ui.dialogs.get_password_dialog import GetPasswordDialog
 from smart_password_manager.ui.dialogs.qr_dialog import QRDialog
 from smart_password_manager.ui.styles.theme_manager import ThemeManager
-from smart_password_manager.core.utils.sound_manager import SoundManager
-from smart_password_manager import __version__ as ver
 
 
 class MainWindow(QMainWindow):
@@ -25,25 +22,13 @@ class MainWindow(QMainWindow):
         super().__init__(parent)
         self.config = MainWindowConfig()
         self.smart_pass_man = SmartPasswordManager()
-        self.setWindowTitle(f'{self.config.app_name}  v{ver}')
+        self.setWindowTitle(f'{self.config.app_name}')
         self.resize(800, 600)
 
         self.setup_application_icon()
 
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
-
-        self.click_sound = QSound("data/sounds/click.wav")
-        self.about_sound = QSound("data/sounds/about.wav")
-        self.notify_sound = QSound("data/sounds/notify.wav")
-        self.error_sound = QSound("data/sounds/error.wav")
-
-        self.sound_manager = SoundManager()
-
-        self.sound_manager.register_sound('click', self.click_sound)
-        self.sound_manager.register_sound('about', self.about_sound)
-        self.sound_manager.register_sound('notify', self.notify_sound)
-        self.sound_manager.register_sound('error', self.error_sound)
 
         self.main_layout = QVBoxLayout(central_widget)
         self.main_layout.setSpacing(10)
@@ -77,7 +62,6 @@ class MainWindow(QMainWindow):
         self.btn_add = QPushButton("+ Add")
         self.btn_add.setMinimumHeight(40)
         self.btn_add.setMinimumWidth(100)
-        self.btn_add.clicked.connect(self.sound_manager.play_click)
         self.btn_add.clicked.connect(self.add_password)
         self.btn_add.setStyleSheet(ThemeManager.get_button_style('primary'))
         top_button_layout.addWidget(self.btn_add)
@@ -85,7 +69,6 @@ class MainWindow(QMainWindow):
         self.btn_import = QPushButton("Import")
         self.btn_import.setMinimumHeight(40)
         self.btn_import.setMinimumWidth(100)
-        self.btn_import.clicked.connect(self.sound_manager.play_click)
         self.btn_import.clicked.connect(self.import_passwords)
         self.btn_import.setStyleSheet(ThemeManager.get_button_style('secondary'))
         top_button_layout.addWidget(self.btn_import)
@@ -142,7 +125,6 @@ class MainWindow(QMainWindow):
         self.btn_get = QPushButton("Get")
         self.btn_get.setMinimumHeight(40)
         self.btn_get.setMinimumWidth(100)
-        self.btn_get.clicked.connect(self.sound_manager.play_click)
         self.btn_get.clicked.connect(self.get_password_for_selected_row)
         self.btn_get.setStyleSheet(ThemeManager.get_button_style('success'))
         bottom_button_layout.addWidget(self.btn_get)
@@ -150,7 +132,6 @@ class MainWindow(QMainWindow):
         self.btn_edit = QPushButton("Edit")
         self.btn_edit.setMinimumHeight(40)
         self.btn_edit.setMinimumWidth(100)
-        self.btn_edit.clicked.connect(self.sound_manager.play_click)
         self.btn_edit.clicked.connect(self.edit_password_for_selected_row)
         self.btn_edit.setStyleSheet(ThemeManager.get_button_style('warning'))
         bottom_button_layout.addWidget(self.btn_edit)
@@ -158,7 +139,6 @@ class MainWindow(QMainWindow):
         self.btn_delete = QPushButton("Delete")
         self.btn_delete.setMinimumHeight(40)
         self.btn_delete.setMinimumWidth(100)
-        self.btn_delete.clicked.connect(self.sound_manager.play_click)
         self.btn_delete.clicked.connect(self.delete_selected_row)
         self.btn_delete.setStyleSheet(ThemeManager.get_button_style('danger'))
         bottom_button_layout.addWidget(self.btn_delete)
@@ -166,7 +146,6 @@ class MainWindow(QMainWindow):
         self.btn_qr = QPushButton("QR")
         self.btn_qr.setMinimumHeight(40)
         self.btn_qr.setMinimumWidth(100)
-        self.btn_qr.clicked.connect(self.sound_manager.play_click)
         self.btn_qr.clicked.connect(self.show_qr_for_selected)
         self.btn_qr.setStyleSheet(ThemeManager.get_button_style('info'))
         bottom_button_layout.addWidget(self.btn_qr)
@@ -174,7 +153,6 @@ class MainWindow(QMainWindow):
         self.btn_export = QPushButton("Export")
         self.btn_export.setMinimumHeight(40)
         self.btn_export.setMinimumWidth(100)
-        self.btn_export.clicked.connect(self.sound_manager.play_click)
         self.btn_export.clicked.connect(self.export_passwords)
         self.btn_export.setStyleSheet(ThemeManager.get_button_style('secondary'))
         bottom_button_layout.addWidget(self.btn_export)
@@ -210,7 +188,7 @@ class MainWindow(QMainWindow):
 
     def create_desktop_entry(self):
         from smart_password_manager.ui.dialogs.desktop_entry_dialog import DesktopEntryDialog
-        dialog = DesktopEntryDialog(self, self.sound_manager)
+        dialog = DesktopEntryDialog(self)
         dialog.exec_()
 
     def setup_menu_bar(self):
@@ -218,13 +196,11 @@ class MainWindow(QMainWindow):
 
         export_action = QAction('Export passwords...', self)
         export_action.setShortcut('Ctrl+E')
-        export_action.triggered.connect(self.sound_manager.play_click)
         export_action.triggered.connect(self.export_passwords)
         file_menu.addAction(export_action)
 
         import_action = QAction('Import passwords...', self)
         import_action.setShortcut('Ctrl+I')
-        import_action.triggered.connect(self.sound_manager.play_click)
         import_action.triggered.connect(self.import_passwords)
         file_menu.addAction(import_action)
 
@@ -239,7 +215,6 @@ class MainWindow(QMainWindow):
 
         create_pass_action = QAction('Create new password', self)
         create_pass_action.setShortcut('Ctrl+N')
-        create_pass_action.triggered.connect(self.sound_manager.play_click)
         create_pass_action.triggered.connect(self.add_password)
         passwords_menu.addAction(create_pass_action)
 
@@ -247,19 +222,16 @@ class MainWindow(QMainWindow):
 
         get_action = QAction('Get Password', self)
         get_action.setShortcut('Ctrl+G')
-        get_action.triggered.connect(self.sound_manager.play_click)
         get_action.triggered.connect(self.get_password_for_selected_row)
         passwords_menu.addAction(get_action)
 
         edit_action = QAction('Edit', self)
         edit_action.setShortcut('Ctrl+Shift+E')
-        edit_action.triggered.connect(self.sound_manager.play_click)
         edit_action.triggered.connect(self.edit_password_for_selected_row)
         passwords_menu.addAction(edit_action)
 
         qr_action = QAction('Show QR Code', self)
         qr_action.setShortcut('Ctrl+R')
-        qr_action.triggered.connect(self.sound_manager.play_click)
         qr_action.triggered.connect(self.show_qr_for_selected)
         passwords_menu.addAction(qr_action)
 
@@ -267,7 +239,6 @@ class MainWindow(QMainWindow):
 
         delete_action = QAction('Delete', self)
         delete_action.setShortcut('Del')
-        delete_action.triggered.connect(self.sound_manager.play_click)
         delete_action.triggered.connect(self.delete_selected_row)
         passwords_menu.addAction(delete_action)
 
@@ -275,15 +246,6 @@ class MainWindow(QMainWindow):
         refresh_action.setShortcut('F5')
         refresh_action.triggered.connect(self.load_passwords)
         passwords_menu.addAction(refresh_action)
-
-        sounds_menu = self.menu_bar.addMenu('Sounds')
-        sound_action = QAction('Enable Sounds', self)
-        sound_action.setCheckable(True)
-        sound_action.setChecked(False)
-        sound_action.setShortcut('Ctrl+Shift+S')
-        sound_action.triggered.connect(self.toggle_sounds)
-        sounds_menu.addAction(sound_action)
-        self.sound_manager.sound_enabled_changed.connect(sound_action.setChecked)
 
         tools_menu = self.menu_bar.addMenu('Tools')
         create_shortcut_action = QAction('Create Desktop Shortcut', self)
@@ -295,13 +257,11 @@ class MainWindow(QMainWindow):
 
         help_action = QAction('Help', self)
         help_action.setShortcut('F1')
-        help_action.triggered.connect(self.sound_manager.play_click)
         help_action.triggered.connect(self.show_help)
         help_menu.addAction(help_action)
 
         shortcuts_action = QAction('Keyboard shortcuts', self)
         shortcuts_action.setShortcut('Ctrl+/')
-        shortcuts_action.triggered.connect(self.sound_manager.play_click)
         shortcuts_action.triggered.connect(self._show_keyboard_shortcuts)
         help_menu.addAction(shortcuts_action)
 
@@ -321,7 +281,6 @@ class MainWindow(QMainWindow):
 
         about_action = QAction('About', self)
         about_action.setShortcut('Ctrl+A')
-        about_action.triggered.connect(self.sound_manager.play_click)
         about_action.triggered.connect(self.show_about)
         help_menu.addAction(about_action)
 
@@ -454,7 +413,6 @@ class MainWindow(QMainWindow):
         self.load_passwords()
 
     def show_help(self):
-        self.sound_manager.play_notify()
         dialog = QDialog(self)
         dialog.setWindowTitle('Smart Password Manager Help')
         dialog.setMinimumWidth(650)
@@ -515,8 +473,6 @@ class MainWindow(QMainWindow):
         dialog.exec_()
 
     def show_about(self):
-        self.sound_manager.play_about()
-
         dialog = QDialog(self)
         dialog.setWindowTitle("About Smart Password Manager")
         dialog.setMinimumWidth(700)
@@ -532,17 +488,12 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout(dialog)
         layout.setSpacing(10)
 
-        title_layout = QHBoxLayout()
-        icon_label = QLabel("🔐")
-        icon_label.setStyleSheet("font-size: 32px;")
-        title_layout.addWidget(icon_label)
-
         title_label = QLabel(
-            f"<h1 style='color: {ThemeManager.COLORS['primary']}; margin: 0;'>{self.config.app_name}</h1>")
+            f"<h1 style='color: {ThemeManager.COLORS['primary']}; margin: 0;'>{self.config.app_name}</h1>"
+        )
         title_label.setTextFormat(Qt.TextFormat.RichText)
-        title_layout.addWidget(title_label)
-        title_layout.addStretch()
-        layout.addLayout(title_layout)
+        title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(title_label)
 
         version_label = QLabel(f"<b>Version {self.config.version}</b>")
         version_label.setTextFormat(Qt.TextFormat.RichText)
@@ -683,7 +634,6 @@ class MainWindow(QMainWindow):
         dialog.exec_()
 
     def show_disclaimer(self):
-        self.sound_manager.play_notify()
         dialog = QDialog(self)
         dialog.setWindowTitle("Disclaimer")
         dialog.setMinimumWidth(700)
@@ -746,7 +696,6 @@ class MainWindow(QMainWindow):
         dialog.exec_()
 
     def show_license(self):
-        self.sound_manager.play_notify()
         dialog = QDialog(self)
         dialog.setWindowTitle("License - BSD 3-Clause")
         dialog.setMinimumWidth(700)
@@ -809,8 +758,6 @@ class MainWindow(QMainWindow):
         dialog.exec_()
 
     def _show_keyboard_shortcuts(self):
-        self.sound_manager.play_notify()
-
         dialog = QDialog(self)
         dialog.setWindowTitle("Keyboard Shortcuts")
         dialog.setMinimumWidth(600)
@@ -873,7 +820,6 @@ class MainWindow(QMainWindow):
         dialog.exec_()
 
     def show_qr(self, public_key):
-        self.sound_manager.play_notify()
         smart_password = self.smart_pass_man.get_smart_password(public_key)
         if not smart_password:
             self.show_status_message('Password metadata not found', 2000)
@@ -884,17 +830,15 @@ class MainWindow(QMainWindow):
             description=smart_password.description,
             public_key=smart_password.public_key,
             length=smart_password.length,
-            sound_manager=self.sound_manager
         )
         dialog.exec_()
 
     def edit_password(self, public_key):
-        self.sound_manager.play_notify()
         smart_password = self.smart_pass_man.get_smart_password(public_key)
         if not smart_password:
             QMessageBox.warning(self, 'Error', 'Password metadata not found.')
             return
-        dialog = EditPasswordDialog(self, smart_password.description, smart_password.length, self.sound_manager)
+        dialog = EditPasswordDialog(self, smart_password.description, smart_password.length)
         if dialog.exec_() == QDialog.Accepted:
             new_description, new_length = dialog.get_values()
             if not new_description:
@@ -970,7 +914,6 @@ class MainWindow(QMainWindow):
         return -1
 
     def remove_password(self, public_key):
-        self.sound_manager.play_notify()
         row = self.find_row_by_public_key(public_key)
         if row != -1:
             description = self.table_widget.item(row, 0).text()
@@ -1071,8 +1014,7 @@ class MainWindow(QMainWindow):
                 )
 
     def add_password(self):
-        self.sound_manager.play_notify()
-        dialog = AddPasswordDialog(self, self.sound_manager)
+        dialog = AddPasswordDialog(self)
         if dialog.exec_() == QDialog.Accepted:
             description, secret, length = dialog.get_inputs()
             if not description or not secret:
@@ -1096,21 +1038,20 @@ class MainWindow(QMainWindow):
                 self.smart_pass_man.add_smart_password(smart_password)
                 self.load_passwords()
                 self.show_status_message(f'Password created for "{description}"', 3000)
-                display_dialog = PasswordDisplayDialog(self, description, password, self.sound_manager)
+                display_dialog = PasswordDisplayDialog(self, description, password)
                 display_dialog.exec_()
             except Exception as e:
                 self.show_status_message('Failed to create password', 3000)
                 QMessageBox.critical(self, 'Error', f'Failed to create password:\n{str(e)}')
 
     def get_password(self, public_key):
-        self.sound_manager.play_notify()
         smart_password = self.smart_pass_man.get_smart_password(public_key)
         if not smart_password:
             self.show_status_message('Password metadata not found', 3000)
             QMessageBox.critical(self, 'Error', 'Password metadata not found.')
             return
         description = smart_password.description
-        dialog = GetPasswordDialog(self, description, self.sound_manager)
+        dialog = GetPasswordDialog(self, description)
         if dialog.exec_() == QDialog.Accepted:
             secret = dialog.get_secret()
             if not secret:
@@ -1122,7 +1063,7 @@ class MainWindow(QMainWindow):
                 if is_valid:
                     password = SmartPasswordMaster.generate_smart_password(secret=secret, length=smart_password.length)
                     self.show_status_message(f'Password retrieved for "{description}"', 3000)
-                    display_dialog = PasswordDisplayDialog(self, description, password, self.sound_manager)
+                    display_dialog = PasswordDisplayDialog(self, description, password)
                     display_dialog.exec_()
                 else:
                     self.show_status_message('Invalid secret phrase', 3000)
@@ -1131,22 +1072,15 @@ class MainWindow(QMainWindow):
                 self.show_status_message('Failed to generate password', 3000)
                 QMessageBox.critical(self, 'Error', f'Failed to generate password:\n{str(e)}')
 
-    def toggle_sounds(self, enabled: bool):
-        self.sound_manager.set_enabled(enabled)
-        status = "enabled" if enabled else "disabled"
-        self.show_status_message(f'Sounds {status}', 2000)
-
     def export_passwords(self):
         from smart_password_manager.ui.dialogs.export_import_dialog import ExportImportDialog
-        dialog = ExportImportDialog(self, mode="export", smart_pass_man=self.smart_pass_man,
-                                    sound_manager=self.sound_manager)
+        dialog = ExportImportDialog(self, mode="export", smart_pass_man=self.smart_pass_man)
         if dialog.exec_() == QDialog.Accepted:
             self.show_status_message('Passwords exported successfully', 3000)
 
     def import_passwords(self):
         from smart_password_manager.ui.dialogs.export_import_dialog import ExportImportDialog
-        dialog = ExportImportDialog(self, mode="import", smart_pass_man=self.smart_pass_man,
-                                    sound_manager=self.sound_manager)
+        dialog = ExportImportDialog(self, mode="import", smart_pass_man=self.smart_pass_man)
         if dialog.exec_() == QDialog.Accepted:
             self.load_passwords()
             self.show_status_message(f'Passwords imported successfully. Total: {self.smart_pass_man.password_count}',
@@ -1165,7 +1099,6 @@ class MainWindow(QMainWindow):
             super().keyPressEvent(event)
 
     def closeEvent(self, event):
-        self.sound_manager.play_error()
         if len(self.smart_pass_man.passwords) > 0:
             reply = QMessageBox.question(self, 'Exit', 'Are you sure you want to exit?',
                                          QMessageBox.Yes | QMessageBox.No, QMessageBox.No)

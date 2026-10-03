@@ -7,13 +7,12 @@ from smart_password_manager.ui.styles.theme_manager import ThemeManager
 
 
 class AddPasswordDialog(QDialog):
-    def __init__(self, parent=None, sound_manager=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle('Create Smart Password')
         self.setMinimumWidth(400)
 
         self.styles = PasswordInputDialogStyles()
-        self.sound_manager = sound_manager
         self.max_length = 255
 
         self.setStyleSheet(
@@ -65,7 +64,6 @@ class AddPasswordDialog(QDialog):
         self.show_secret_checkbox.setCheckable(True)
         self.show_secret_checkbox.setMaximumWidth(100)
         self.show_secret_checkbox.setStyleSheet(ThemeManager.get_button_style('secondary'))
-        self.show_secret_checkbox.clicked.connect(self.sound_manager.play_click)
         self.show_secret_checkbox.clicked.connect(self.toggle_secret_visibility)
         secret_layout.addWidget(self.show_secret_checkbox, alignment=Qt.AlignmentFlag.AlignCenter)
 
@@ -93,14 +91,12 @@ class AddPasswordDialog(QDialog):
 
         button_layout = QHBoxLayout()
         self.cancel_button = QPushButton('Cancel', self)
-        self.cancel_button.clicked.connect(self.sound_manager.play_click)
         self.cancel_button.clicked.connect(self.reject)
         self.cancel_button.setStyleSheet(ThemeManager.get_button_style('secondary'))
         button_layout.addWidget(self.cancel_button)
 
         self.submit_button = QPushButton('Create Password', self)
         self.submit_button.setDefault(True)
-        self.submit_button.clicked.connect(self.sound_manager.play_click)
         self.submit_button.clicked.connect(self.accept)
         self.submit_button.setStyleSheet(ThemeManager.get_button_style('primary'))
         button_layout.addWidget(self.submit_button)
@@ -126,16 +122,16 @@ class AddPasswordDialog(QDialog):
         remaining = self.max_length - current
 
         if remaining < 0:
-            self.counter_label.setText(f"🔴 {current}/{self.max_length} EXCEEDED!")
+            self.counter_label.setText(f"{current}/{self.max_length} EXCEEDED!")
             self.counter_label.setStyleSheet("color: #dc3545; font-size: 10px; font-weight: bold;")
         elif remaining <= 10:
-            self.counter_label.setText(f"⚠️ {current}/{self.max_length} - {remaining} chars left")
+            self.counter_label.setText(f"{current}/{self.max_length} - {remaining} chars left")
             self.counter_label.setStyleSheet("color: #ff9800; font-size: 10px; font-weight: bold;")
         elif remaining <= 30:
-            self.counter_label.setText(f"📝 {current}/{self.max_length} - {remaining} chars left")
+            self.counter_label.setText(f"{current}/{self.max_length} - {remaining} chars left")
             self.counter_label.setStyleSheet("color: #ffc107; font-size: 10px;")
         else:
-            self.counter_label.setText(f"📝 {current}/{self.max_length}")
+            self.counter_label.setText(f"{current}/{self.max_length}")
             self.counter_label.setStyleSheet("color: #6c757d; font-size: 10px;")
 
     def toggle_secret_visibility(self):

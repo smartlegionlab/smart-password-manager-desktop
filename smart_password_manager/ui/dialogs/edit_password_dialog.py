@@ -7,15 +7,13 @@ from smart_password_manager.ui.styles.theme_manager import ThemeManager
 
 
 class EditPasswordDialog(QDialog):
-    def __init__(self, parent=None, current_description="",
-                 current_length=16, sound_manager=None):
+    def __init__(self, parent=None, current_description="", current_length=16):
         super().__init__(parent)
         self.current_length = current_length
         self.max_length = 255
         self.setWindowTitle('Edit Password Metadata')
         self.setMinimumWidth(400)
         self.styles = EditPasswordDialogStyles()
-        self.sound_manager = sound_manager
 
         self.setStyleSheet(
             ThemeManager.get_input_style() +
@@ -79,14 +77,12 @@ class EditPasswordDialog(QDialog):
 
         button_layout = QHBoxLayout()
         self.cancel_button = QPushButton('Cancel', self)
-        self.cancel_button.clicked.connect(self.sound_manager.play_click)
         self.cancel_button.clicked.connect(self.reject)
         self.cancel_button.setStyleSheet(ThemeManager.get_button_style('secondary'))
         button_layout.addWidget(self.cancel_button)
 
         self.submit_button = QPushButton('Update', self)
         self.submit_button.setDefault(True)
-        self.submit_button.clicked.connect(self.sound_manager.play_click)
         self.submit_button.clicked.connect(self.accept)
         self.submit_button.setStyleSheet(ThemeManager.get_button_style('warning'))
         button_layout.addWidget(self.submit_button)
@@ -112,16 +108,16 @@ class EditPasswordDialog(QDialog):
         remaining = self.max_length - current
 
         if remaining < 0:
-            self.counter_label.setText(f"🔴 {current}/{self.max_length} EXCEEDED!")
+            self.counter_label.setText(f"{current}/{self.max_length} EXCEEDED!")
             self.counter_label.setStyleSheet("color: #dc3545; font-size: 10px; font-weight: bold;")
         elif remaining <= 10:
-            self.counter_label.setText(f"⚠️ {current}/{self.max_length} - {remaining} chars left")
+            self.counter_label.setText(f"{current}/{self.max_length} - {remaining} chars left")
             self.counter_label.setStyleSheet("color: #ff9800; font-size: 10px; font-weight: bold;")
         elif remaining <= 30:
-            self.counter_label.setText(f"📝 {current}/{self.max_length} - {remaining} chars left")
+            self.counter_label.setText(f"{current}/{self.max_length} - {remaining} chars left")
             self.counter_label.setStyleSheet("color: #ffc107; font-size: 10px;")
         else:
-            self.counter_label.setText(f"📝 {current}/{self.max_length}")
+            self.counter_label.setText(f"{current}/{self.max_length}")
             self.counter_label.setStyleSheet("color: #6c757d; font-size: 10px;")
 
     def validate_description(self, text):

@@ -11,13 +11,12 @@ from smart_password_manager.ui.styles.theme_manager import ThemeManager
 
 class QRDialog(QDialog):
     def __init__(self, parent=None, description="",
-                 public_key="", length=16, sound_manager=None):
+                 public_key="", length=16):
         super().__init__(parent)
         self.setWindowTitle("QR Code Export")
         self.setMinimumWidth(500)
         self.setMaximumWidth(550)
         self.setModal(True)
-        self.sound_manager = sound_manager
 
         self.description = description
         self.public_key = public_key
@@ -165,9 +164,6 @@ class QRDialog(QDialog):
             self.qr_label.setStyleSheet("color: red;")
 
     def copy_json(self):
-        if self.sound_manager:
-            self.sound_manager.play_click()
-
         clipboard = QApplication.clipboard()
         clipboard.setText(json.dumps(self.qr_data, separators=(',', ':')))
 
@@ -181,9 +177,6 @@ class QRDialog(QDialog):
             self.parent().show_status_message("QR data copied to clipboard", 2000)
 
     def copy_description(self):
-        if self.sound_manager:
-            self.sound_manager.play_click()
-
         clipboard = QApplication.clipboard()
         clipboard.setText(self.description)
 
@@ -191,9 +184,6 @@ class QRDialog(QDialog):
             self.parent().show_status_message("Description copied to clipboard", 2000)
 
     def copy_public_key(self):
-        if self.sound_manager:
-            self.sound_manager.play_click()
-
         clipboard = QApplication.clipboard()
         clipboard.setText(self.public_key)
 

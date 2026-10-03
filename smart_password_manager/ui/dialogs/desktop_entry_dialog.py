@@ -11,12 +11,11 @@ from smart_password_manager.ui.styles.theme_manager import ThemeManager
 
 
 class DesktopEntryDialog(QDialog):
-    def __init__(self, parent=None, sound_manager=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.parent = parent
         self.styles = DesktopEntryDialogStyles()
         self.config = DesktopEntryDialogConfig()
-        self.sound_manager = sound_manager
         self.setWindowTitle("Create Desktop Entry")
         self.setMinimumWidth(550)
         self.setModal(True)
@@ -72,7 +71,7 @@ class DesktopEntryDialog(QDialog):
         layout.addWidget(options_group)
 
         note_label = QLabel(
-            "📌 <b>Note:</b> After creation, you may need to log out and back in "
+            "<b>Note:</b> After creation, you may need to log out and back in "
             "or restart your desktop for the entry to appear in the menu."
         )
         note_label.setTextFormat(Qt.TextFormat.RichText)
@@ -103,9 +102,6 @@ class DesktopEntryDialog(QDialog):
             self.move(x, y)
 
     def create_desktop_entry(self):
-        if self.sound_manager:
-            self.sound_manager.play_click()
-
         created_files = []
         errors = []
 
