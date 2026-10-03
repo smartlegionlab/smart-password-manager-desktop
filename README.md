@@ -1,8 +1,8 @@
-# Smart Password Manager Desktop <sup>v4.0.4</sup>
+# Smart Password Manager Desktop <sup>v4.1.0</sup>
 
 ---
 
-**Cross-platform desktop manager for deterministic smart passwords. Generate, manage, and retrieve passwords without storing them. Your secret phrase is the only key you need.**
+**Linux desktop manager for deterministic smart passwords. Generate, manage, and retrieve passwords without storing them. Your secret phrase is the only key you need.**
 
 **Decentralized by Design**: Unlike traditional password managers that store encrypted vaults on central servers, 
 Smart Password Manager stores nothing. Your secrets never leave your device. Passwords are regenerated on-demand — 
@@ -85,7 +85,7 @@ Smart Password Manager stores nothing. Your secrets never leave your device. Pas
 
 Powered by [**smartpasslib**](https://github.com/smartlegionlab/smartpasslib) — The core library for deterministic password generation.
 
-**Key derivation (same as Python/JS/Kotlin/Go/C# versions v4.0.4):**
+**Key derivation:**
 
 | Key Type    | Iterations              | Purpose                                               |
 |-------------|-------------------------|-------------------------------------------------------|
@@ -129,30 +129,137 @@ Configuration files are stored in:
 
 ---
 
-## Installation & Quick Start
+## Installation
 
-### Prerequisites
-- **Python 3.7+** required
-- **Git** for cloning repository
+There are **two independent ways** to use this application:
 
-### Quick Installation
+- **Run from source** — clone the repo, create a virtual environment, launch manually. Nothing is installed system-wide.
+- **Install system-wide** — one command creates a menu entry and (optionally) a Desktop shortcut.
+
+Choose one. They are not meant to be combined.
+
+---
+
+### Option 1 — Run from Source (no system install)
+
+Use this if you just want to try the app or run it manually from a folder.
+
+**Requirements:** Python 3.7+, git.
+
 ```bash
-# Clone repository
+# 1. Clone the repository
 git clone https://github.com/smartlegionlab/smart-password-manager-desktop.git
 cd smart-password-manager-desktop
 
-# Create virtual environment (recommended)
-python -m venv venv
+# 2. Create a virtual environment
+python3 -m venv venv
 
-# Activate virtual environment
+# 3. Activate it
 source venv/bin/activate
 
-# Install dependencies
+# 4. Install dependencies
 pip install -r requirements.txt
 
-# Launch application
+# 5. Launch the app
 python app.py
 ```
+
+To run it again later:
+
+```bash
+cd smart-password-manager-desktop
+source venv/bin/activate
+python app.py
+```
+
+Nothing is installed system-wide. The app runs from this folder.
+
+---
+
+### Option 2 — Install System-Wide (recommended)
+
+Use this if you want the app in your application menu and (optionally) on your Desktop.
+
+**Requirements:** Python 3.7+, git, curl, Linux desktop with `.desktop` support.
+
+#### One-command install
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/smartlegionlab/smart-password-manager-desktop/master/install.sh | bash
+```
+
+**What the installer does:**
+
+1. Asks for confirmation — shows a plan before touching anything.
+2. Downloads the source code from GitHub.
+3. Installs the application to `~/.local/share/smart-password-manager/`.
+   No root, no sudo — everything lives inside your home directory.
+4. Creates a dedicated Python virtual environment at
+   `~/.local/share/smart-password-manager/venv/` and installs dependencies into it.
+5. Registers the app in your desktop environment by creating
+   `~/.local/share/applications/smart-password-manager.desktop`.
+   The `.desktop` file contains absolute paths to the venv Python and to
+   `app.py`, so no `PATH` edits, no `source venv/bin/activate`, and no
+   console commands are required to launch the app.
+6. Optionally creates a shortcut on your Desktop
+   (`~/Desktop/smart-password-manager.desktop`, or the path reported by
+   `xdg-user-dir DESKTOP`). The installer will ask before doing this.
+7. Refreshes the desktop database so the menu entry appears without a full re-login on most systems.
+
+**Launch after install:**
+- Application menu → **Smart Password Manager**
+- Desktop shortcut (if you chose to create one)
+
+**Notes:**
+- On GNOME (default on Ubuntu), desktop icons may be hidden by default. Enable Desktop Icons in GNOME Tweaks to see the shortcut.
+- The Desktop shortcut may show an **"Unsecured Application Launcher"** warning. Right-click → **Allow Launching** (one-time action).
+- If the menu entry does not appear immediately, log out and back in.
+
+#### Alternative — install from a cloned repo
+
+If you already cloned the repository, you can run the installer locally:
+
+```bash
+cd smart-password-manager-desktop
+./install.sh
+```
+
+It works the same way. It ignores any local `venv/` and creates its own under `~/.local/share/smart-password-manager/venv/`.
+
+---
+
+### Uninstall
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/smartlegionlab/smart-password-manager-desktop/master/uninstall.sh | bash
+```
+
+**What the uninstaller removes:**
+- `~/.local/share/smart-password-manager/` — the application and its venv
+- `~/.local/share/applications/smart-password-manager.desktop` — the menu entry
+- `~/Desktop/smart-password-manager.desktop` — the Desktop shortcut (if present)
+
+**What the uninstaller never touches:**
+- `~/.config/smart_password_manager/passwords.json` — your password metadata.
+  It is your data. Only you decide what to do with it.
+
+If you want to remove your data as well, run after uninstall:
+
+```bash
+rm -rf ~/.config/smart_password_manager
+```
+
+---
+
+### Installation Paths
+
+| Item                           | Path                                                          |
+|--------------------------------|---------------------------------------------------------------|
+| Application files              | `~/.local/share/smart-password-manager/`                      |
+| Virtual environment            | `~/.local/share/smart-password-manager/venv/`                 |
+| Application menu entry         | `~/.local/share/applications/smart-password-manager.desktop`  |
+| Desktop shortcut (optional)    | `~/Desktop/smart-password-manager.desktop`                    |
+| User data (passwords metadata) | `~/.config/smart_password_manager/passwords.json`             |
 
 ---
 
@@ -226,6 +333,10 @@ python app.py
 ---
 
 ### Desktop Integration (Linux)
+
+> **Note:** If you installed the app via `install.sh`, the application menu
+> entry is already created automatically. The in-app option described below
+> is useful when you run the app manually from a custom location.
 
 **Creating Application Shortcuts:**
 
@@ -400,7 +511,7 @@ Length Strategy:
 #### Best Practices:
 1. **Unique per service** - Different secret for each account type
 2. **Memorable but complex** - Phrases you can remember
-3. **Case-sensitive** - v4.0.4 enforces exact case matching
+3. **Case-sensitive** - exact case matching is enforced
 4. **No digital storage** - Keep only in memory
 5. **Backup plan** - Physical written backup in secure location
 6. **Export regularly** - Backup metadata after adding new passwords
@@ -438,28 +549,13 @@ Length Strategy:
 
 ---
 
-## Cross-Platform Compatibility
-
-Smart Password Manager Desktop (Python) produces **identical passwords** to:
-
-| Platform         | Application                                                                             |
-|------------------|-----------------------------------------------------------------------------------------|
-| Python CLI       | [CLI PassMan](https://github.com/smartlegionlab/clipassman)                             |
-| Python CLI Gen   | [CLI PassGen](https://github.com/smartlegionlab/clipassgen)                             |
-| Desktop (C#)     | [Desktop Manager](https://github.com/smartlegionlab/SmartPasswordManagerCsharpDesktop)  |
-| CLI C#           | [CLI Manager (C#)](https://github.com/smartlegionlab/SmartPasswordManagerCsharpCli)     |
-| CLI Generator C# | [CLI Generator (C#)](https://github.com/smartlegionlab/SmartPasswordGeneratorCsharpCli) |
-| Web              | [Web Manager](https://github.com/smartlegionlab/smart-password-manager-web)             |
-| Android          | [Android Manager](https://github.com/smartlegionlab/smart-password-manager-android)     |
-
-**Cross-platform data transfer:** 
-- **QR codes** - Transfer password metadata from Desktop to Android app seamlessly
-- **Export/Import** - JSON export/import works across all platforms (Desktop, Web, CLI, Android)
-
 ## Ecosystem
+
+[Smart Passwords Ecosystem](https://smartlegionlab.github.io/ecosystems/smart-passwords-ecosystem.html)
 
 **Core Libraries:**
 - **[smartpasslib](https://github.com/smartlegionlab/smartpasslib)** - Python
+- **[smartpasslib-rs](https://github.com/smartlegionlab/smartpasslib-rs)** - Rust
 - **[smartpasslib-js](https://github.com/smartlegionlab/smartpasslib-js)** - JavaScript
 - **[smartpasslib-kotlin](https://github.com/smartlegionlab/smartpasslib-kotlin)** - Kotlin
 - **[smartpasslib-go](https://github.com/smartlegionlab/smartpasslib-go)** - Go
