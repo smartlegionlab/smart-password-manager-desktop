@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-APP_NAME="Smart Password Manager"
 APP_ID="smart-password-manager"
 INSTALL_DIR="$HOME/.local/share/$APP_ID"
 APPS_DIR="$HOME/.local/share/applications"
@@ -32,23 +31,13 @@ banner() {
 
 banner
 
-echo "This uninstaller will remove:"
-echo "  - Application files:   $INSTALL_DIR"
-echo "  - Menu entry:          $MENU_ENTRY"
-echo "  - Desktop shortcut:    ~/Desktop/$DESKTOP_FILE  (if exists)"
+echo "Will remove:"
+echo "  - Application:      $INSTALL_DIR"
+echo "  - Menu entry:       $MENU_ENTRY"
+echo "  - Desktop shortcut: ~/Desktop/$DESKTOP_FILE"
 echo ""
 echo -e "${BOLD}${GREEN}Your password metadata is NOT touched.${NC}"
-echo "It stays safe in:"
 echo "  $USER_DATA_FILE"
-echo ""
-echo "If you want to remove your data as well, do it manually after uninstall:"
-echo "  rm -rf $USER_DATA_DIR"
-echo ""
-read -r -p "Continue with uninstall? [y/N]: " CONFIRM < /dev/tty
-case "$CONFIRM" in
-    [yY]*) ;;
-    *) echo "Aborted."; exit 0 ;;
-esac
 echo ""
 
 step "Removing application files..."
@@ -56,7 +45,7 @@ if [ -d "$INSTALL_DIR" ]; then
     rm -rf "$INSTALL_DIR"
     info "Removed: $INSTALL_DIR"
 else
-    warn "Not found (already removed?): $INSTALL_DIR"
+    warn "Not found: $INSTALL_DIR"
 fi
 
 step "Removing menu entry..."
@@ -64,7 +53,7 @@ if [ -f "$MENU_ENTRY" ]; then
     rm -f "$MENU_ENTRY"
     info "Removed: $MENU_ENTRY"
 else
-    warn "Not found (already removed?): $MENU_ENTRY"
+    warn "Not found: $MENU_ENTRY"
 fi
 
 step "Removing Desktop shortcut..."
@@ -74,7 +63,7 @@ if [ -f "$DESKTOP_DIR/$DESKTOP_FILE" ]; then
     rm -f "$DESKTOP_DIR/$DESKTOP_FILE"
     info "Removed: $DESKTOP_DIR/$DESKTOP_FILE"
 else
-    warn "Not found (already removed?): $DESKTOP_DIR/$DESKTOP_FILE"
+    warn "Not found: $DESKTOP_DIR/$DESKTOP_FILE"
 fi
 
 if command -v update-desktop-database >/dev/null 2>&1; then
@@ -82,19 +71,8 @@ if command -v update-desktop-database >/dev/null 2>&1; then
 fi
 
 echo ""
-echo -e "${BOLD}${GREEN}==============================================${NC}"
 echo -e "${BOLD}${GREEN}  Uninstall complete${NC}"
-echo -e "${BOLD}${GREEN}==============================================${NC}"
 echo ""
-echo -e "${BOLD}What was removed:${NC}"
-echo "  Application files, menu entry, and Desktop shortcut."
-echo ""
-echo -e "${BOLD}What was kept:${NC}"
-echo "  Your password metadata:"
-echo "    $USER_DATA_FILE"
-echo ""
-echo "To delete your data as well, run:"
-echo "  rm -rf $USER_DATA_DIR"
-echo ""
-echo -e "${YELLOW}Note:${NC} If the menu entry still appears, log out and back in."
+echo "  Kept: $USER_DATA_FILE"
+echo "  To delete data too: rm -rf $USER_DATA_DIR"
 echo ""
