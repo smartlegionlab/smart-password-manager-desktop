@@ -134,7 +134,7 @@ Configuration files are stored in:
 There are **two independent ways** to use this application:
 
 - **Run from source** — clone the repo, create a virtual environment, launch manually. Nothing is installed system-wide.
-- **Install system-wide** — one command creates a menu entry and (optionally) a Desktop shortcut.
+- **Install system-wide** — one command creates a menu entry. Desktop shortcut is opt-in.
 
 Choose one. They are not meant to be combined.
 
@@ -178,7 +178,7 @@ Nothing is installed system-wide. The app runs from this folder.
 
 ### Option 2 — Install System-Wide (recommended)
 
-Use this if you want the app in your application menu and (optionally) on your Desktop.
+Use this if you want the app in your application menu.
 
 **Requirements:** Python 3.7+, git, curl, Linux desktop with `.desktop` support.
 
@@ -190,25 +190,51 @@ curl -fsSL https://raw.githubusercontent.com/smartlegionlab/smart-password-manag
 
 **What the installer does:**
 
-1. Asks for confirmation — shows a plan before touching anything.
-2. Downloads the source code from GitHub.
-3. Installs the application to `~/.local/share/smart-password-manager/`.
+1. Downloads the source code from GitHub.
+2. Installs the application to `~/.local/share/smart-password-manager/`.
    No root, no sudo — everything lives inside your home directory.
-4. Creates a dedicated Python virtual environment at
+3. Creates a dedicated Python virtual environment at
    `~/.local/share/smart-password-manager/venv/` and installs dependencies into it.
-5. Registers the app in your desktop environment by creating
+4. Registers the app in your desktop environment by creating
    `~/.local/share/applications/smart-password-manager.desktop`.
    The `.desktop` file contains absolute paths to the venv Python and to
    `app.py`, so no `PATH` edits, no `source venv/bin/activate`, and no
    console commands are required to launch the app.
-6. Optionally creates a shortcut on your Desktop
-   (`~/Desktop/smart-password-manager.desktop`, or the path reported by
-   `xdg-user-dir DESKTOP`). The installer will ask before doing this.
-7. Refreshes the desktop database so the menu entry appears without a full re-login on most systems.
+5. Refreshes the desktop database so the menu entry appears without a full re-login on most systems.
 
 **Launch after install:**
 - Application menu → **Smart Password Manager**
-- Desktop shortcut (if you chose to create one)
+
+**Desktop shortcut (opt-in):**
+
+By default, no Desktop shortcut is created. This is intentional — on GNOME
+(default on Ubuntu), desktop icons are hidden by default, which would make
+a shortcut invisible and confusing.
+
+To also create a Desktop shortcut during install, pass the
+`SPM_CREATE_DESKTOP_SHORTCUT=1` environment variable to **bash** — the
+second command in the pipeline:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/smartlegionlab/smart-password-manager-desktop/master/install.sh | SPM_CREATE_DESKTOP_SHORTCUT=1 bash
+```
+
+Or export it first, then run the normal installer:
+
+```bash
+export SPM_CREATE_DESKTOP_SHORTCUT=1
+curl -fsSL https://raw.githubusercontent.com/smartlegionlab/smart-password-manager-desktop/master/install.sh | bash
+```
+
+> **Note:** Writing `SPM_CREATE_DESKTOP_SHORTCUT=1 curl ... | bash` does
+> **not** work — in a shell pipeline, an environment variable prefix applies
+> only to the command on the **left** side of the `|`. The variable never
+> reaches `bash`, which is on the right side. Pass it to `bash` directly, or
+> `export` it beforehand.
+
+Alternatively, after install, open the app and use
+**File → Create Desktop Entry** — it supports both Application Menu and
+Desktop locations and shows exactly what it will do.
 
 **Notes:**
 - On GNOME (default on Ubuntu), desktop icons may be hidden by default. Enable Desktop Icons in GNOME Tweaks to see the shortcut.
@@ -258,7 +284,7 @@ rm -rf ~/.config/smart_password_manager
 | Application files              | `~/.local/share/smart-password-manager/`                      |
 | Virtual environment            | `~/.local/share/smart-password-manager/venv/`                 |
 | Application menu entry         | `~/.local/share/applications/smart-password-manager.desktop`  |
-| Desktop shortcut (optional)    | `~/Desktop/smart-password-manager.desktop`                    |
+| Desktop shortcut (opt-in)      | `~/Desktop/smart-password-manager.desktop`                    |
 | User data (passwords metadata) | `~/.config/smart_password_manager/passwords.json`             |
 
 ---
@@ -336,7 +362,8 @@ rm -rf ~/.config/smart_password_manager
 
 > **Note:** If you installed the app via `install.sh`, the application menu
 > entry is already created automatically. The in-app option described below
-> is useful when you run the app manually from a custom location.
+> is useful when you run the app manually from a custom location, or when
+> you want to add a Desktop shortcut on demand.
 
 **Creating Application Shortcuts:**
 
