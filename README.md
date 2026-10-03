@@ -363,7 +363,10 @@ rm -rf ~/.config/smart_password_manager
 > **Note:** If you installed the app via `install.sh`, the application menu
 > entry is already created automatically. The in-app option described below
 > is useful when you run the app manually from a custom location, or when
-> you want to add a Desktop shortcut on demand.
+> you want to add a Desktop shortcut on demand. It is also the recommended
+> way for development: it creates a shortcut pointing to the **currently
+> running instance** (your working copy), not to a copy under
+> `~/.local/share/`.
 
 **Creating Application Shortcuts:**
 
