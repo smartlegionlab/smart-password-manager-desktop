@@ -1,12 +1,6 @@
 #!/bin/bash
-# Smart Password Manager Desktop — Installer
-# Usage:
-#   Local:  ./install.sh
-#   Remote: curl -fsSL https://raw.githubusercontent.com/smartlegionlab/smart-password-manager-desktop/master/install.sh | bash
-
 set -e
 
-# --- Config ---
 REPO_URL="https://github.com/smartlegionlab/smart-password-manager-desktop.git"
 APP_NAME="Smart Password Manager"
 APP_ID="smart-password-manager"
@@ -18,7 +12,6 @@ DESKTOP_FILE="$APP_ID.desktop"
 USER_DATA_DIR="$HOME/.config/smart_password_manager"
 USER_DATA_FILE="$USER_DATA_DIR/passwords.json"
 
-# --- Colors ---
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
@@ -34,12 +27,11 @@ step()  { echo -e "${BOLD}${BLUE}[*]${NC} $*"; }
 banner() {
     echo ""
     echo -e "${BOLD}${GREEN}==============================================${NC}"
-    echo -e "${BOLD}${GREEN}  Smart Password Manager Desktop — Installer${NC}"
+    echo -e "${BOLD}${GREEN}  Smart Password Manager Desktop - Installer${NC}"
     echo -e "${BOLD}${GREEN}==============================================${NC}"
     echo ""
 }
 
-# --- Header ---
 banner
 
 echo "This installer will:"
@@ -53,19 +45,19 @@ echo -e "Your data will be stored separately in:"
 echo -e "  ${BOLD}$USER_DATA_FILE${NC}"
 echo "  (that folder is created by the app on first run)"
 echo ""
-read -r -p "Continue? [Y/n]: " CONFIRM
+read -r -p "Continue? [Y/n]: " CONFIRM < /dev/tty
 case "$CONFIRM" in
     [nN]*) echo "Aborted."; exit 0 ;;
 esac
 echo ""
 
-# --- Detect source mode ---
 step "Detecting source..."
+SOURCE_DIR=""
 if [ -n "${BASH_SOURCE[0]:-}" ] && [ -f "${BASH_SOURCE[0]}" ]; then
     SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
     if [ -f "$SCRIPT_DIR/app.py" ]; then
         SOURCE_DIR="$SCRIPT_DIR"
-        info "Source: local folder — $SOURCE_DIR"
+        info "Source: local folder - $SOURCE_DIR"
     fi
 fi
 
@@ -83,7 +75,6 @@ if [ -z "${SOURCE_DIR:-}" ]; then
     SOURCE_DIR="$TMP_CLONE"
 fi
 
-# --- Python check ---
 step "Checking Python..."
 if ! command -v python3 >/dev/null 2>&1; then
     error "python3 is required but not installed."
@@ -93,16 +84,14 @@ fi
 PY_VER="$(python3 --version 2>&1)"
 info "Found: $PY_VER"
 
-# --- Install directory ---
 step "Preparing install directory..."
 if [ -d "$INSTALL_DIR" ]; then
-    warn "Existing install found at $INSTALL_DIR — removing it first."
+    warn "Existing install found at $INSTALL_DIR - removing it first."
     rm -rf "$INSTALL_DIR"
 fi
 mkdir -p "$INSTALL_DIR"
 info "Install directory: $INSTALL_DIR"
 
-# --- Copy files ---
 step "Copying application files..."
 if command -v rsync >/dev/null 2>&1; then
     rsync -a --exclude='.git' --exclude='venv' --exclude='__pycache__' \
@@ -118,7 +107,6 @@ if [ -n "${TMP_CLONE:-}" ]; then
     info "Temporary clone removed: $TMP_CLONE"
 fi
 
-# --- Virtual environment ---
 step "Creating virtual environment..."
 info "Location: $VENV_DIR"
 python3 -m venv "$VENV_DIR"
@@ -130,11 +118,9 @@ info "Into: $VENV_DIR"
 "$VENV_DIR/bin/pip" install -r "$INSTALL_DIR/requirements.txt" >/dev/null
 info "Dependencies installed."
 
-# --- Icon ---
 ICON_PATH="$INSTALL_DIR/data/icons/icon.png"
 [ -f "$ICON_PATH" ] || ICON_PATH="system-run"
 
-# --- Desktop entry content ---
 DESKTOP_CONTENT="[Desktop Entry]
 Version=1.0
 Type=Application
@@ -148,23 +134,21 @@ StartupNotify=true
 Keywords=password;manager;security;deterministic;
 "
 
-# --- Install to Application Menu ---
 step "Registering application in the menu..."
 mkdir -p "$APPS_DIR"
 echo "$DESKTOP_CONTENT" > "$MENU_ENTRY"
 chmod +x "$MENU_ENTRY"
 info "Menu entry created: $MENU_ENTRY"
-info "  → Look for \"$APP_NAME\" in your application menu."
+info "  -> Look for \"$APP_NAME\" in your application menu."
 
-# --- Desktop shortcut (optional) ---
 step "Desktop shortcut (optional)"
 echo ""
 warn "Notes about the Desktop shortcut:"
 echo "  - On GNOME (default on Ubuntu), desktop icons may be hidden by default."
 echo "  - The shortcut may show an 'Unsecured Application Launcher' warning."
-echo "  - If it does: right-click → 'Allow Launching' (one-time action)."
+echo "  - If it does: right-click -> 'Allow Launching' (one-time action)."
 echo ""
-read -r -p "Create Desktop shortcut? [y/N]: " REPLY
+read -r -p "Create Desktop shortcut? [y/N]: " REPLY < /dev/tty
 echo ""
 if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     DESKTOP_DIR="$(xdg-user-dir DESKTOP 2>/dev/null || true)"
@@ -177,12 +161,10 @@ else
     info "Skipped Desktop shortcut."
 fi
 
-# --- Update desktop database ---
 if command -v update-desktop-database >/dev/null 2>&1; then
     update-desktop-database "$APPS_DIR" >/dev/null 2>&1 || true
 fi
 
-# --- Summary ---
 echo ""
 echo -e "${BOLD}${GREEN}==============================================${NC}"
 echo -e "${BOLD}${GREEN}  Installation complete${NC}"
@@ -196,8 +178,8 @@ echo "  Your data folder: $USER_DATA_DIR"
 echo "                    (created by the app on first run, holds passwords.json)"
 echo ""
 echo -e "${BOLD}How to launch:${NC}"
-echo "  • Application menu → \"$APP_NAME\""
-echo "  • Desktop shortcut (if you created one)"
+echo "  - Application menu -> \"$APP_NAME\""
+echo "  - Desktop shortcut (if you created one)"
 echo ""
 echo -e "${BOLD}How to uninstall:${NC}"
 echo "  curl -fsSL https://raw.githubusercontent.com/smartlegionlab/smart-password-manager-desktop/master/uninstall.sh | bash"
